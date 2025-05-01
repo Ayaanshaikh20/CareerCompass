@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.secondary-button {
+    background-color: white !important;
+    padding: 6px !important;
+    border-radius: 5px !important;
+    color: black !important;
+    border: none !important;
+}
+
+.primary-button {
+    background-color: palevioletred !important;
+    padding: 6px !important;
+    border: none !important;
+    border-radius: 5px !important;
+    color: white !important;
+}
