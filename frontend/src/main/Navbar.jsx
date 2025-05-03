@@ -29,15 +29,14 @@ const Navbar = () => {
   return (
     <>
       <AppBar
-        position="sticky"
+        position="static"
         elevation={0}
         sx={{
           backgroundColor: "#ffffff",
-          borderBottom: "1px solid #e5e7eb", // light gray border
-          zIndex: 1100,
+          borderBottom: "1px solid #e5e7eb",
         }}
       >
-        <Toolbar className="w-full flex justify-between items-center px-6 py-3">
+        <Toolbar className="w-full flex justify-between items-center px-6 py-1">
           {/* Brand Logo and Title */}
           <div
             className="flex items-center cursor-pointer"
@@ -101,6 +100,7 @@ const Navbar = () => {
               </>
             ) : (
               <Button
+                size="small"
                 onClick={handleLogout}
                 sx={{
                   backgroundColor: "#2563EB",

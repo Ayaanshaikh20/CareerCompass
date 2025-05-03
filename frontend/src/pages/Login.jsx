@@ -26,10 +26,10 @@ const Login = () => {
                 const response = await axios.post("/api/login", formData);
                 const { status } = response.data;
                 if (status === 200) {
-                  const { message, userDetails } = response.data;
+                  const { message, userData } = response.data;
                   toast.success(message);
-                  localStorage.setItem("user", JSON.stringify(userDetails));
-                  queryClient.setQueryData(["user"], userDetails);
+                  localStorage.setItem("user", JSON.stringify(userData));
+                  queryClient.setQueryData(["user"], userData);
                   navigate("/dashboard");
                 }
               } catch (error) {

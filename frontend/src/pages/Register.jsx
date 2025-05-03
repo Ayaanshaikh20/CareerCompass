@@ -4,7 +4,6 @@ import axios from "axios";
 import { toast, Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router";
 import { Formik, Form, Field } from "formik";
-import { v4 as uuidv4 } from "uuid";
 import { useQueryClient } from "@tanstack/react-query";
 
 const Register = () => {
@@ -32,14 +31,13 @@ const Register = () => {
             initialValues={formData}
             onSubmit={async (formData) => {
               try {
-                formData.id = uuidv4();
                 const response = await axios.post("/api/register", formData);
                 const { status } = response.data;
                 if (status === 201) {
-                  const { message, userDetails } = response?.data;
+                  const { message, userData } = response?.data;
                   toast.success(message);
-                  localStorage.setItem("user", JSON.stringify(userDetails));
-                  queryClient.setQueryData(["user"], userDetails);
+                  localStorage.setItem("user", JSON.stringify(userData));
+                  queryClient.setQueryData(["user"], userData);
                   navigate("/dashboard");
                 }
               } catch (error) {
