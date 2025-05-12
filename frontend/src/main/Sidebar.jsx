@@ -12,7 +12,7 @@ const Sidebar = () => {
 
   return (
     <div className="relative">
-      <div className="h-full w-52 bg-white shadow-md border-r transition-all duration-300">
+      <div className="h-full w-44 bg-white shadow-md border-r transition-all duration-300">
         <div className="p-2 text-lg font-semibold border-b text-blue-700">
           Menu
         </div>

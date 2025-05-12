@@ -11,9 +11,11 @@ app.use(require("./controllers/Register"));
 
 app.use(require("./controllers/Login"));
 
-app.use(require("./controllers/RefreshToken"));
+app.use(require("./controllers/NewAccessToken"));
 
 app.use(require("./controllers/NewApplication"));
+
+app.use(require("./controllers/Applications"));
 
 app.get("/", (req, res) => {
   res.send("Hello world");

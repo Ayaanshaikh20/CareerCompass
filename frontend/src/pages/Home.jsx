@@ -4,11 +4,11 @@ import { Typography, Button } from "@mui/material";
 import compass from "../assets/images/compass.png";
 
 const Home = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = localStorage.getItem("user");
   const navigate = useNavigate();
 
   const redirectDashboard = () => {
-    if (user?.id) {
+    if (user) {
       navigate("/dashboard");
     } else {
       navigate("/login");

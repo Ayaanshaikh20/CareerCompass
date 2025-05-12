@@ -15,6 +15,8 @@ const validateUser = async (req, res, next) => {
 
     const user = await User.findOne({ email: userEmail });
 
+    const { _id } = user;
+
     if (!user) {
       return res.status(401).json({
         message: "Email does not exist",
@@ -33,6 +35,7 @@ const validateUser = async (req, res, next) => {
     const { firstName, location, phone, email, password: userPass } = user;
 
     const userObject = {
+      _id,
       firstName,
       location,
       phone,

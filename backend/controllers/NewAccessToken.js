@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 
 const User = mongoose.models.User;
 
-router.post("/api/refresh-token", async (req, res) => {
+router.post("/api/new-access-token", async (req, res) => {
   const refreshToken = req.body.token;
 
   if (!refreshToken) return res.sendStatus(401);
@@ -15,11 +15,7 @@ router.post("/api/refresh-token", async (req, res) => {
     refreshToken,
     process.env.REFRESH_TOKEN_SECRET,
     async (err, decoded) => {
-      if (err)
-        return res.status(403).json({
-          message: "expired",
-          status: 403,
-        });
+      if (err) return res.sendStatus(403);
       const { firstName, email, phone, location, password } = decoded;
       const newAccessToken = generateAccessToken({
         firstName,
