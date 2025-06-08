@@ -1,36 +1,21 @@
-import React, { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Button } from "@mui/material";
-import { Formik, Field, Form as FormikForm, ErrorMessage } from "formik";
-import {
-  Input,
-  DatePicker,
-  Select,
-  Drawer,
-  Row,
-  Col,
-  Space,
-  Descriptions,
-} from "antd";
+import { Input, DatePicker, Select, Drawer, Row, Col, Space, Descriptions } from "antd";
 import dayjs from "dayjs";
-import { CalendarOutlined, EnvironmentOutlined } from "@ant-design/icons";
 import axios from "axios";
-import { handleTokenExpiryAndRetry } from "../helpers/AccessTokenExpiry";
-import { useNavigate } from "react-router";
-import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { MaterialReactTable } from "material-react-table";
 import moment from "moment";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import axiosInstance from "../config/axiosInstance";
+import { CalendarOutlined, EditIcon, EnvironmentOutlined, FaPlus, MdOutlineRefresh } from "../components/Icons";
+import { customToggleLoading } from "../components/CustomLoading";
 
 const AppliedJobs = () => {
   const [open, setOpen] = useState(false);
-  const { accessToken, refreshToken, _id } = JSON.parse(
-    localStorage.getItem("user")
-  );
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const showDrawer = () => setOpen(true);
-  const [formData, setFormData] = useState({
+  const [errors, setErrors] = useState({});
+  const { accessToken, _id } = JSON.parse(localStorage.getItem("user"));
+  const defaultFormData = {
     userId: _id,
     role: "",
     appliedDate: "",
@@ -41,182 +26,139 @@ const AppliedJobs = () => {
     experience: "",
     platform: "",
     jobDescription: "",
-  });
+  };
+  const [formData, setFormData] = useState(defaultFormData);
   const [applications, setApplications] = useState([]);
   const [isViewDetailsDrawer, setIsViewDetailsDrawer] = useState(false);
   const [selectedJob, setSelectedJob] = useState(null);
+  const [isEditApplication, setIsEditApplication] = useState(false);
 
   useEffect(() => {
     fetchApplications();
   }, []);
 
-  const onClose = () => {
-    setOpen(false);
+  const handleChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    setErrors((prev) => ({ ...prev, [field]: "" }));
   };
 
-  const validate = (values) => {
-    const errors = {};
-    if (!values.role) errors.role = "Role is required";
-    if (!values.appliedDate) errors.appliedDate = "Applied date is required";
-    if (!values.package) errors.package = "Package is required";
-    if (!values.employer) errors.employer = "Employer is required";
-    // if (!values.resume) errors.resume = "Resume URL is required";
-    if (!values.location) errors.location = "Location is required";
-    if (!values.jobLink) errors.jobLink = "Job link is required";
-    else if (!/^https?:\/\/.+/.test(values.jobLink))
-      errors.jobLink = "Enter a valid URL";
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.role) newErrors.role = "Role is required";
+    if (!formData.appliedDate) newErrors.appliedDate = "Applied date is required";
+    if (!formData.package) newErrors.package = "Package is required";
+    if (!formData.employer) newErrors.employer = "Employer is required";
+    if (!formData.location) newErrors.location = "Location is required";
+    if (!formData.jobLink) newErrors.jobLink = "Job link is required";
+    else if (!/^https?:\/\/.+/.test(formData.jobLink)) newErrors.jobLink = "Enter a valid URL";
+    if (!formData.experience) newErrors.experience = "Experience is required";
+    if (!formData.platform) newErrors.platform = "Platform is required";
+    if (!formData.jobDescription) newErrors.jobDescription = "Job description is required";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
-    if (!values.experience) errors.experience = "Experience is required";
-    if (!values.platform) errors.platform = "Platform is required";
-    if (!values.jobDescription)
-      errors.jobDescription = "Job description is required";
-    return errors;
+  const submitOrEditApplication = async () => {
+    if (!validate()) return;
+
+    const url = isEditApplication ? "/api/edit-application" : "/api/new-application";
+    try {
+      const response = await axiosInstance.post(url, formData);
+      const { status, message } = response.data;
+      if (status === 201 || status === 200) {
+        toast.success(message);
+        setFormData(defaultFormData);
+        setOpen(false);
+        setIsEditApplication(false);
+        await fetchApplications();
+      }
+    } catch (error) {
+      const { status, message } = error?.response?.data || {};
+      toast.error(message || "Error submitting form");
+    }
   };
 
   const fetchApplications = async () => {
     try {
-      const response = await axios.get(`/api/applications/${_id}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      customToggleLoading({ loading: true });
+      const response = await axiosInstance.get(`/api/applications/${_id}`);
       const { status } = response.data;
       if (status === 200) {
-        const { applications: allApplications } = response.data;
-        setApplications(allApplications);
+        setApplications(response.data.applications);
       }
     } catch (error) {
-      const status = error.response.status;
-      if (status === 403) {
-        const newToken = await handleTokenExpiryAndRetry(
-          error,
-          navigate,
-          queryClient
-        );
-        if (newToken === "Expired refresh token") {
-          return;
-        } else if (newToken) {
-          //retry api
-          const response = await axios.get(`/api/applications/${_id}`, {
-            headers: {
-              Authorization: `Bearer ${newToken}`,
-            },
-          });
-          const { status } = response.data;
-          if (status === 200) {
-            const { applications: allApplications } = response.data;
-            setApplications(allApplications);
-          }
-        } else {
-          toast.error("Error fetching application");
-        }
+      const { status, message } = error?.response?.data || {};
+      if (!error.customSessionExpired) {
+        toast.error(message || "Error fetching applications");
       }
+    } finally {
+      customToggleLoading({ loading: false });
     }
   };
 
-  const retrySubmitApplication = async (
-    latestAccessToken,
-    values,
-    resetForm
-  ) => {
-    try {
-      const retryRes = await axios.post("/api/new-application", values, {
-        headers: {
-          Authorization: `Bearer ${latestAccessToken}`,
-        },
-      });
-      const { status, message } = retryRes.data;
-      if (status === 201) {
-        toast.success(message);
-        onClose();
-        resetForm();
-        await fetchApplications();
-      }
-    } catch {
-      toast.error("Error creating application");
-    }
+  const viewEditApplication = (application) => {
+    setFormData(application);
+    setIsEditApplication(true);
   };
 
-  const viewDetails = (row) => {
-    setSelectedJob(row);
-    setIsViewDetailsDrawer(true);
+  const clearDrawer = () => {
+    setFormData(defaultFormData);
+    setOpen(false);
+    setIsEditApplication(false);
+    setErrors({});
   };
 
   const clearDrawerDetails = () => {
     setIsViewDetailsDrawer(false);
-    setSelectedJob(null);
+  };
+
+  const showDrawer = () => {
+    setOpen(true);
+  };
+
+  const viewDetails = (job) => {
+    setSelectedJob(job);
+    setIsViewDetailsDrawer(true);
   };
 
   const columns = useMemo(
     () => [
       {
         accessorKey: "view",
-        header: "View",
-        size: 60,
+        header: "Actions",
         Cell: ({ row }) => (
-          <VisibilityIcon
-            style={{ cursor: "pointer", color: "orange" }}
-            onClick={() => viewDetails(row.original)}
-            sx={{
-              fontSize: "22px",
-            }}
-          />
+          <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+            <VisibilityIcon style={{ cursor: "pointer", color: "orange" }} onClick={() => viewDetails(row.original)} />
+            <EditIcon style={{ cursor: "pointer", color: "green" }} onClick={() => viewEditApplication(row.original)} />
+          </div>
         ),
       },
-      {
-        accessorKey: "role",
-        header: "Role",
-      },
-      {
-        accessorKey: "experience",
-        header: "Experience",
-      },
-      {
-        accessorKey: "platform",
-        header: "Platform",
-      },
+      { accessorKey: "role", header: "Role" },
+      { accessorKey: "experience", header: "Experience" },
+      { accessorKey: "platform", header: "Platform" },
       {
         accessorKey: "appliedDate",
         header: "Applied Date",
-        Cell: ({ row }) => (
-          <span>{moment(row.original.appliedDate).format("DD/MM/YYYY")}</span>
-        ),
+        Cell: ({ row }) => <span>{moment(row.original.appliedDate).format("DD/MM/YYYY")}</span>,
       },
       {
         accessorKey: "jobDescription",
         header: "Job Description",
+        Cell: ({ row }) => <span className=' text-wrap'>{row.original.jobDescription}</span>,
       },
     ],
     []
   );
 
   return (
-    <section className="h-full w-[calc(100vw-210px)]">
-      <div className="w-full flex justify-end">
-        <Button
-          size="small"
-          onClick={showDrawer}
-          sx={{
-            backgroundColor: "#2563EB",
-            color: "white",
-            textTransform: "none",
-            fontWeight: 500,
-            px: 2,
-            "&:hover": {
-              backgroundColor: "#1D4ED8",
-            },
-          }}
-        >
-          New application
-        </Button>
-      </div>
-      <div className="w-full mt-5">
+    <section className='h-full w-[calc(100vw-210px)]'>
+      <div className='w-full'>
         <MaterialReactTable
           data={applications}
           columns={columns}
           enableTopToolbar={true}
           enableColumnResizing={false}
-          columnResizeMode="onChange"
+          columnResizeMode='onChange'
           enableSorting={false}
           enableBottomToolbar={false}
           enableColumnFilters={false}
@@ -226,6 +168,18 @@ const AppliedJobs = () => {
           enableColumnActions={false}
           enableRowVirtualization={true}
           enablePagination={false}
+          renderTopToolbarCustomActions={() => {
+            return (
+              <div className=' flex gap-3'>
+                <button className=' p-2' onClick={showDrawer}>
+                  <FaPlus size={20} className=' text-green-700' />
+                </button>
+                <button onClick={fetchApplications}>
+                  <MdOutlineRefresh size={24} className=' text-blue-600' />
+                </button>
+              </div>
+            );
+          }}
           muiTableBodyRowProps={{
             sx: {
               paddingY: 0.5,
@@ -248,306 +202,156 @@ const AppliedJobs = () => {
               maxWidth: "100%",
               overflowX: "auto",
               "&::-webkit-scrollbar": {
-                height: "4px",
+                height: "3px",
               },
               "&::-webkit-scrollbar-thumb": {
                 backgroundColor: "#c1c1c1",
-                borderRadius: "4px",
+                borderRadius: "2px",
               },
               "&::-webkit-scrollbar-track": {
                 backgroundColor: "#f1f1f1",
               },
-              height: "calc(100vh - 220px)",
+              height: "calc(100vh - 160px)",
             },
           }}
         />
       </div>
-      <Drawer
-        title="Job Details"
-        placement="right"
-        width={480}
-        onClose={() => clearDrawerDetails()}
-        open={isViewDetailsDrawer}
-      >
+      <Drawer title='Job Details' placement='right' width={480} onClose={() => clearDrawerDetails()} open={isViewDetailsDrawer}>
         {selectedJob && (
-          <Descriptions
-            bordered
-            column={1}
-            size="small"
-            labelStyle={{ fontWeight: 600, width: 140 }}
-            contentStyle={{ wordBreak: "break-word" }}
-          >
-            <Descriptions.Item label="Role">
-              {selectedJob.role}
-            </Descriptions.Item>
-            <Descriptions.Item label="Employer">
-              {selectedJob.employer}
-            </Descriptions.Item>
-            <Descriptions.Item label="Package">
-              {selectedJob.package}
-            </Descriptions.Item>
-            <Descriptions.Item label="Location">
+          <Descriptions bordered column={1} size='small' labelStyle={{ fontWeight: 600, width: 140 }} contentStyle={{ wordBreak: "break-word" }}>
+            <Descriptions.Item label='Role'>{selectedJob.role}</Descriptions.Item>
+            <Descriptions.Item label='Employer'>{selectedJob.employer}</Descriptions.Item>
+            <Descriptions.Item label='Package'>{selectedJob.package}</Descriptions.Item>
+            <Descriptions.Item label='Location'>
               <EnvironmentOutlined /> {selectedJob.location}
             </Descriptions.Item>
-            <Descriptions.Item label="Experience">
-              {selectedJob.experience}
+            <Descriptions.Item label='Experience'>{selectedJob.experience}</Descriptions.Item>
+            <Descriptions.Item label='Platform'>{selectedJob.platform}</Descriptions.Item>
+            <Descriptions.Item label='Job Description'>{selectedJob.jobDescription}</Descriptions.Item>
+            <Descriptions.Item label='Applied Date'>
+              <CalendarOutlined /> {moment(selectedJob.appliedDate).format("DD/MM/YYYY")}
             </Descriptions.Item>
-            <Descriptions.Item label="Platform">
-              {selectedJob.platform}
-            </Descriptions.Item>
-            <Descriptions.Item label="Job Description">
-              {selectedJob.jobDescription}
-            </Descriptions.Item>
-            <Descriptions.Item label="Applied Date">
-              <CalendarOutlined />{" "}
-              {moment(selectedJob.appliedDate).format("DD/MM/YYYY")}
-            </Descriptions.Item>
-            <Descriptions.Item label="Job Link">
-              <a
-                href={selectedJob.jobLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: "#1677ff" }}
-              >
+            <Descriptions.Item label='Job Link'>
+              <a href={selectedJob.jobLink} target='_blank' rel='noopener noreferrer' style={{ color: "#1677ff" }}>
                 View Posting
               </a>
             </Descriptions.Item>
           </Descriptions>
         )}
       </Drawer>
-      <Formik
-        initialValues={formData}
-        validate={validate}
-        validateOnBlur={validate}
-        enableReinitialize={true}
-        onSubmit={async (values, { resetForm }) => {
-          try {
-            let response = await axios.post("/api/new-application", values, {
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-            });
-            const { status, message } = response.data;
-            if (status === 201) {
-              toast.success(message);
-              onClose();
-              resetForm();
-              await fetchApplications();
-            }
-          } catch (error) {
-            const status = error.response.status;
-            if (status === 403) {
-              const newToken = await handleTokenExpiryAndRetry(
-                error,
-                navigate,
-                queryClient
-              );
-              if (newToken === "Expired refresh token") {
-                return;
-              } else if (newToken) {
-                //retry api
-                await retrySubmitApplication(newToken, values, resetForm);
-              } else {
-                toast.error("Error creating application");
-              }
-            }
-          }
-        }}
+      <Drawer
+        title={isEditApplication ? "Edit Application" : "New Application"}
+        open={open || isEditApplication}
+        onClose={clearDrawer}
+        width={700}
+        extra={
+          <Space>
+            <Button onClick={clearDrawer}>Cancel</Button>
+            <Button variant='contained' onClick={submitOrEditApplication}>
+              Submit
+            </Button>
+          </Space>
+        }
       >
-        {(formik) => (
-          <Drawer
-            title="New application"
-            width={700}
-            closeIcon={false}
-            open={open}
-            styles={{ body: { paddingBottom: 80 } }}
-            extra={
-              <Space>
-                <Button
-                  variant="outlined"
-                  size="small"
-                  onClick={() => {
-                    onClose();
-                    formik.resetForm();
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant="contained"
-                  size="small"
-                  onClick={formik.handleSubmit}
-                >
-                  Submit
-                </Button>
-              </Space>
-            }
-          >
-            <FormikForm id="applicationForm">
-              <Row gutter={16}>
-                <Col span={12} className="mb-4">
-                  <label className="block mb-1">Role</label>
-                  <Field name="role" as={Input} placeholder="Enter role" />
-                  <ErrorMessage
-                    name="role"
-                    render={(msg) => (
-                      <div className="text-red-500 text-xs mt-1">{msg}</div>
-                    )}
-                  />
-                </Col>
-                <Col span={12} className="mb-4">
-                  <label className="block mb-1">Applied Date</label>
-                  <DatePicker
-                    style={{ width: "100%" }}
-                    format="DD/MM/YYYY"
-                    disabledDate={(current) =>
-                      current && current > dayjs().endOf("day")
-                    }
-                    onChange={(date) => {
-                      formik.setFieldValue(
-                        "appliedDate",
-                        date.format("DD/MM/YYYY")
-                      );
-                    }}
-                  />
-                  <ErrorMessage
-                    name="appliedDate"
-                    render={(msg) => (
-                      <div className="text-red-500 text-xs mt-1">{msg}</div>
-                    )}
-                  />
-                </Col>
-              </Row>
-
-              <Row gutter={16}>
-                <Col span={12} className="mb-4">
-                  <label className="block mb-1">Package (LPA)</label>
-                  <Field
-                    name="package"
-                    as={Input}
-                    placeholder="Enter package"
-                  />
-                  <ErrorMessage
-                    name="package"
-                    render={(msg) => (
-                      <div className="text-red-500 text-xs mt-1">{msg}</div>
-                    )}
-                  />
-                </Col>
-
-                <Col span={12} className="mb-4">
-                  <label className="block mb-1">Employer / Company</label>
-                  <Field
-                    name="employer"
-                    as={Input}
-                    placeholder="Enter company name"
-                  />
-                  <ErrorMessage
-                    name="employer"
-                    render={(msg) => (
-                      <div className="text-red-500 text-xs mt-1">{msg}</div>
-                    )}
-                  />
-                </Col>
-              </Row>
-
-              <Row gutter={16}>
-                <Col span={12} className="mb-4">
-                  <label className="block mb-1">Location</label>
-                  <Field
-                    name="location"
-                    as={Input}
-                    placeholder="Enter location"
-                  />
-                  <ErrorMessage
-                    name="location"
-                    render={(msg) => (
-                      <div className="text-red-500 text-xs mt-1">{msg}</div>
-                    )}
-                  />
-                </Col>
-              </Row>
-
-              <Row gutter={16}>
-                <Col span={12} className="mb-4">
-                  <label className="block mb-1">Link of the job</label>
-                  <Field
-                    name="jobLink"
-                    as={Input}
-                    placeholder="Enter job link"
-                  />
-                  <ErrorMessage
-                    name="jobLink"
-                    render={(msg) => (
-                      <div className="text-red-500 text-xs mt-1">{msg}</div>
-                    )}
-                  />
-                </Col>
-
-                <Col span={12} className="mb-4">
-                  <label className="block mb-1">Required experience</label>
-                  <Field
-                    name="experience"
-                    as={Input}
-                    placeholder="Enter experience"
-                  />
-                  <ErrorMessage
-                    name="experience"
-                    render={(msg) => (
-                      <div className="text-red-500 text-xs mt-1">{msg}</div>
-                    )}
-                  />
-                </Col>
-              </Row>
-
-              <Row gutter={16}>
-                <Col span={12} className="mb-4">
-                  <label className="block mb-1">Platform</label>
-                  <Select
-                    style={{ width: "100%" }}
-                    placeholder="Select platform"
-                    value={formik.values.platform}
-                    onChange={(value) =>
-                      formik.setFieldValue("platform", value)
-                    }
-                  >
-                    <Select.Option value="Linkedin">Linkedin</Select.Option>
-                    <Select.Option value="Naukri">Naukri</Select.Option>
-                    <Select.Option value="Indeed">Indeed</Select.Option>
-                    <Select.Option value="Monster">Monster</Select.Option>
-                    <Select.Option value="Workday">Workday</Select.Option>
-                    <Select.Option value="Other">Other</Select.Option>
-                  </Select>
-                  <ErrorMessage
-                    name="platform"
-                    render={(msg) => (
-                      <div className="text-red-500 text-xs mt-1">{msg}</div>
-                    )}
-                  />
-                </Col>
-              </Row>
-
-              <Row>
-                <Col span={24} className="mb-4">
-                  <label className="block mb-1">Job Description</label>
-                  <Field
-                    name="jobDescription"
-                    as={Input.TextArea}
-                    rows={4}
-                    placeholder="Enter job description"
-                  />
-                  <ErrorMessage
-                    name="jobDescription"
-                    render={(msg) => (
-                      <div className="text-red-500 text-xs mt-1">{msg}</div>
-                    )}
-                  />
-                </Col>
-              </Row>
-            </FormikForm>
-          </Drawer>
-        )}
-      </Formik>
+        <Row gutter={16}>
+          <Col span={12} className='mb-4'>
+            <label>Role</label>
+            <Input value={formData.role} onChange={(e) => handleChange("role", e.target.value)} placeholder='Enter role' />
+            {errors.role && <p className='text-red-500 text-xs'>{errors.role}</p>}
+          </Col>
+          <Col span={12} className='mb-4'>
+            <label>Applied Date</label>
+            <DatePicker
+              style={{ width: "100%" }}
+              format='YYYY-MM-DD'
+              value={formData.appliedDate ? dayjs(formData.appliedDate) : null}
+              onChange={(date, dateString) => handleChange("appliedDate", dateString)}
+              disabledDate={(current) => current && current > dayjs().endOf("day")}
+            />
+            {errors.appliedDate && <p className='text-red-500 text-xs'>{errors.appliedDate}</p>}
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={12} className='mb-4'>
+            <label className='block mb-1'>Package (LPA)</label>
+            <Input name='package' value={formData.package} onChange={(e) => handleChange("package", e.target.value)} placeholder='Enter package' />
+            {errors.package && <p className='text-red-500 text-xs'>{errors.package}</p>}
+          </Col>
+          <Col span={12} className='mb-4'>
+            <label className='block mb-1'>Employer/Company</label>
+            <Input
+              name='employer'
+              value={formData.employer}
+              onChange={(e) => {
+                handleChange("employer", e.target.value);
+              }}
+              placeholder='Enter company name'
+            />
+            {errors.employer && <p className='text-red-500 text-xs'>{errors.employer}</p>}
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={12} className='mb-4'>
+            <label className='block mb-1'>Location</label>
+            <Input
+              name='location'
+              value={formData.location}
+              onChange={(e) => handleChange("location", e.target.value)}
+              placeholder='Enter location'
+            />
+            {errors.location && <p className='text-red-500 text-xs'>{errors.location}</p>}
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={12} className='mb-4'>
+            <label className='block mb-1'>Link of the job</label>
+            <Input name='jobLink' value={formData.jobLink} onChange={(e) => handleChange("jobLink", e.target.value)} placeholder='Enter job link' />
+            {errors.jobLink && <p className='text-red-500 text-xs'>{errors.jobLink}</p>}
+          </Col>
+          <Col span={12} className='mb-4'>
+            <label className='block mb-1'>Required experience</label>
+            <Input
+              name='experience'
+              value={formData.experience}
+              onChange={(e) => handleChange("experience", e.target.value)}
+              placeholder='Enter experience'
+            />
+            {errors.experience && <p className='text-red-500 text-xs'>{errors.experience}</p>}
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={12} className='mb-4'>
+            <label className='block mb-1'>Platform</label>
+            <Select
+              style={{ width: "100%" }}
+              placeholder='Select platform'
+              value={formData.platform}
+              onChange={(selectedValue) => handleChange("platform", selectedValue)}
+            >
+              <Select.Option value='Linkedin'>Linkedin</Select.Option>
+              <Select.Option value='Naukri'>Naukri</Select.Option>
+              <Select.Option value='Indeed'>Indeed</Select.Option>
+              <Select.Option value='Monster'>Monster</Select.Option>
+              <Select.Option value='Workday'>Workday</Select.Option>
+              <Select.Option value='Other'>Other</Select.Option>
+            </Select>
+            {errors.platform && <p className='text-red-500 text-xs'>{errors.platform}</p>}
+          </Col>
+        </Row>
+        <Row>
+          <Col span={24} className='mb-4'>
+            <label className='block mb-1'>Job Description</label>
+            <Input
+              name='jobDescription'
+              onChange={(e) => {
+                handleChange("jobDescription", e.target.value);
+              }}
+              placeholder='Enter job description'
+            />
+            {errors.jobDescription && <p className='text-red-500 text-xs'>{errors.jobDescription}</p>}
+          </Col>
+        </Row>
+      </Drawer>
     </section>
   );
 };

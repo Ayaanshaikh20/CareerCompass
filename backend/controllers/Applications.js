@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const mongoose = require("mongoose");
-const { verifyAccessToken } = require("../config/validateToken");
+const { verifyAccessToken } = require("../config/generateTokens");
 const router = Router();
 
 const AppliedJob = mongoose.models.Appliedjob;

@@ -15,14 +15,21 @@ const AuthRoutes = () => {
   return user !== null ? <Outlet /> : <Navigate to="/" />;
 };
 
+const PublicRoutes = () => {
+  const user = localStorage.getItem("user");
+  return user ? <Navigate to="/dashboard" /> : <Outlet />;
+};
+
 const Router = () => {
   return (
     <Routes>
+      {/* Public routes wrapped with PublicRoutes */}
       <Route element={<MainLayout />}>
-        {/* Public routes */}
         <Route path="/" element={<Home />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
+        <Route element={<PublicRoutes />}>
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+        </Route>
       </Route>
 
       {/* Protected routes with sidebar */}
