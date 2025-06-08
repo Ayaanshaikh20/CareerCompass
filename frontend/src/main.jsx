@@ -1,19 +1,14 @@
-import { createRoot } from 'react-dom/client';
-import Router from './config/Router.jsx';
-import { BrowserRouter } from 'react-router';
-import './assets/styles.css';
-import '@fontsource/roboto';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { Toaster } from 'react-hot-toast';
+import { Toaster, ReactQueryDevtools, QueryClient, QueryClientProvider, BrowserRouter, createRoot, Router } from "./shared/imports.js";
+import "./assets/styles.css";
+import "@fontsource/roboto";
 
 const queryClient = new QueryClient();
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <QueryClientProvider client={queryClient}>
     <ReactQueryDevtools initialIsOpen={false} />
     <BrowserRouter>
-    <Toaster />
+      <Toaster />
       <Router />
     </BrowserRouter>
   </QueryClientProvider>

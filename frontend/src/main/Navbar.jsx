@@ -1,10 +1,5 @@
-import React, { useState } from "react";
-import AppBar from "@mui/material/AppBar";
-import Button from "@mui/material/Button";
-import { useQueryClient, useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router";
-import { Toolbar, Typography } from "@mui/material";
-import compass from "../assets/images/compass.png";
+import { AppBar, Button, useQueryClient, useQuery, useNavigate, Toolbar, Typography } from "../shared/imports";
+import { compass } from "../shared/icons";
 
 const Navbar = () => {
   const queryClient = useQueryClient();
@@ -29,43 +24,32 @@ const Navbar = () => {
   return (
     <>
       <AppBar
-        position="static"
+        position='static'
         elevation={0}
         sx={{
           backgroundColor: "#ffffff",
           borderBottom: "1px solid #e5e7eb",
         }}
       >
-        <Toolbar className="w-full flex justify-between items-center px-6 py-1">
+        <Toolbar className='w-full flex justify-between items-center px-6 py-1'>
           {/* Brand Logo and Title */}
-          <div
-            className="flex items-center cursor-pointer"
-            onClick={() => navigate("/")}
-          >
-            <Typography
-              variant="h6"
-              component="div"
-              sx={{ color: "#1E3A8A", fontWeight: 600 }}
-            >
+          <div className='flex items-center cursor-pointer' onClick={() => navigate("/")}>
+            <Typography variant='h6' component='div' sx={{ color: "#1E3A8A", fontWeight: 600 }}>
               Career C
             </Typography>
-            <img src={compass} alt="compass_logo" className="h-5 w-5" />
-            <Typography
-              variant="h6"
-              component="div"
-              sx={{ color: "#1E3A8A", fontWeight: 600 }}
-            >
+            <img src={compass} alt='compass_logo' className='h-5 w-5' />
+            <Typography variant='h6' component='div' sx={{ color: "#1E3A8A", fontWeight: 600 }}>
               mpass
             </Typography>
           </div>
 
           {/* Right Side Controls */}
-          <div className="flex items-center gap-3">
+          <div className='flex items-center gap-3'>
             {!user ? (
               <>
                 <Button
                   onClick={handleClickOpen}
-                  size="small"
+                  size='small'
                   sx={{
                     backgroundColor: "#2563EB",
                     color: "white",
@@ -80,8 +64,8 @@ const Navbar = () => {
                   Login
                 </Button>
                 <Button
-                  variant="outlined"
-                  size="small"
+                  variant='outlined'
+                  size='small'
                   onClick={() => navigate("/register")}
                   sx={{
                     borderColor: "#2563EB",
@@ -100,7 +84,7 @@ const Navbar = () => {
               </>
             ) : (
               <Button
-                size="small"
+                size='small'
                 onClick={handleLogout}
                 sx={{
                   backgroundColor: "#2563EB",

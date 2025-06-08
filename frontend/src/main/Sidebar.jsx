@@ -1,5 +1,4 @@
-import React from "react";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation } from "../shared/imports";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -11,12 +10,10 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="relative h-[calc(100vh-69px)]">
-      <div className="h-full w-44 bg-white shadow-md border-r transition-all duration-300">
-        <div className="p-2 text-lg font-semibold border-b text-blue-700">
-          Menu
-        </div>
-        <ul className="p-2 space-y-1">
+    <div className='relative h-[calc(100vh-69px)]'>
+      <div className='h-full w-44 bg-white shadow-md border-r transition-all duration-300'>
+        <div className='p-2 text-lg font-semibold border-b text-blue-700'>Menu</div>
+        <ul className='p-2 space-y-1'>
           {menuItems.map((item, index) => {
             const isActive = location.pathname === item.path;
 
@@ -25,9 +22,7 @@ const Sidebar = () => {
                 <Link
                   to={item.path}
                   className={`block px-4 py-2 rounded-md transition-colors duration-200 ${
-                    isActive
-                      ? "bg-blue-100 text-blue-700 font-medium"
-                      : "text-gray-700 hover:bg-gray-100"
+                    isActive ? "bg-blue-100 text-blue-700 font-medium" : "text-gray-700 hover:bg-gray-100"
                   }`}
                 >
                   {item.name}

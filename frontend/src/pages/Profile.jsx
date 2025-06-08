@@ -1,16 +1,5 @@
-import React from "react";
-import {
-  Avatar,
-  Typography,
-  Box,
-  Grid,
-  IconButton,
-  Tooltip,
-} from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import EmailIcon from "@mui/icons-material/Email";
-import PhoneIcon from "@mui/icons-material/Phone";
+import { Grid2, Box, Avatar, Tooltip, Typography, IconButton } from "../shared/imports";
+import { EditIcon, EmailIcon, PhoneIcon, LocationOnIcon } from "../shared/icons";
 
 const Profile = () => {
   const user = {
@@ -23,10 +12,10 @@ const Profile = () => {
   };
 
   return (
-    <Box p={4} maxWidth={1000} mx="auto">
-      <Grid container spacing={4} alignItems="center">
+    <Box p={4} maxWidth={1000} mx='auto'>
+      <Grid2 container spacing={4} alignItems='center'>
         {/* Left: Large Avatar */}
-        <Grid item xs={12} md={4}>
+        <Grid2 xs={12} md={4}>
           <Avatar
             // src={user.avatar}
             // alt={user.name}
@@ -36,26 +25,22 @@ const Profile = () => {
               maxWidth: 300,
               boxShadow: 3,
             }}
-            variant="rounded"
+            variant='rounded'
           />
-        </Grid>
+        </Grid2>
 
         {/* Right: Details */}
-        <Grid item xs={12} md={8}>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-          >
+        <Grid2 xs={12} md={8}>
+          <Box display='flex' justifyContent='space-between' alignItems='center'>
             <Box>
-              <Typography variant="h4" fontWeight={600}>
+              <Typography variant='h4' fontWeight={600}>
                 {user.name}
               </Typography>
-              <Typography variant="subtitle1" color="text.secondary" mt={0.5}>
+              <Typography variant='subtitle1' color='text.secondary' mt={0.5}>
                 {user.role}
               </Typography>
             </Box>
-            <Tooltip title="Edit Profile">
+            <Tooltip title='Edit Profile'>
               <IconButton>
                 <EditIcon />
               </IconButton>
@@ -63,21 +48,21 @@ const Profile = () => {
           </Box>
 
           <Box mt={3}>
-            <Box display="flex" alignItems="center" mb={1.5}>
-              <EmailIcon color="primary" sx={{ mr: 1 }} />
+            <Box display='flex' alignItems='center' mb={1.5}>
+              <EmailIcon color='primary' sx={{ mr: 1 }} />
               <Typography>{user.email}</Typography>
             </Box>
-            <Box display="flex" alignItems="center" mb={1.5}>
-              <PhoneIcon color="primary" sx={{ mr: 1 }} />
+            <Box display='flex' alignItems='center' mb={1.5}>
+              <PhoneIcon color='primary' sx={{ mr: 1 }} />
               <Typography>{user.phone}</Typography>
             </Box>
-            <Box display="flex" alignItems="center">
-              <LocationOnIcon color="primary" sx={{ mr: 1 }} />
+            <Box display='flex' alignItems='center'>
+              <LocationOnIcon color='primary' sx={{ mr: 1 }} />
               <Typography>{user.location}</Typography>
             </Box>
           </Box>
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
     </Box>
   );
 };

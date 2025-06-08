@@ -1,9 +1,4 @@
-import axios from "axios";
-import { useState } from "react";
-import { TextField, Button } from "@mui/material";
-import { Link, useNavigate } from "react-router";
-import { toast } from "react-hot-toast";
-import { useQueryClient } from "@tanstack/react-query";
+import { axios, useState, TextField, Button, Link, useNavigate, toast, useQueryClient } from "../shared/imports";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -44,47 +39,32 @@ const Login = () => {
 
   return (
     <>
-      <div className="flex justify-center items-center mt-24">
-        <div className="bg-white p-6 rounded-lg shadow-lg w-80">
-          <h2 className="text-2xl font-semibold text-center mb-4">Login</h2>
+      <div className='flex justify-center items-center mt-24'>
+        <div className='bg-white p-6 rounded-lg shadow-lg w-80'>
+          <h2 className='text-2xl font-semibold text-center mb-4'>Login</h2>
           <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <TextField
-                name="email"
-                label="Email *"
-                fullWidth
-                size="small"
-                variant="outlined"
-                value={formData.email}
-                onChange={handleChange}
-              />
+            <div className='mb-4'>
+              <TextField name='email' label='Email *' fullWidth size='small' variant='outlined' value={formData.email} onChange={handleChange} />
             </div>
-            <div className="mb-4">
+            <div className='mb-4'>
               <TextField
-                name="password"
-                label="Password *"
-                type="password"
+                name='password'
+                label='Password *'
+                type='password'
                 fullWidth
-                size="small"
-                variant="outlined"
+                size='small'
+                variant='outlined'
                 value={formData.password}
                 onChange={handleChange}
               />
             </div>
-            <div className="text-sm mb-4">
+            <div className='text-sm mb-4'>
               Don't have an account?{" "}
-              <Link to="/register" className="text-blue-500 hover:underline">
+              <Link to='/register' className='text-blue-500 hover:underline'>
                 Register
               </Link>
             </div>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              fullWidth
-              size="small"
-              className="hover:bg-blue-600 transition"
-            >
+            <Button type='submit' variant='contained' color='primary' fullWidth size='small' className='hover:bg-blue-600 transition'>
               Login
             </Button>
           </form>

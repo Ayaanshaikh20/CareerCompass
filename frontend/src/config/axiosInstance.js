@@ -1,5 +1,4 @@
-import axios from "axios";
-import toast from "react-hot-toast";
+import { toast, axios } from "../shared/imports";
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_LOCAL_API,
@@ -52,7 +51,7 @@ axiosInstance.interceptors.response.use(
         return Promise.reject({
           customSessionExpired: true,
           originalError: err,
-        });;
+        });
       }
     }
     return Promise.reject(error);

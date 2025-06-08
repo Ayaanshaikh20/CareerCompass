@@ -1,15 +1,25 @@
-import { useEffect, useState, useMemo } from "react";
-import { Button } from "@mui/material";
-import { Input, DatePicker, Select, Drawer, Row, Col, Space, Descriptions } from "antd";
-import dayjs from "dayjs";
-import axios from "axios";
-import toast from "react-hot-toast";
-import { MaterialReactTable } from "material-react-table";
-import moment from "moment";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import axiosInstance from "../config/axiosInstance";
-import { CalendarOutlined, EditIcon, EnvironmentOutlined, FaPlus, MdOutlineRefresh } from "../components/Icons";
-import { customToggleLoading } from "../components/CustomLoading";
+import { CalendarOutlined, EditIcon, EnvironmentOutlined, FaPlus, MdOutlineRefresh } from "../shared/icons";
+import {
+  Button,
+  Col,
+  DatePicker,
+  Descriptions,
+  Drawer,
+  Input,
+  MaterialReactTable,
+  Row,
+  Select,
+  Space,
+  VisibilityIcon,
+  axiosInstance,
+  customToggleLoading,
+  dayjs,
+  moment,
+  toast,
+  useEffect,
+  useMemo,
+  useState,
+} from "../shared/imports";
 
 const AppliedJobs = () => {
   const [open, setOpen] = useState(false);
