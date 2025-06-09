@@ -3,7 +3,6 @@ import { useEffect, useState, useMemo } from "react";
 
 //Material UI/Icons
 import { Button, Typography, TextField, Avatar, Box, Grid2, IconButton, Tooltip, AppBar, Toolbar } from "@mui/material";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 
 //Material Table
 import { MaterialReactTable } from "material-react-table";
@@ -83,7 +82,6 @@ export {
   useMemo,
   Button,
   Typography,
-  VisibilityIcon,
   MaterialReactTable,
   Input,
   DatePicker,

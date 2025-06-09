@@ -1,11 +1,17 @@
-const mongoose = require('mongoose');
+const { MongoClient } = require("mongodb");
 
 const dbConnect = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
-    console.log('MongoDB connected successfully!!');
+    //client
+    const client = await new MongoClient(process.env.MONGODB_URI_LOCAL);
+    // Database Name
+    const dbName = "career-compass";
+
+    await client.connect();
+    const db = client.db(dbName);
+    return db;
   } catch (error) {
-    console.error('Error connecting to MongoDB', error);
+    console.error("Error connecting to MongoDB", error);
   }
 };
 

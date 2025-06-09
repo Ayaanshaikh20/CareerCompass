@@ -1,19 +1,18 @@
 const { Router } = require("express");
 const router = Router();
-const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const {
-  generateAccessToken,
-  generateRefreshToken,
-} = require("../config/generateTokens");
-
-const User = mongoose.models.User;
+const { generateAccessToken, generateRefreshToken } = require("../config/generateTokens");
+const dbConnect = require("../config/dbConnect");
 
 const validateUser = async (req, res, next) => {
   try {
+    //dbConnect
+    const db = await dbConnect();
+    const users = db.collection("users");
+
     const { email: userEmail, password: reqPass } = req.body;
-    const user = await User.findOne({ email: userEmail });
-    const { _id, firstName, location, phone, email, password: userPass } = user;
+
+    const user = await users.findOne({ email: userEmail });
 
     if (!user) {
       return res.status(401).json({
@@ -21,6 +20,9 @@ const validateUser = async (req, res, next) => {
         status: 401,
       });
     }
+
+    const { _id, firstName, location, phone, email, password: userPass } = user;
+
     const isMatch = await bcrypt.compare(reqPass, user.password);
     if (!isMatch) {
       return res.status(401).json({

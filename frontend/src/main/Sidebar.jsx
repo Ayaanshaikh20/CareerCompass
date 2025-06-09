@@ -10,7 +10,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className='relative h-[calc(100vh-69px)]'>
+    <div className='relative hidden md:block h-[calc(100vh-67px)]'>
       <div className='h-full w-44 bg-white shadow-md border-r transition-all duration-300'>
         <div className='p-2 text-lg font-semibold border-b text-blue-700'>Menu</div>
         <ul className='p-2 space-y-1'>
