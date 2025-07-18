@@ -9,7 +9,7 @@ const editApplication = async (req, res, next) => {
     //dbConnect
     const db = await dbConnect();
     const appliedjobs = db.collection("appliedjobs");
-    const { _id, userId, role, appliedDate, package, employer, location, jobLink, experience, platform, jobDescription } = req.body;
+    const { _id, userId, role, appliedDate, package, employer, location, jobLink, experience, platform, jobDescription, status } = req.body;
     const application = await appliedjobs.findOneAndUpdate(
       { _id: ObjectId.createFromHexString(_id) },
       {
@@ -24,6 +24,7 @@ const editApplication = async (req, res, next) => {
           experience,
           platform,
           jobDescription,
+          status
         }
       }
     );
@@ -35,7 +36,6 @@ const editApplication = async (req, res, next) => {
     }
     next();
   } catch (error) {
-    console.log(error.message);
     res.status(500).json({
       status: 500,
       message: "Internal server error",

@@ -1,18 +1,15 @@
-const { MongoClient } = require("mongodb");
+// db.js
+const { Pool } = require('pg');
+require("dotenv").config();
 
-const dbConnect = async () => {
-  try {
-    //client
-    const client = await new MongoClient(process.env.MONGODB_URI_LOCAL);
-    // Database Name
-    const dbName = "career-compass";
-
-    await client.connect();
-    const db = client.db(dbName);
-    return db;
-  } catch (error) {
-    console.error("Error connecting to MongoDB", error);
-  }
+const pgConObj = {
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  password: process.env.DB_PASSWORD,
+  port: parseInt(process.env.DB_PORT, 10),
+  database: process.env.DB_NAME,
 };
 
-module.exports = dbConnect;
+const pool = new Pool(pgConObj);
+
+module.exports = pool;

@@ -2,7 +2,23 @@
 import { useEffect, useState, useMemo } from "react";
 
 //Material UI/Icons
-import { Button, Typography, TextField, Avatar, Box, Grid2, IconButton, Tooltip, AppBar, Toolbar } from "@mui/material";
+import {
+  Button,
+  Typography,
+  TextField,
+  Avatar,
+  Box,
+  Grid2,
+  IconButton,
+  Tooltip,
+  AppBar,
+  Toolbar,
+  Chip,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
 
 //Material Table
 import { MaterialReactTable } from "material-react-table";
@@ -25,6 +41,17 @@ import axios from "axios";
 import dayjs from "dayjs";
 import toast, { Toaster } from "react-hot-toast";
 import moment from "moment";
+import { Line, Pie } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  ArcElement,
+  Tooltip as ToolTip,
+  Legend,
+} from "chart.js";
 
 //Components
 import { customToggleLoading } from "../shared/CustomLoading";
@@ -43,6 +70,21 @@ import Navbar from "../main/Navbar";
 import Sidebar from "../main/Sidebar";
 
 export {
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+  Chip,
+  Line,
+  Pie,
+  ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  ArcElement,
+  Legend,
+  ToolTip,
   useLocation,
   Toolbar,
   useQuery,

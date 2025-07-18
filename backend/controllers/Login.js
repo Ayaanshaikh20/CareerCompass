@@ -2,17 +2,21 @@ const { Router } = require("express");
 const router = Router();
 const bcrypt = require("bcrypt");
 const { generateAccessToken, generateRefreshToken } = require("../config/generateTokens");
-const dbConnect = require("../config/dbConnect");
+const pool = require("../config/dbConnect");
 
 const validateUser = async (req, res, next) => {
+  let sqlQuery, con;
   try {
-    //dbConnect
-    const db = await dbConnect();
-    const users = db.collection("users");
+    // connect db
+    con = await pool.connect()
 
     const { email: userEmail, password: reqPass } = req.body;
 
-    const user = await users.findOne({ email: userEmail });
+    sqlQuery = `SELECT * FROM register_users WHERE email='${userEmail}'`;
+
+    const result = await con.query(sqlQuery);
+
+    const user = result.rows[0];
 
     if (!user) {
       return res.status(401).json({
@@ -21,9 +25,10 @@ const validateUser = async (req, res, next) => {
       });
     }
 
-    const { _id, firstName, location, phone, email, password: userPass } = user;
+    const { user_id, firstName, location, phone, email, password: userPass } = user;
 
     const isMatch = await bcrypt.compare(reqPass, user.password);
+
     if (!isMatch) {
       return res.status(401).json({
         message: "Invalid credentials",
@@ -32,7 +37,7 @@ const validateUser = async (req, res, next) => {
     }
 
     const userObject = {
-      _id,
+      user_id,
       firstName,
       location,
       phone,
@@ -44,15 +49,20 @@ const validateUser = async (req, res, next) => {
     const refreshToken = generateRefreshToken(userObject);
 
     const { password, ...userWithoutPassword } = userObject;
+
     res.locals.userData = userWithoutPassword;
     res.locals.accessToken = accessToken;
     res.locals.refreshToken = refreshToken;
+
     next();
+
   } catch (error) {
     res.status(500).json({
       message: "Internal server error",
       status: 500,
     });
+  } finally {
+    if(con) con.release();
   }
 };
 

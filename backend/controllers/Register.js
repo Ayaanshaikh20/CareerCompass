@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const dbConnect = require("../config/dbConnect");
+const pool = require("../config/dbConnect");
 const { generateAccessToken, generateRefreshToken } = require("../config/generateTokens");
 const bcrypt = require("bcrypt");
 
@@ -7,7 +7,9 @@ const router = Router();
 
 // Middleware: Generate JWT Tokens
 const generateTokens = (req, res, next) => {
+  //generate access token
   const accessToken = generateAccessToken(req.body);
+  //generate refresh token
   const refreshToken = generateRefreshToken(req.body);
 
   res.locals.userDetails = {
@@ -18,20 +20,44 @@ const generateTokens = (req, res, next) => {
   next();
 };
 
+//check user exists
+const checkUserExist = async (req, res, next) => {
+  let sqlQuery, con;
+  try {
+
+    //connect db
+    con = await pool.connect()
+
+    // Extract email from request body
+    const { email } = res.locals.userDetails;
+
+    //check user query;
+    sqlQuery = `SELECT * FROM register_users WHERE email='${email}'`
+
+    const result = await con.query(sqlQuery);
+
+    if (result.rows.length > 0) {
+      return res.status(400).json({ status: 400, message: "Email already registered" });
+    };
+
+    next();
+
+  } catch (error) {
+    res.status(500).json({ status: 500, message: error.message });
+  } finally {
+    if (con) con.release();
+  }
+};
+
 // Middleware: Store User in DB
 const storeUser = async (req, res, next) => {
+  let sqlQuery, con;
   try {
-    //dbConnect
-    const db = await dbConnect();
-    const users = db.collection("users");
+
+    //connect db
+    con = await pool.connect();
 
     const { email, firstName, location, password, phone, accessToken, refreshToken } = res.locals.userDetails;
-
-    // Check if user exists
-    const existingUser = await users.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ status: 400, message: "Email already registered" });
-    }
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -44,10 +70,24 @@ const storeUser = async (req, res, next) => {
       email,
       password: hashedPassword,
     };
-    const result = await users.insertOne(newUser);
+
+    //insert user query
+    sqlQuery = `INSERT INTO register_users (
+    first_name, 
+    location, 
+    phone_number, 
+    email, 
+    password) VALUES (
+    '${newUser.firstName}', 
+    '${newUser.location}', 
+    '${newUser.phone}', 
+    '${newUser.email}', 
+    '${newUser.password}') RETURNING *`;
+
+    const result = await con.query(sqlQuery);
 
     const userData = {
-      _id: result.insertedId,
+      user_id: result.rows[0].user_id,
       firstName,
       email,
       phone,
@@ -60,20 +100,26 @@ const storeUser = async (req, res, next) => {
 
     next();
   } catch (error) {
-    res.status(500).json({ status: 500, message: "Internal server error" });
+    res.status(500).json({ status: 500, message: error.message });
+  } finally {
+    if (con) con.release();
   }
 };
 
 // Register Route
-router.post("/api/register", generateTokens, storeUser, (req, res) => {
-  const { userData, accessToken, refreshToken } = res.locals;
-  res.status(201).json({
-    status: 201,
-    message: "User registered successfully",
-    userData,
-    accessToken,
-    refreshToken,
+router.post("/api/register",
+  generateTokens,
+  checkUserExist,
+  storeUser,
+  (req, res) => {
+    const { userData, accessToken, refreshToken } = res.locals;
+    res.status(201).json({
+      status: 201,
+      message: "User registered successfully",
+      userData,
+      accessToken,
+      refreshToken,
+    });
   });
-});
 
 module.exports = router;

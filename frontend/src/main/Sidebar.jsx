@@ -21,7 +21,7 @@ const Sidebar = () => {
               <li key={index}>
                 <Link
                   to={item.path}
-                  className={`block px-4 py-2 rounded-md transition-colors duration-200 ${
+                  className={`block px-4 py-1 rounded-md transition-colors duration-200 ${
                     isActive ? "bg-blue-100 text-blue-700 font-medium" : "text-gray-700 hover:bg-gray-100"
                   }`}
                 >

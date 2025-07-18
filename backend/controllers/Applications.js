@@ -1,27 +1,51 @@
 const { Router } = require("express");
 const { verifyAccessToken } = require("../config/generateTokens");
-const dbConnect = require("../config/dbConnect");
+const pool = require("../config/dbConnect");
 
 const router = Router();
 
 const fetchApplication = async (req, res, next) => {
-  const db = await dbConnect();
-  const appliedjobs = db.collection("appliedjobs");
+  let sqlQuery, con;
+  try {
 
-  const { userId } = req.params;
-  const result = await appliedjobs.find({ userId }).toArray();
-  if (!result || result.length === 0) {
-    return res.status(200).json({
-      status: 200,
-      message: "No applications",
-    });
+    // connect db
+    con = await pool.connect();
+
+    //request data
+    const { user_id } = req.query;
+
+    sqlQuery = `SELECT * FROM applications WHERE user_id='${user_id}'`;
+
+    const result = await con.query(sqlQuery);
+
+    if (!result || result.rows.length === 0) {
+      return res.status(200).json({
+        status: 200,
+        message: "No applications",
+      });
+    }
+
+    let newArr = result.rows.map((item) => {
+      return {
+        ...item,
+        jobDescription: item.job_description,
+        jobLink: item.job_link,
+        appliedDate: item.applied_date
+      }
+    })
+
+    res.locals.applications = newArr;
+
+    next();
+
+  } catch (error) {
+    res.status(500).json({ status: 500, message: error.message });
+  } finally {
+    if (con) con.release();
   }
-
-  res.locals.applications = result;
-  next();
 };
 
-router.get("/api/applications/:userId", verifyAccessToken, fetchApplication, async (req, res) => {
+router.get("/api/applications", verifyAccessToken, fetchApplication, async (req, res) => {
   const { applications } = res.locals;
   res.status(200).json({
     status: 200,

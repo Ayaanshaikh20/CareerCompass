@@ -1,4 +1,13 @@
-import { CalendarOutlined, EditIcon, EnvironmentOutlined, FaPlus, MdOutlineRefresh, VisibilityIcon, DeleteIcon } from "../shared/icons";
+import {
+  CalendarOutlined,
+  EditIcon,
+  EnvironmentOutlined,
+  FaPlus,
+  MdOutlineRefresh,
+  VisibilityIcon,
+  DeleteIcon,
+  MoreVertIcon,
+} from "../shared/icons";
 import {
   Button,
   Col,
@@ -18,14 +27,73 @@ import {
   useEffect,
   useMemo,
   useState,
+  Chip,
+  IconButton,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
 } from "../shared/imports";
+
+const ActionMenuCell = ({ row, viewDetails, deleteApplication, viewEditApplication }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleOpen = (e) => setAnchorEl(e.currentTarget);
+  const handleClose = () => setAnchorEl(null);
+
+  const item = row.original;
+
+  return (
+    <>
+      <IconButton size='small' onClick={handleOpen}>
+        <MoreVertIcon />
+      </IconButton>
+      <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            viewDetails(item);
+          }}
+        >
+          <ListItemIcon>
+            <VisibilityIcon fontSize='small' sx={{ color: "orange" }} />
+          </ListItemIcon>
+          <ListItemText primary='View' />
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            viewEditApplication(item);
+          }}
+        >
+          <ListItemIcon>
+            <EditIcon fontSize='small' sx={{ color: "green" }} />
+          </ListItemIcon>
+          <ListItemText primary='Edit' />
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            deleteApplication(item);
+          }}
+        >
+          <ListItemIcon>
+            <DeleteIcon fontSize='small' sx={{ color: "red" }} />
+          </ListItemIcon>
+          <ListItemText primary='Delete' />
+        </MenuItem>
+      </Menu>
+    </>
+  );
+};
 
 const AppliedJobs = () => {
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState({});
-  const { _id } = JSON.parse(localStorage.getItem("user"));
+  const { user_id } = JSON.parse(localStorage.getItem("user"));
   const defaultFormData = {
-    userId: _id,
+    userId: user_id,
     role: "",
     appliedDate: "",
     package: "",
@@ -35,6 +103,7 @@ const AppliedJobs = () => {
     experience: "",
     platform: "",
     jobDescription: "",
+    status: "",
   };
   const [formData, setFormData] = useState(defaultFormData);
   const [applications, setApplications] = useState([]);
@@ -62,6 +131,7 @@ const AppliedJobs = () => {
     else if (!/^https?:\/\/.+/.test(formData.jobLink)) newErrors.jobLink = "Enter a valid URL (https://...";
     if (!formData.experience) newErrors.experience = "Experience is required";
     if (!formData.platform) newErrors.platform = "Platform is required";
+    if (!formData.status) newErrors.status = "Status is required";
     if (!formData.jobDescription) newErrors.jobDescription = "Job description is required";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -82,7 +152,7 @@ const AppliedJobs = () => {
         await fetchApplications();
       }
     } catch (error) {
-      const { status, message } = error?.response?.data || {};
+      const { message } = error?.response?.data || {};
       if (!error.customSessionExpired) {
         toast.error(message || "Error submitting form");
       }
@@ -92,13 +162,15 @@ const AppliedJobs = () => {
   const fetchApplications = async () => {
     try {
       customToggleLoading({ loading: true });
-      const response = await axiosInstance.get(`/api/applications/${_id}`);
-      const { status, message } = response.data;
+      const response = await axiosInstance.get(`/api/applications?user_id=${user_id}`);
+      console.log(response);
+      const { status, applications, message } = response.data;
       if (status === 200) {
-        setApplications(response.data.applications);
+        setApplications(applications);
+        toast.success(message)
       }
     } catch (error) {
-      const { status, message } = error?.response?.data || {};
+      const { message } = error?.response?.data || {};
       if (!error.customSessionExpired) {
         toast.error(message || "Error fetching applications");
       }
@@ -126,15 +198,15 @@ const AppliedJobs = () => {
 
   const deleteApplication = async (selectedApplication) => {
     try {
-      const { _id } = selectedApplication;
-      let response = await axiosInstance.delete(`/api/delete-application?_id=${_id}`);
+      const { user_id } = selectedApplication;
+      let response = await axiosInstance.delete(`/api/delete-application?user_id=${user_id}`);
       const { status } = response.data;
       if (status === 200) {
         await fetchApplications();
         toast.success("Application deleted successfully");
       }
     } catch (error) {
-      const { status, message } = error?.response?.data || {};
+      const { message } = error?.response?.data || {};
       if (!error.customSessionExpired) {
         toast.error(message || "Error deleting application");
       }
@@ -145,24 +217,64 @@ const AppliedJobs = () => {
     () => [
       {
         accessorKey: "view",
-        header: "Actions",
-        maxSize: 100,
+        header: "",
+        maxSize: 40,
+        enableColumnResizing: false,
+        enableResizing: false,
         Cell: ({ row }) => (
-          <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-            <VisibilityIcon style={{ cursor: "pointer", color: "orange" }} onClick={() => viewDetails(row.original)} />
-            <EditIcon style={{ cursor: "pointer", color: "green" }} onClick={() => viewEditApplication(row.original)} />
-            <DeleteIcon style={{ cursor: "pointer", color: "red" }} onClick={() => deleteApplication(row.original)} />
+          <div className=' flex justify-center items-center w-full'>
+            <ActionMenuCell
+              deleteApplication={deleteApplication}
+              viewDetails={viewDetails}
+              viewEditApplication={viewEditApplication}
+              row={row}
+            />
           </div>
         ),
       },
-      { accessorKey: "role", header: "Role", minSize: 450 },
+      {
+        accessorKey: "status",
+        header: "Status",
+        maxSize: 100,
+        enableColumnResizing: false,
+        enableResizing: false,
+        Cell: ({ row }) => {
+          const status = row.original.status;
+          const getColor = (status) => {
+            switch (status.toLowerCase()) {
+              case "pending":
+                return "warning";
+              case "approved":
+                return "success";
+              case "rejected":
+                return "error";
+              default:
+                return "default";
+            }
+          };
+          return <Chip label={status} color={getColor(status)} size='small' />;
+        },
+      },
+      {
+        accessorKey: "jobLink",
+        header: "Visit",
+        maxSize: 70,
+        enableColumnResizing: false,
+        enableResizing: false,
+        Cell: ({ row }) => (
+          <a className='text-blue-500 flex justify-center items-center w-full underline' href={row.original.jobLink}>
+            Link
+          </a>
+        ),
+      },
+      { accessorKey: "role", header: "Role", minSize: 350 },
       { accessorKey: "experience", header: "Experience", maxSize: 120 },
       { accessorKey: "platform", header: "Platform", maxSize: 100 },
       {
         accessorKey: "appliedDate",
         header: "Applied Date",
         maxSize: 130,
-        Cell: ({ row }) => <span>{moment(row.original.appliedDate).format("DD/MM/YYYY")}</span>,
+        Cell: ({ row }) => <span>{moment(row.original.appliedDate).format("DD-MMM-YYYY")}</span>,
       },
       {
         accessorKey: "jobDescription",
@@ -183,6 +295,11 @@ const AppliedJobs = () => {
           enableTopToolbar={true}
           enableColumnResizing={true}
           enableSorting={false}
+          initialState={
+            {
+              density: "compact"
+            }
+          }
           enableBottomToolbar={false}
           enableColumnFilters={false}
           enableDensityToggle={false}
@@ -244,9 +361,21 @@ const AppliedJobs = () => {
           }}
         />
       </div>
-      <Drawer title='Job Details' placement='right' width={480} onClose={() => setIsViewDetailsDrawer(false)} open={isViewDetailsDrawer}>
+      <Drawer
+        title='Job Details'
+        placement='right'
+        width={480}
+        onClose={() => setIsViewDetailsDrawer(false)}
+        open={isViewDetailsDrawer}
+      >
         {selectedJob && (
-          <Descriptions bordered column={1} size='small' labelStyle={{ fontWeight: 600, width: 140 }} contentStyle={{ wordBreak: "break-word" }}>
+          <Descriptions
+            bordered
+            column={1}
+            size='small'
+            labelStyle={{ fontWeight: 600, width: 140 }}
+            contentStyle={{ wordBreak: "break-word" }}
+          >
             <Descriptions.Item label='Role'>{selectedJob.role}</Descriptions.Item>
             <Descriptions.Item label='Employer'>{selectedJob.employer}</Descriptions.Item>
             <Descriptions.Item label='Package'>{selectedJob.package}</Descriptions.Item>
@@ -284,7 +413,11 @@ const AppliedJobs = () => {
         <Row gutter={16}>
           <Col span={12} className='mb-4'>
             <label>Role</label>
-            <Input value={formData.role} onChange={(e) => handleChange("role", e.target.value)} placeholder='Enter role' />
+            <Input
+              value={formData.role}
+              onChange={(e) => handleChange("role", e.target.value)}
+              placeholder='Enter role'
+            />
             {errors.role && <p className='text-red-500 text-xs'>{errors.role}</p>}
           </Col>
           <Col span={12} className='mb-4'>
@@ -302,7 +435,12 @@ const AppliedJobs = () => {
         <Row gutter={16}>
           <Col span={12} className='mb-4'>
             <label className='block mb-1'>Package (LPA)</label>
-            <Input name='package' value={formData.package} onChange={(e) => handleChange("package", e.target.value)} placeholder='Enter package' />
+            <Input
+              name='package'
+              value={formData.package}
+              onChange={(e) => handleChange("package", e.target.value)}
+              placeholder='Enter package'
+            />
             {errors.package && <p className='text-red-500 text-xs'>{errors.package}</p>}
           </Col>
           <Col span={12} className='mb-4'>
@@ -329,11 +467,30 @@ const AppliedJobs = () => {
             />
             {errors.location && <p className='text-red-500 text-xs'>{errors.location}</p>}
           </Col>
+          <Col span={12} className='mb-4'>
+            <label className='block mb-1'>Status</label>
+            <Select
+              style={{ width: "100%" }}
+              placeholder='Select Status'
+              value={formData.status}
+              onChange={(selectedValue) => handleChange("status", selectedValue)}
+            >
+              <Select.Option value='pending'>Pending</Select.Option>
+              <Select.Option value='approved'>Approved</Select.Option>
+              <Select.Option value='rejected'>Rejected</Select.Option>
+            </Select>
+            {errors.status && <p className='text-red-500 text-xs'>{errors.status}</p>}
+          </Col>
         </Row>
         <Row gutter={16}>
           <Col span={12} className='mb-4'>
             <label className='block mb-1'>Link of the job</label>
-            <Input name='jobLink' value={formData.jobLink} onChange={(e) => handleChange("jobLink", e.target.value)} placeholder='Enter job link' />
+            <Input
+              name='jobLink'
+              value={formData.jobLink}
+              onChange={(e) => handleChange("jobLink", e.target.value)}
+              placeholder='Enter job link'
+            />
             {errors.jobLink && <p className='text-red-500 text-xs'>{errors.jobLink}</p>}
           </Col>
           <Col span={12} className='mb-4'>

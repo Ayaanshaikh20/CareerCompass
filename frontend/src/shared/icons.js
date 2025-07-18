@@ -7,11 +7,13 @@ import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DeleteIcon from "@mui/icons-material/Delete";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 //images
 import compass from "../assets/images/compass.png";
 
 export {
+  MoreVertIcon,
   MdOutlineRefresh,
   FaPlus,
   CalendarOutlined,

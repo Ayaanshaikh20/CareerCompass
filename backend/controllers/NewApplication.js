@@ -1,25 +1,56 @@
 const { Router } = require("express");
 const router = Router();
 const { verifyAccessToken } = require("../config/generateTokens");
-const dbConnect = require("../config/dbConnect");
+const pool = require("../config/dbConnect");
 
 // Controller
 const createApplication = async (req, res, next) => {
+  let sqlQuery, con;
   try {
-    //dbConnect
-    const db = await dbConnect();
-    const appliedjobs = db.collection("appliedjobs");
+    // connect db
+    con = await pool.connect();
 
     const applicationData = req.body;
-    const newApplication = appliedjobs.insertOne(applicationData);
-    res.locals.newApplication = newApplication;
-    next();
+
+    console.log(applicationData, 'data');
+
+    const {
+      userId: user_id,
+      role,
+      appliedDate: applied_date,
+      package,
+      employer,
+      location,
+      jobLink: job_link,
+      experience,
+      platform,
+      jobDescription: job_description,
+      status
+    } = applicationData;
+
+    sqlQuery = `INSERT INTO applications(
+      user_id, status, job_link, role, experience, platform, applied_date, job_description, employer, package, location
+    ) VALUES (
+      '${user_id}','${status}','${job_link}','${role}','${experience}','${platform}','${applied_date}','${job_description}','${employer}','${package}', '${location}'
+    ) `
+
+    const result = await con.query(sqlQuery);
+
+    if (result) {
+      res.status(200).json({
+        status: 200,
+        message: "Application added successfully",
+      });
+      next();
+    };
   } catch (error) {
     res.status(500).json({
       status: 500,
-      message: "Internal server error",
+      message: error.message,
       error: error.message,
     });
+  } finally {
+    if (con) con.release();
   }
 };
 
