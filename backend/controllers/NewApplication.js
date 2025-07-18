@@ -12,8 +12,6 @@ const createApplication = async (req, res, next) => {
 
     const applicationData = req.body;
 
-    console.log(applicationData, 'data');
-
     const {
       userId: user_id,
       role,
@@ -37,10 +35,6 @@ const createApplication = async (req, res, next) => {
     const result = await con.query(sqlQuery);
 
     if (result) {
-      res.status(200).json({
-        status: 200,
-        message: "Application added successfully",
-      });
       next();
     };
   } catch (error) {

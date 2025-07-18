@@ -14,8 +14,8 @@ app.use(require("./controllers/login"));
 app.use(require("./controllers/applications"));
 app.use(require("./controllers/refreshToken"));
 app.use(require("./controllers/newApplication"));
-// app.use(require("./controllers/editApplication"));
-// app.use(require("./controllers/deleteApplication"));
+app.use(require("./controllers/editApplication"));
+app.use(require("./controllers/deleteApplication"));
 
 app.get("/", (req, res) => {
   res.send("Hello world");

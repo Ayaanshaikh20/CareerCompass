@@ -163,7 +163,6 @@ const AppliedJobs = () => {
     try {
       customToggleLoading({ loading: true });
       const response = await axiosInstance.get(`/api/applications?user_id=${user_id}`);
-      console.log(response);
       const { status, applications, message } = response.data;
       if (status === 200) {
         setApplications(applications);
@@ -198,8 +197,8 @@ const AppliedJobs = () => {
 
   const deleteApplication = async (selectedApplication) => {
     try {
-      const { user_id } = selectedApplication;
-      let response = await axiosInstance.delete(`/api/delete-application?user_id=${user_id}`);
+      const { user_id, id } = selectedApplication;
+      let response = await axiosInstance.delete(`/api/delete-application?user_id=${user_id}&application_id=${id}`);
       const { status } = response.data;
       if (status === 200) {
         await fetchApplications();

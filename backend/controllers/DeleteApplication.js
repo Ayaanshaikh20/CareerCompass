@@ -1,17 +1,22 @@
 const { Router } = require("express");
 const router = Router();
 const { verifyAccessToken } = require("../config/generateTokens");
-const dbConnect = require("../config/dbConnect");
-const { ObjectId } = require("mongodb");
+const pool = require("../config/dbConnect");
 
 const deleteApplication = async (req, res, next) => {
-  //dbConnect
-  const db = await dbConnect();
-  const appliedjobs = db.collection("appliedjobs");
 
-  const { _id } = req.query;
-  const deleted = await appliedjobs.findOneAndDelete({ _id: ObjectId.createFromHexString(_id) });
-  if (!deleted) {
+  let sqlQuery, con;
+
+  // connect db
+  con = await pool.connect();
+
+  const { user_id, application_id } = req.query;
+
+  sqlQuery = `DELETE FROM applications WHERE user_id='${user_id}' AND id='${application_id}'`
+
+  const result = await con.query(sqlQuery);
+
+  if (!result) {
     return res.status(404).json({ status: 404, message: "Application not found" });
   }
   next();

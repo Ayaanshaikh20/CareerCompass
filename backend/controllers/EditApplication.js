@@ -1,44 +1,46 @@
 const { Router } = require("express");
 const router = Router();
 const { verifyAccessToken } = require("../config/generateTokens");
-const dbConnect = require("../config/dbConnect");
-const { ObjectId } = require("mongodb");
+const pool = require("../config/dbConnect");
 
 const editApplication = async (req, res, next) => {
+
+  let sqlQuery, con;
+
   try {
-    //dbConnect
-    const db = await dbConnect();
-    const appliedjobs = db.collection("appliedjobs");
-    const { _id, userId, role, appliedDate, package, employer, location, jobLink, experience, platform, jobDescription, status } = req.body;
-    const application = await appliedjobs.findOneAndUpdate(
-      { _id: ObjectId.createFromHexString(_id) },
-      {
-        $set: {
-          userId,
-          role,
-          appliedDate,
-          package,
-          employer,
-          location,
-          jobLink,
-          experience,
-          platform,
-          jobDescription,
-          status
-        }
-      }
-    );
-    if (!application) {
+
+    // connect db
+    con = await pool.connect()
+
+    const { id, role, appliedDate, package, employer, location, jobLink, experience, platform, jobDescription, status } = req.body;
+
+    sqlQuery = `UPDATE applications
+      SET role='${role}', 
+      applied_date='${appliedDate}', 
+      package='${package}', 
+      employer='${employer}', 
+      location='${location}', 
+      job_link='${jobLink}',
+      experience='${experience}',
+      platform='${platform}',
+      job_description='${jobDescription}',
+      status='${status}'
+      WHERE id='${id}';`
+
+    const result = await con.query(sqlQuery);
+
+    if (!result) {
       return res.status(404).json({
         status: 404,
         message: "Application not found",
       });
     }
     next();
+
   } catch (error) {
     res.status(500).json({
       status: 500,
-      message: "Internal server error",
+      message: error.message,
       error: error.message,
     });
   }

@@ -25,14 +25,20 @@ const fetchApplication = async (req, res, next) => {
       });
     }
 
-    let newArr = result.rows.map((item) => {
-      return {
-        ...item,
-        jobDescription: item.job_description,
-        jobLink: item.job_link,
-        appliedDate: item.applied_date
-      }
-    })
+    let newArr = result.rows.map((item) => ({
+      id: item.id,
+      user_id: item.user_id,
+      status: item.status,
+      jobLink: item.job_link,
+      role: item.role,
+      experience: item.experience,
+      platform: item.platform,
+      appliedDate: item.applied_date,
+      jobDescription: item.job_description,
+      employer: item.employer,
+      package: item.package,
+      location: item.location
+    }));
 
     res.locals.applications = newArr;
 
