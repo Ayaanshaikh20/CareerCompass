@@ -1,4 +1,4 @@
-import { useState, TextField, Button, axios, toast, useNavigate, useQueryClient } from "../shared/imports";
+import { useState, TextField, Button, axios, toast, useNavigate, useQueryClient, axiosInstance } from "../shared/imports";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -23,7 +23,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/api/register", formData);
+      const response = await axiosInstance.post("/api/register", formData);
       const { status } = response.data;
       if (status === 201) {
         const { message, userData, accessToken, refreshToken } = response.data;
