@@ -5,7 +5,18 @@ const cors = require("cors");
 const path = require("path");
 require("dotenv").config();
 
-app.use(cors());
+const corsOptions = {
+  origin: [
+    "http://localhost:3000", // local development
+    "https://careercompass.cyrusesolutions.xyz", // production frontend domain
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true, // if you're sending cookies or auth headers
+};
+
+app.use(cors(corsOptions));
+
 app.use(express.json());
 
 // ✅ API routes first
