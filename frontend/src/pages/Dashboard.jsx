@@ -20,10 +20,8 @@ import {
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, ArcElement, ToolTip, Legend);
 
 const Dashboard = () => {
-  const { _id } = JSON.parse(localStorage.getItem("user"));
+  const { user_id } = JSON.parse(localStorage.getItem("user"));
   const [applications, setApplications] = useState([]);
-
-  console.log(applications, "applications");
 
   useEffect(() => {
     fetchApplications();
@@ -32,7 +30,7 @@ const Dashboard = () => {
   const fetchApplications = async () => {
     try {
       customToggleLoading({ loading: true });
-      const response = await axiosInstance.get(`/api/applications/${_id}`);
+      const response = await axiosInstance.get(`/api/applications?user_id=${user_id}`);
       const { status, applications } = response.data;
       if (status === 200) {
         setApplications(applications);

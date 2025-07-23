@@ -20,7 +20,6 @@
     "@tanstack/react-query-devtools": "^5.71.1",
     "antd": "^5.24.9",
     "axios": "^1.8.4",
-    "chart.js": "^4.4.9",
     "dayjs": "^1.11.13",
     "material-react-table": "^3.2.1",
     "moment": "^2.30.1",

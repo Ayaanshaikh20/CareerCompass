@@ -25,7 +25,7 @@ const validateUser = async (req, res, next) => {
       });
     }
 
-    const { user_id, firstName, location, phone, email, password: userPass } = user;
+    const { user_id, first_name, location, phone_number, email, password: userPass } = user;
 
     const isMatch = await bcrypt.compare(reqPass, user.password);
 
@@ -38,9 +38,9 @@ const validateUser = async (req, res, next) => {
 
     const userObject = {
       user_id,
-      firstName,
+      first_name,
       location,
-      phone,
+      phone_number,
       email,
       password: userPass,
     };

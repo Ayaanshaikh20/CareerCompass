@@ -218,8 +218,6 @@ const AppliedJobs = () => {
         accessorKey: "view",
         header: "",
         maxSize: 40,
-        enableColumnResizing: false,
-        enableResizing: false,
         Cell: ({ row }) => (
           <div className=' flex justify-center items-center w-full'>
             <ActionMenuCell
@@ -235,8 +233,6 @@ const AppliedJobs = () => {
         accessorKey: "status",
         header: "Status",
         maxSize: 100,
-        enableColumnResizing: false,
-        enableResizing: false,
         Cell: ({ row }) => {
           const status = row.original.status;
           const getColor = (status) => {
@@ -258,10 +254,8 @@ const AppliedJobs = () => {
         accessorKey: "jobLink",
         header: "Visit",
         maxSize: 70,
-        enableColumnResizing: false,
-        enableResizing: false,
         Cell: ({ row }) => (
-          <a className='text-blue-500 flex justify-center items-center w-full underline' href={row.original.jobLink}>
+          <a className='text-blue-500 items-center w-full underline' href={row.original.jobLink}>
             Link
           </a>
         ),
@@ -286,13 +280,12 @@ const AppliedJobs = () => {
   );
 
   return (
-    <section className='h-full w-[calc(100vw-210px)]'>
+    <section className='h-full w-[calc(100vw-260px)]'>
       <div className='w-full'>
         <MaterialReactTable
           data={applications || []}
           columns={columns}
           enableTopToolbar={true}
-          enableColumnResizing={true}
           enableSorting={false}
           initialState={
             {

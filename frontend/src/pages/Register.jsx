@@ -26,9 +26,11 @@ const Register = () => {
       const response = await axios.post("/api/register", formData);
       const { status } = response.data;
       if (status === 201) {
-        const { message, userData } = response.data;
+        const { message, userData, accessToken, refreshToken } = response.data;
         toast.success(message);
         localStorage.setItem("user", JSON.stringify(userData));
+        localStorage.setItem("refreshToken", refreshToken);
+        localStorage.setItem("accessToken", accessToken);
         queryClient.setQueryData(["user"], userData);
         navigate("/dashboard");
       }
