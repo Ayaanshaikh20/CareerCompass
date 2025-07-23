@@ -21,13 +21,13 @@ app.get("/", (req, res) => {
   res.send("Hello world");
 });
 
-// ✅ Then serve static files
-app.use(express.static(path.join(__dirname, "../frontend/build")));
+// // ✅ Then serve static files
+// app.use(express.static(path.join(__dirname, "../frontend/build")));
 
-// ✅ Catch-all route for SPA (after all API routes!)
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
-});
+// // ✅ Catch-all route for SPA (after all API routes!)
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
+// });
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
