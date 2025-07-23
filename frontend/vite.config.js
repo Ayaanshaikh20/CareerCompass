@@ -7,7 +7,7 @@ export default defineConfig({
     port: 3000, // Frontend port
     proxy: {
       "/api": {
-        target: "http://localhost:8000", // Backend server URL
+        target: "https://careercompass-bs0j.onrender.com/", // Backend server URL
         changeOrigin: true,
       },
     },
