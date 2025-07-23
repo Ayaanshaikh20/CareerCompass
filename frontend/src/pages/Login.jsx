@@ -32,6 +32,7 @@ const Login = () => {
         navigate("/dashboard");
       }
     } catch (error) {
+      console.log(error.message);
       const { status, message } = error?.response?.data || {};
       toast.error(status ? message : "Error logging in user");
     }

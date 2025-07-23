@@ -7,6 +7,8 @@ const axiosInstance = axios.create({
   },
 });
 
+console.log(axiosInstance, 'instance')
+
 // Request interceptor to add access token
 axiosInstance.interceptors.request.use(
   (config) => {
