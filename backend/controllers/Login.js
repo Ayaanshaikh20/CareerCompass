@@ -1,19 +1,22 @@
 const { Router } = require("express");
 const router = Router();
-const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const {
-  generateAccessToken,
-  generateRefreshToken,
-} = require("../config/generateTokens");
-
-const User = mongoose.models.User;
+const { generateAccessToken, generateRefreshToken } = require("../config/generateTokens");
+const pool = require("../config/dbConnect");
 
 const validateUser = async (req, res, next) => {
+  let sqlQuery, con;
   try {
+    // connect db
+    con = await pool.connect()
+
     const { email: userEmail, password: reqPass } = req.body;
-    const user = await User.findOne({ email: userEmail });
-    const { _id, firstName, location, phone, email, password: userPass } = user;
+
+    sqlQuery = `SELECT * FROM register_users WHERE email='${userEmail}'`;
+
+    const result = await con.query(sqlQuery);
+
+    const user = result.rows[0];
 
     if (!user) {
       return res.status(401).json({
@@ -21,7 +24,11 @@ const validateUser = async (req, res, next) => {
         status: 401,
       });
     }
+
+    const { user_id, first_name, location, phone_number, email, password: userPass } = user;
+
     const isMatch = await bcrypt.compare(reqPass, user.password);
+
     if (!isMatch) {
       return res.status(401).json({
         message: "Invalid credentials",
@@ -30,10 +37,10 @@ const validateUser = async (req, res, next) => {
     }
 
     const userObject = {
-      _id,
-      firstName,
+      user_id,
+      first_name,
       location,
-      phone,
+      phone_number,
       email,
       password: userPass,
     };
@@ -42,15 +49,20 @@ const validateUser = async (req, res, next) => {
     const refreshToken = generateRefreshToken(userObject);
 
     const { password, ...userWithoutPassword } = userObject;
+
     res.locals.userData = userWithoutPassword;
     res.locals.accessToken = accessToken;
     res.locals.refreshToken = refreshToken;
+
     next();
+
   } catch (error) {
     res.status(500).json({
       message: "Internal server error",
       status: 500,
     });
+  } finally {
+    if(con) con.release();
   }
 };
 

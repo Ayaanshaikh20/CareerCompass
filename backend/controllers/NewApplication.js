@@ -1,58 +1,61 @@
 const { Router } = require("express");
 const router = Router();
 const { verifyAccessToken } = require("../config/generateTokens");
-const mongoose = require("mongoose");
-
-const appliedJobSchema = new mongoose.Schema(
-  {
-    userId: { type: String, required: true },
-    role: { type: String, required: true },
-    appliedDate: { type: Date, required: true },
-    package: { type: String, required: true },
-    employer: { type: String, required: true },
-    location: { type: String, required: true },
-    jobLink: { type: String, default: "" },
-    experience: { type: String, default: "" },
-    platform: { type: String, default: "" },
-    jobDescription: { type: String, default: "" },
-  },
-  {
-    timestamps: true,
-  }
-);
-
-const AppliedJob = mongoose.model("Appliedjob", appliedJobSchema);
+const pool = require("../config/dbConnect");
 
 // Controller
 const createApplication = async (req, res, next) => {
+  let sqlQuery, con;
   try {
+    // connect db
+    con = await pool.connect();
+
     const applicationData = req.body;
-    const newApplication = new AppliedJob(applicationData);
-    await newApplication.save();
-    res.locals.newApplication = newApplication;
-    next();
+
+    const {
+      userId: user_id,
+      role,
+      appliedDate: applied_date,
+      package,
+      employer,
+      location,
+      jobLink: job_link,
+      experience,
+      platform,
+      jobDescription: job_description,
+      status
+    } = applicationData;
+
+    sqlQuery = `INSERT INTO applications(
+      user_id, status, job_link, role, experience, platform, applied_date, job_description, employer, package, location
+    ) VALUES (
+      '${user_id}','${status}','${job_link}','${role}','${experience}','${platform}','${applied_date}','${job_description}','${employer}','${package}', '${location}'
+    ) `
+
+    const result = await con.query(sqlQuery);
+
+    if (result) {
+      next();
+    };
   } catch (error) {
     res.status(500).json({
       status: 500,
-      message: "Internal server error",
+      message: error.message,
       error: error.message,
     });
+  } finally {
+    if (con) con.release();
   }
 };
 
 // Route
-router.post(
-  "/api/new-application",
-  verifyAccessToken,
-  createApplication,
-  async (req, res) => {
-    const { newApplication } = res.locals;
-    res.status(201).json({
-      status: 201,
-      message: "New application created",
-      newApplication,
-    });
-  }
-);
+router.post("/api/new-application", verifyAccessToken, createApplication, async (req, res) => {
+  const { newApplication } = res.locals;
+  res.status(201).json({
+    status: 201,
+    message: "New application created",
+    newApplication,
+  });
+});
 
 module.exports = router;

@@ -1,12 +1,15 @@
-const mongoose = require('mongoose');
+// db.js
+const { Pool } = require('pg');
+require("dotenv").config();
 
-const dbConnect = async () => {
-  try {
-    await mongoose.connect(process.env.MONGODB_URI);
-    console.log('MongoDB connected successfully!!');
-  } catch (error) {
-    console.error('Error connecting to MongoDB', error);
-  }
+const pgConObj = {
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  password: process.env.DB_PASSWORD,
+  port: parseInt(process.env.DB_PORT, 10),
+  database: process.env.DB_NAME,
 };
 
-module.exports = dbConnect;
+const pool = new Pool(pgConObj);
+
+module.exports = pool;

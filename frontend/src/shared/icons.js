@@ -5,8 +5,24 @@ import EditIcon from "@mui/icons-material/Edit";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import DeleteIcon from "@mui/icons-material/Delete";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 //images
 import compass from "../assets/images/compass.png";
 
-export { MdOutlineRefresh, FaPlus, CalendarOutlined, EnvironmentOutlined, EditIcon, compass, LocationOnIcon, EmailIcon, PhoneIcon };
+export {
+  MoreVertIcon,
+  MdOutlineRefresh,
+  FaPlus,
+  CalendarOutlined,
+  EnvironmentOutlined,
+  EditIcon,
+  compass,
+  LocationOnIcon,
+  EmailIcon,
+  PhoneIcon,
+  VisibilityIcon,
+  DeleteIcon,
+};

@@ -1,5 +1,5 @@
 /frontend/node_modules
-/frontend/dist
+/frontend/build
 /frontend/.env
 /frontend/.env.development
 /frontend/.env.production
@@ -15,7 +15,7 @@
 /frontend/CHANGELOG.md
 
 /backend/node_modules
-/backend/dist
+/backend/build
 /backend/.env
 /backend/.env.development
 /backend/.env.production

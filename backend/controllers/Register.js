@@ -1,28 +1,15 @@
 const { Router } = require("express");
-const mongoose = require("mongoose");
-const dbConnect = require("../config/dbConnect");
-const {
-  generateAccessToken,
-  generateRefreshToken,
-} = require("../config/generateTokens");
+const pool = require("../config/dbConnect");
+const { generateAccessToken, generateRefreshToken } = require("../config/generateTokens");
 const bcrypt = require("bcrypt");
 
 const router = Router();
 
-// Define Schema and Model
-const userSchema = new mongoose.Schema({
-  firstName: { type: String, required: true },
-  location: { type: String, required: true },
-  phone: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-});
-
-const User = mongoose.model("User", userSchema);
-
 // Middleware: Generate JWT Tokens
 const generateTokens = (req, res, next) => {
+  //generate access token
   const accessToken = generateAccessToken(req.body);
+  //generate refresh token
   const refreshToken = generateRefreshToken(req.body);
 
   res.locals.userDetails = {
@@ -30,72 +17,109 @@ const generateTokens = (req, res, next) => {
     accessToken,
     refreshToken,
   };
-
   next();
+};
+
+//check user exists
+const checkUserExist = async (req, res, next) => {
+  let sqlQuery, con;
+  try {
+
+    //connect db
+    con = await pool.connect()
+
+    // Extract email from request body
+    const { email } = res.locals.userDetails;
+
+    //check user query;
+    sqlQuery = `SELECT * FROM register_users WHERE email='${email}'`
+
+    const result = await con.query(sqlQuery);
+
+    if (result.rows.length > 0) {
+      return res.status(400).json({ status: 400, message: "Email already registered" });
+    };
+
+    next();
+
+  } catch (error) {
+    res.status(500).json({ status: 500, message: error.message });
+  } finally {
+    if (con) con.release();
+  }
 };
 
 // Middleware: Store User in DB
 const storeUser = async (req, res, next) => {
+  let sqlQuery, con;
   try {
-    const {
-      email,
-      firstName,
-      location,
-      password,
-      phone,
-      accessToken,
-      refreshToken,
-    } = res.locals.userDetails;
 
-    // Check if user exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res
-        .status(400)
-        .json({ status: 400, message: "Email already registered" });
-    }
+    //connect db
+    con = await pool.connect();
+
+    const { email, firstName, location, password, phone, accessToken, refreshToken } = res.locals.userDetails;
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create and save new user
-    const newUser = new User({
+    // Create and insert new user
+    const newUser = {
       firstName,
       location,
       phone,
       email,
       password: hashedPassword,
-    });
+    };
 
-    await newUser.save();
+    //insert user query
+    sqlQuery = `INSERT INTO register_users (
+    first_name, 
+    location, 
+    phone_number, 
+    email, 
+    password) VALUES (
+    '${newUser.firstName}', 
+    '${newUser.location}', 
+    '${newUser.phone}', 
+    '${newUser.email}', 
+    '${newUser.password}') RETURNING *`;
 
-    const { _id } = newUser;
+    const result = await con.query(sqlQuery);
 
-    // Remove password from userDetails for response
-    res.locals.userData = {
-      _id,
+    const userData = {
+      user_id: result.rows[0].user_id,
       firstName,
       email,
       phone,
-      accessToken,
-      refreshToken,
     };
+
+    // Remove password from userDetails for response
+    res.locals.userData = userData;
+    res.locals.accessToken = accessToken;
+    res.locals.refreshToken = refreshToken;
 
     next();
   } catch (error) {
-    console.error("Error storing user:", error);
-    res.status(500).json({ status: 500, message: "Internal server error" });
+    res.status(500).json({ status: 500, message: error.message });
+  } finally {
+    if (con) con.release();
   }
 };
 
 // Register Route
-router.post("/api/register", generateTokens, storeUser, (req, res) => {
-  const { userData } = res.locals;
-  res.status(201).json({
-    status: 201,
-    message: "User registered successfully",
-    userData,
+router.post("/api/register",
+  generateTokens,
+  checkUserExist,
+  storeUser,
+  (req, res) => {
+    const { userData, accessToken, refreshToken } = res.locals;
+    res.status(201).json({
+      status: 201,
+      message: "User registered successfully",
+      userData,
+      accessToken,
+      refreshToken,
+    });
   });
-});
 
 module.exports = router;

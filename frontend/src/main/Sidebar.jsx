@@ -10,8 +10,8 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className='relative h-[calc(100vh-69px)]'>
-      <div className='h-full w-44 bg-white shadow-md border-r transition-all duration-300'>
+    <div className='relative hidden md:block h-[calc(100vh-65px)]'>
+      <div className='h-full w-56 bg-white shadow-md border-r transition-all duration-300'>
         <div className='p-2 text-lg font-semibold border-b text-blue-700'>Menu</div>
         <ul className='p-2 space-y-1'>
           {menuItems.map((item, index) => {
@@ -21,7 +21,7 @@ const Sidebar = () => {
               <li key={index}>
                 <Link
                   to={item.path}
-                  className={`block px-4 py-2 rounded-md transition-colors duration-200 ${
+                  className={`block px-4 py-1 rounded-md transition-colors duration-200 ${
                     isActive ? "bg-blue-100 text-blue-700 font-medium" : "text-gray-700 hover:bg-gray-100"
                   }`}
                 >

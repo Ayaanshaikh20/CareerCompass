@@ -1,4 +1,13 @@
-import { CalendarOutlined, EditIcon, EnvironmentOutlined, FaPlus, MdOutlineRefresh } from "../shared/icons";
+import {
+  CalendarOutlined,
+  EditIcon,
+  EnvironmentOutlined,
+  FaPlus,
+  MdOutlineRefresh,
+  VisibilityIcon,
+  DeleteIcon,
+  MoreVertIcon,
+} from "../shared/icons";
 import {
   Button,
   Col,
@@ -10,7 +19,6 @@ import {
   Row,
   Select,
   Space,
-  VisibilityIcon,
   axiosInstance,
   customToggleLoading,
   dayjs,
@@ -19,14 +27,73 @@ import {
   useEffect,
   useMemo,
   useState,
+  Chip,
+  IconButton,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
 } from "../shared/imports";
+
+const ActionMenuCell = ({ row, viewDetails, deleteApplication, viewEditApplication }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleOpen = (e) => setAnchorEl(e.currentTarget);
+  const handleClose = () => setAnchorEl(null);
+
+  const item = row.original;
+
+  return (
+    <>
+      <IconButton size='small' onClick={handleOpen}>
+        <MoreVertIcon />
+      </IconButton>
+      <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            viewDetails(item);
+          }}
+        >
+          <ListItemIcon>
+            <VisibilityIcon fontSize='small' sx={{ color: "orange" }} />
+          </ListItemIcon>
+          <ListItemText primary='View' />
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            viewEditApplication(item);
+          }}
+        >
+          <ListItemIcon>
+            <EditIcon fontSize='small' sx={{ color: "green" }} />
+          </ListItemIcon>
+          <ListItemText primary='Edit' />
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            deleteApplication(item);
+          }}
+        >
+          <ListItemIcon>
+            <DeleteIcon fontSize='small' sx={{ color: "red" }} />
+          </ListItemIcon>
+          <ListItemText primary='Delete' />
+        </MenuItem>
+      </Menu>
+    </>
+  );
+};
 
 const AppliedJobs = () => {
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState({});
-  const { accessToken, _id } = JSON.parse(localStorage.getItem("user"));
+  const { user_id } = JSON.parse(localStorage.getItem("user"));
   const defaultFormData = {
-    userId: _id,
+    userId: user_id,
     role: "",
     appliedDate: "",
     package: "",
@@ -36,6 +103,7 @@ const AppliedJobs = () => {
     experience: "",
     platform: "",
     jobDescription: "",
+    status: "",
   };
   const [formData, setFormData] = useState(defaultFormData);
   const [applications, setApplications] = useState([]);
@@ -60,9 +128,10 @@ const AppliedJobs = () => {
     if (!formData.employer) newErrors.employer = "Employer is required";
     if (!formData.location) newErrors.location = "Location is required";
     if (!formData.jobLink) newErrors.jobLink = "Job link is required";
-    else if (!/^https?:\/\/.+/.test(formData.jobLink)) newErrors.jobLink = "Enter a valid URL";
+    else if (!/^https?:\/\/.+/.test(formData.jobLink)) newErrors.jobLink = "Enter a valid URL (https://...";
     if (!formData.experience) newErrors.experience = "Experience is required";
     if (!formData.platform) newErrors.platform = "Platform is required";
+    if (!formData.status) newErrors.status = "Status is required";
     if (!formData.jobDescription) newErrors.jobDescription = "Job description is required";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -83,21 +152,24 @@ const AppliedJobs = () => {
         await fetchApplications();
       }
     } catch (error) {
-      const { status, message } = error?.response?.data || {};
-      toast.error(message || "Error submitting form");
+      const { message } = error?.response?.data || {};
+      if (!error.customSessionExpired) {
+        toast.error(message || "Error submitting form");
+      }
     }
   };
 
   const fetchApplications = async () => {
     try {
       customToggleLoading({ loading: true });
-      const response = await axiosInstance.get(`/api/applications/${_id}`);
-      const { status } = response.data;
+      const response = await axiosInstance.get(`/api/applications?user_id=${user_id}`);
+      const { status, applications, message } = response.data;
       if (status === 200) {
-        setApplications(response.data.applications);
+        setApplications(applications);
+        toast.success(message)
       }
     } catch (error) {
-      const { status, message } = error?.response?.data || {};
+      const { message } = error?.response?.data || {};
       if (!error.customSessionExpired) {
         toast.error(message || "Error fetching applications");
       }
@@ -118,42 +190,89 @@ const AppliedJobs = () => {
     setErrors({});
   };
 
-  const clearDrawerDetails = () => {
-    setIsViewDetailsDrawer(false);
-  };
-
-  const showDrawer = () => {
-    setOpen(true);
-  };
-
   const viewDetails = (job) => {
     setSelectedJob(job);
     setIsViewDetailsDrawer(true);
+  };
+
+  const deleteApplication = async (selectedApplication) => {
+    try {
+      const { user_id, id } = selectedApplication;
+      let response = await axiosInstance.delete(`/api/delete-application?user_id=${user_id}&application_id=${id}`);
+      const { status } = response.data;
+      if (status === 200) {
+        await fetchApplications();
+        toast.success("Application deleted successfully");
+      }
+    } catch (error) {
+      const { message } = error?.response?.data || {};
+      if (!error.customSessionExpired) {
+        toast.error(message || "Error deleting application");
+      }
+    }
   };
 
   const columns = useMemo(
     () => [
       {
         accessorKey: "view",
-        header: "Actions",
+        header: "",
+        maxSize: 40,
         Cell: ({ row }) => (
-          <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-            <VisibilityIcon style={{ cursor: "pointer", color: "orange" }} onClick={() => viewDetails(row.original)} />
-            <EditIcon style={{ cursor: "pointer", color: "green" }} onClick={() => viewEditApplication(row.original)} />
+          <div className=' flex justify-center items-center w-full'>
+            <ActionMenuCell
+              deleteApplication={deleteApplication}
+              viewDetails={viewDetails}
+              viewEditApplication={viewEditApplication}
+              row={row}
+            />
           </div>
         ),
       },
-      { accessorKey: "role", header: "Role" },
-      { accessorKey: "experience", header: "Experience" },
-      { accessorKey: "platform", header: "Platform" },
+      {
+        accessorKey: "status",
+        header: "Status",
+        maxSize: 100,
+        Cell: ({ row }) => {
+          const status = row.original.status;
+          const getColor = (status) => {
+            switch (status.toLowerCase()) {
+              case "pending":
+                return "warning";
+              case "approved":
+                return "success";
+              case "rejected":
+                return "error";
+              default:
+                return "default";
+            }
+          };
+          return <Chip label={status} color={getColor(status)} size='small' />;
+        },
+      },
+      {
+        accessorKey: "jobLink",
+        header: "Visit",
+        maxSize: 70,
+        Cell: ({ row }) => (
+          <a className='text-blue-500 items-center w-full underline' href={row.original.jobLink}>
+            Link
+          </a>
+        ),
+      },
+      { accessorKey: "role", header: "Role", minSize: 350 },
+      { accessorKey: "experience", header: "Experience", maxSize: 120 },
+      { accessorKey: "platform", header: "Platform", maxSize: 100 },
       {
         accessorKey: "appliedDate",
         header: "Applied Date",
-        Cell: ({ row }) => <span>{moment(row.original.appliedDate).format("DD/MM/YYYY")}</span>,
+        maxSize: 130,
+        Cell: ({ row }) => <span>{moment(row.original.appliedDate).format("DD-MMM-YYYY")}</span>,
       },
       {
         accessorKey: "jobDescription",
         header: "Job Description",
+        minSize: 400,
         Cell: ({ row }) => <span className=' text-wrap'>{row.original.jobDescription}</span>,
       },
     ],
@@ -161,15 +280,18 @@ const AppliedJobs = () => {
   );
 
   return (
-    <section className='h-full w-[calc(100vw-210px)]'>
+    <section className='h-full w-[calc(100vw-260px)]'>
       <div className='w-full'>
         <MaterialReactTable
-          data={applications}
+          data={applications || []}
           columns={columns}
           enableTopToolbar={true}
-          enableColumnResizing={false}
-          columnResizeMode='onChange'
           enableSorting={false}
+          initialState={
+            {
+              density: "compact"
+            }
+          }
           enableBottomToolbar={false}
           enableColumnFilters={false}
           enableDensityToggle={false}
@@ -181,7 +303,12 @@ const AppliedJobs = () => {
           renderTopToolbarCustomActions={() => {
             return (
               <div className=' flex gap-3'>
-                <button className=' p-2' onClick={showDrawer}>
+                <button
+                  className=' p-2'
+                  onClick={() => {
+                    setOpen(true);
+                  }}
+                >
                   <FaPlus size={20} className=' text-green-700' />
                 </button>
                 <button onClick={fetchApplications}>
@@ -226,9 +353,21 @@ const AppliedJobs = () => {
           }}
         />
       </div>
-      <Drawer title='Job Details' placement='right' width={480} onClose={() => clearDrawerDetails()} open={isViewDetailsDrawer}>
+      <Drawer
+        title='Job Details'
+        placement='right'
+        width={480}
+        onClose={() => setIsViewDetailsDrawer(false)}
+        open={isViewDetailsDrawer}
+      >
         {selectedJob && (
-          <Descriptions bordered column={1} size='small' labelStyle={{ fontWeight: 600, width: 140 }} contentStyle={{ wordBreak: "break-word" }}>
+          <Descriptions
+            bordered
+            column={1}
+            size='small'
+            labelStyle={{ fontWeight: 600, width: 140 }}
+            contentStyle={{ wordBreak: "break-word" }}
+          >
             <Descriptions.Item label='Role'>{selectedJob.role}</Descriptions.Item>
             <Descriptions.Item label='Employer'>{selectedJob.employer}</Descriptions.Item>
             <Descriptions.Item label='Package'>{selectedJob.package}</Descriptions.Item>
@@ -266,7 +405,11 @@ const AppliedJobs = () => {
         <Row gutter={16}>
           <Col span={12} className='mb-4'>
             <label>Role</label>
-            <Input value={formData.role} onChange={(e) => handleChange("role", e.target.value)} placeholder='Enter role' />
+            <Input
+              value={formData.role}
+              onChange={(e) => handleChange("role", e.target.value)}
+              placeholder='Enter role'
+            />
             {errors.role && <p className='text-red-500 text-xs'>{errors.role}</p>}
           </Col>
           <Col span={12} className='mb-4'>
@@ -284,7 +427,12 @@ const AppliedJobs = () => {
         <Row gutter={16}>
           <Col span={12} className='mb-4'>
             <label className='block mb-1'>Package (LPA)</label>
-            <Input name='package' value={formData.package} onChange={(e) => handleChange("package", e.target.value)} placeholder='Enter package' />
+            <Input
+              name='package'
+              value={formData.package}
+              onChange={(e) => handleChange("package", e.target.value)}
+              placeholder='Enter package'
+            />
             {errors.package && <p className='text-red-500 text-xs'>{errors.package}</p>}
           </Col>
           <Col span={12} className='mb-4'>
@@ -311,11 +459,30 @@ const AppliedJobs = () => {
             />
             {errors.location && <p className='text-red-500 text-xs'>{errors.location}</p>}
           </Col>
+          <Col span={12} className='mb-4'>
+            <label className='block mb-1'>Status</label>
+            <Select
+              style={{ width: "100%" }}
+              placeholder='Select Status'
+              value={formData.status}
+              onChange={(selectedValue) => handleChange("status", selectedValue)}
+            >
+              <Select.Option value='pending'>Pending</Select.Option>
+              <Select.Option value='approved'>Approved</Select.Option>
+              <Select.Option value='rejected'>Rejected</Select.Option>
+            </Select>
+            {errors.status && <p className='text-red-500 text-xs'>{errors.status}</p>}
+          </Col>
         </Row>
         <Row gutter={16}>
           <Col span={12} className='mb-4'>
             <label className='block mb-1'>Link of the job</label>
-            <Input name='jobLink' value={formData.jobLink} onChange={(e) => handleChange("jobLink", e.target.value)} placeholder='Enter job link' />
+            <Input
+              name='jobLink'
+              value={formData.jobLink}
+              onChange={(e) => handleChange("jobLink", e.target.value)}
+              placeholder='Enter job link'
+            />
             {errors.jobLink && <p className='text-red-500 text-xs'>{errors.jobLink}</p>}
           </Col>
           <Col span={12} className='mb-4'>
@@ -353,6 +520,7 @@ const AppliedJobs = () => {
             <label className='block mb-1'>Job Description</label>
             <Input
               name='jobDescription'
+              value={formData.jobDescription}
               onChange={(e) => {
                 handleChange("jobDescription", e.target.value);
               }}

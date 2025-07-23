@@ -1,43 +1,57 @@
 const { Router } = require("express");
 const router = Router();
 const { verifyAccessToken } = require("../config/generateTokens");
-const mongoose = require("mongoose");
-
-const AppliedJob = mongoose.models.Appliedjob;
+const pool = require("../config/dbConnect");
 
 const editApplication = async (req, res, next) => {
-    try {
-        const { _id } = req.body;
-        const application = await AppliedJob.findByIdAndUpdate(_id, req.body, {
-            new: true,
-        });
-        if (!application) {
-            return res.status(404).json({
-                status: 404,
-                message: "Application not found",
-            });
-        }
-        next();
-    } catch (error) {
-        res.status(500).json({
-            status: 500,
-            message: "Internal server error",
-            error: error.message,
-        });
+
+  let sqlQuery, con;
+
+  try {
+
+    // connect db
+    con = await pool.connect()
+
+    const { id, role, appliedDate, package, employer, location, jobLink, experience, platform, jobDescription, status } = req.body;
+
+    sqlQuery = `UPDATE applications
+      SET role='${role}', 
+      applied_date='${appliedDate}', 
+      package='${package}', 
+      employer='${employer}', 
+      location='${location}', 
+      job_link='${jobLink}',
+      experience='${experience}',
+      platform='${platform}',
+      job_description='${jobDescription}',
+      status='${status}'
+      WHERE id='${id}';`
+
+    const result = await con.query(sqlQuery);
+
+    if (!result) {
+      return res.status(404).json({
+        status: 404,
+        message: "Application not found",
+      });
     }
+    next();
+
+  } catch (error) {
+    res.status(500).json({
+      status: 500,
+      message: error.message,
+      error: error.message,
+    });
+  }
 };
 
 // Route
-router.post(
-    "/api/edit-application",
-    verifyAccessToken,
-    editApplication,
-    async (req, res) => {
-        res.status(200).json({
-            status: 200,
-            message: "Application updated successfully",
-        });
-    }
-);
+router.post("/api/edit-application", verifyAccessToken, editApplication, async (req, res) => {
+  res.status(200).json({
+    status: 200,
+    message: "Application updated successfully",
+  });
+});
 
 module.exports = router;
