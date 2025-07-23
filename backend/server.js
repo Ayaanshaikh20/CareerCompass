@@ -9,13 +9,13 @@ app.use(cors());
 app.use(express.json());
 
 // ✅ API routes first
-app.use(require("./controllers/register"));
-app.use(require("./controllers/login"));
-app.use(require("./controllers/applications"));
-app.use(require("./controllers/refreshToken"));
-app.use(require("./controllers/newApplication"));
-app.use(require("./controllers/editApplication"));
-app.use(require("./controllers/deleteApplication"));
+app.use(require("./controllers/Register"));
+app.use(require("./controllers/Login"));
+app.use(require("./controllers/Applications"));
+app.use(require("./controllers/RefreshToken"));
+app.use(require("./controllers/NewApplication"));
+app.use(require("./controllers/EditApplication"));
+app.use(require("./controllers/DeleteApplication"));
 
 app.get("/", (req, res) => {
   res.send("Hello world");
