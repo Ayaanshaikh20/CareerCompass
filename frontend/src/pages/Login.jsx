@@ -20,7 +20,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axiosInstance.post("/api/login", formData);
+      const response = await axiosInstance.post("https://careercompass-bs0j.onrender.com/api/login", formData);
       const { status } = response.data;
       if (status === 200) {
         const { message, userData, refreshToken, accessToken } = response.data;
