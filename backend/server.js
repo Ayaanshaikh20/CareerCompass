@@ -15,7 +15,7 @@ const corsOptions = {
   credentials: true, // if you're sending cookies or auth headers
 };
 
-app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 app.use(express.json());
 
