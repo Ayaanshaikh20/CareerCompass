@@ -2,11 +2,12 @@ const express = require("express");
 const app = express();
 const port = 8000;
 const cors = require("cors");
-const path = require("path");
 require("dotenv").config();
 
 app.use(cors({
-  origin: 'https://careercompass.cyrusesolutions.xyz',
+  origin: ['https://careercompass.cyrusesolutions.xyz'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
 
