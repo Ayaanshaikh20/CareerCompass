@@ -8,6 +8,8 @@ const pgConObj = {
   password: process.env.DB_PASSWORD,
   port: parseInt(process.env.DB_PORT, 10),
   database: process.env.DB_NAME,
+  ssl: true,
+  family: 4
 };
 
 const pool = new Pool(pgConObj);
