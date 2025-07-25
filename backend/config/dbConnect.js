@@ -8,13 +8,27 @@ const pgConObj = {
   password: process.env.DB_PASSWORD,
   port: parseInt(process.env.DB_PORT, 10),
   database: process.env.DB_NAME,
-  ssl: {
-    rejectUnauthorized: false,
-  },
   family: 4
 };
 
 
 const pool = new Pool(pgConObj);
+
+pool.on('error', (err) => {
+  console.error('Unexpected error on idle client', err);
+  process.exit(-1);
+});
+
+// Test connection on startup
+(async () => {
+  try {
+    const client = await pool.connect();
+    console.log('Database connected successfully');
+    client.release();
+  } catch (err) {
+    console.error('Database connection error:', err);
+    process.exit(1);
+  }
+})();
 
 module.exports = pool;
