@@ -54,20 +54,20 @@ import {
 } from "chart.js";
 
 //Components
-import { customToggleLoading } from "../shared/CustomLoading";
+import { customToggleLoading } from "../components/CustomLoading";
 import axiosInstance from "../config/axiosInstance";
-import MainLayout from "../main/MainLayout";
+import MainLayout from "../layouts/MainLayout";
 import Home from "../pages/Home";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
-import AuthLayout from "../main/AuthLayout";
+import AuthLayout from "../layouts/AuthLayout";
 import Settings from "../pages/Settings";
 import Profile from "../pages/Profile";
 import AppliedJobs from "../pages/AppliedJobs";
 import Router from "../config/Router";
-import Navbar from "../main/Navbar";
-import Sidebar from "../main/Sidebar";
+import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
 
 export {
   Menu,
