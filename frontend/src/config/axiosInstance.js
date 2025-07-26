@@ -1,7 +1,7 @@
 import { toast, axios } from "../shared/imports";
 
 const key = import.meta.env.VITE_PRODUCTION_URL
-console.log(key, 'key');
+console.log(key, 'key pair');
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_PRODUCTION_URL,
