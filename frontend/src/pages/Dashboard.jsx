@@ -31,9 +31,9 @@ const Dashboard = () => {
     try {
       customToggleLoading({ loading: true });
       const response = await axiosInstance.get(`/api/applications?user_id=${user_id}`);
-      const { status, data } = response.data;
+      const { status, applications } = response.data;
       if (status === 200) {
-        setApplications(data);
+        setApplications(applications);
       }
     } catch (error) {
       const { message } = error?.response?.data || {};

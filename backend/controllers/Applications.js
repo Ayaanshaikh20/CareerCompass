@@ -1,4 +1,4 @@
-const { Router } = require("express");
+const { Router, application } = require("express");
 const { verifyAccessToken } = require("../config/generateTokens");
 const pool = require("../config/dbConnect");
 
@@ -22,7 +22,7 @@ const fetchApplication = async (req, res, next) => {
       return res.status(200).json({
         status: 200,
         message: "No applications",
-        data: []
+        applications: []
       });
     }
 
