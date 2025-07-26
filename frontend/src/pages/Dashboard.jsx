@@ -45,17 +45,17 @@ const Dashboard = () => {
     }
   };
 
-  const dateFrequency = applications.reduce((acc, item) => {
+  const dateFrequency = applications && applications.reduce((acc, item) => {
     const month = moment(item.appliedDate).format("DD-MMM-YYYY");
     acc[month] = (acc[month] || 0) + 1;
     return acc;
-  }, {});
+  }, {}) || [];
 
   const monthFrequency = applications.reduce((acc, item) => {
     const month = moment(item.appliedDate).format("MMM-YYYY");
     acc[month] = (acc[month] || 0) + 1;
     return acc;
-  }, {});
+  }, {}) || [];
 
   // Prepare chart data based on real applications
   const dateLabels = Object.keys(dateFrequency);
