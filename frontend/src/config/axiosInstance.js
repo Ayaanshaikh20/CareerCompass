@@ -1,14 +1,13 @@
 import { toast, axios } from "../shared/imports";
 
-const key = import.meta.env.VITE_PRODUCTION_URL
-console.log(key, 'key');
-
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_PRODUCTION_URL,
+  baseURL: process.env.NODE_ENV == "production" ? import.meta.env.VITE_PRODUCTION_URL : import.meta.env.VITE_LOCAL_API,
   headers: {
     "Content-Type": "application/json",
   },
 });
+
+console.log(process.env.NODE_ENV == "production" ? import.meta.env.VITE_PRODUCTION_URL : import.meta.env.VITE_LOCAL_API)
 
 // Request interceptor to add access token
 axiosInstance.interceptors.request.use(

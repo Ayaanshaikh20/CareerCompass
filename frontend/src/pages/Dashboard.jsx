@@ -31,9 +31,9 @@ const Dashboard = () => {
     try {
       customToggleLoading({ loading: true });
       const response = await axiosInstance.get(`/api/applications?user_id=${user_id}`);
-      const { status, applications } = response.data;
+      const { status, data } = response.data;
       if (status === 200) {
-        setApplications(applications);
+        setApplications(data);
       }
     } catch (error) {
       const { message } = error?.response?.data || {};
@@ -45,7 +45,7 @@ const Dashboard = () => {
     }
   };
 
-  const dateFrequency = applications && applications.reduce((acc, item) => {
+  const dateFrequency = applications.reduce((acc, item) => {
     const month = moment(item.appliedDate).format("DD-MMM-YYYY");
     acc[month] = (acc[month] || 0) + 1;
     return acc;
