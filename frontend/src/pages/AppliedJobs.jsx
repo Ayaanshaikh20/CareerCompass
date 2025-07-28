@@ -33,6 +33,7 @@ import {
   MenuItem,
   ListItemIcon,
   ListItemText,
+  Theme
 } from "../shared/imports";
 
 const ActionMenuCell = ({ row, viewDetails, deleteApplication, viewEditApplication }) => {
@@ -166,7 +167,6 @@ const AppliedJobs = () => {
       const { status, applications, message } = response.data;
       if (status === 200) {
         setApplications(applications);
-        toast.success(message)
       }
     } catch (error) {
       const { message } = error?.response?.data || {};
@@ -280,7 +280,7 @@ const AppliedJobs = () => {
   );
 
   return (
-    <section className='h-full w-[calc(100vw-260px)]'>
+    <section className='h-full p-6 pt-16 bg-zinc-900'>
       <div className='w-full'>
         <MaterialReactTable
           data={applications || []}
@@ -394,12 +394,11 @@ const AppliedJobs = () => {
         onClose={clearDrawer}
         width={700}
         extra={
-          <Space>
-            <Button onClick={clearDrawer}>Cancel</Button>
-            <Button variant='contained' onClick={submitOrEditApplication}>
+          <Theme>
+            <Button variant='solid' size="2" onClick={submitOrEditApplication}>
               Submit
             </Button>
-          </Space>
+          </Theme>
         }
       >
         <Row gutter={16}>

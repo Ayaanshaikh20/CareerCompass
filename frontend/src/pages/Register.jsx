@@ -45,76 +45,192 @@ const Register = () => {
   };
 
   return (
-    <div className='flex flex-col items-center justify-center mt-24 p-4'>
-      <div className='bg-white shadow-lg rounded-lg p-4 w-full max-w-sm'>
-        <h2 className='text-xl font-bold text-gray-800 mb-3 text-center'>Register</h2>
-        <form onSubmit={handleSubmit} className='flex flex-col gap-5'>
-          <TextField
-            label='Firstname'
-            variant='outlined'
-            name='firstName'
-            size='small'
+    <main className="min-h-screen flex items-center justify-center bg-[#0f0f0f] px-4 text-white font-sans">
+      <div className="w-full max-w-md bg-[#1a1a1a] border border-[#333] rounded-xl shadow-lg p-8">
+        <h2 className="text-xl font-bold text-white mb-3 text-center">Register</h2>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5 text-sm text-gray-200">
+          {/* Firstname */}
+          <div>
+            <label htmlFor="firstName" className="block mb-1">Firstname</label>
+            <TextField
+              id="firstName"
+              name="firstName"
+              variant="outlined"
+              size="small"
+              fullWidth
+              required
+              value={formData.firstName}
+              onChange={handleChange}
+              placeholder="Enter your name"
+              InputLabelProps={{ shrink: false }}
+              InputProps={{
+                style: {
+                  color: "white",
+                  backgroundColor: "#121212",
+                },
+              }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': { borderColor: "#444" },
+                  '&:hover fieldset': { borderColor: "#888" },
+                  '&.Mui-focused fieldset': { borderColor: "#1976d2" },
+                },
+              }}
+            />
+          </div>
+
+          {/* Location */}
+          <div>
+            <label htmlFor="location" className="block mb-1">Location</label>
+            <TextField
+              id="location"
+              name="location"
+              variant="outlined"
+              size="small"
+              fullWidth
+              required
+              value={formData.location}
+              onChange={handleChange}
+              placeholder="Enter your location"
+              InputLabelProps={{ shrink: false }}
+              InputProps={{
+                style: {
+                  color: "white",
+                  backgroundColor: "#121212",
+                },
+              }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': { borderColor: "#444" },
+                  '&:hover fieldset': { borderColor: "#888" },
+                  '&.Mui-focused fieldset': { borderColor: "#1976d2" },
+                },
+              }}
+            />
+          </div>
+
+          {/* Phone */}
+          <div>
+            <label htmlFor="phone" className="block mb-1">Phone Number</label>
+            <TextField
+              id="phone"
+              name="phone"
+              type="tel"
+              size="small"
+              fullWidth
+              required
+              inputProps={{
+                minLength: 10,
+                maxLength: 10,
+                inputMode: "numeric",
+                pattern: "\\d{10}",
+              }}
+              helperText="Phone number must be 10 digits"
+              value={formData.phone}
+              onChange={handleChange}
+              placeholder="Enter your phone"
+              InputLabelProps={{ shrink: false }}
+              InputProps={{
+                style: {
+                  color: "white",
+                  backgroundColor: "#121212",
+                },
+              }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': { borderColor: "#444" },
+                  '&:hover fieldset': { borderColor: "#888" },
+                  '&.Mui-focused fieldset': { borderColor: "#1976d2" },
+                },
+                '& .MuiFormHelperText-root': {
+                  color: "#aaa",
+                  fontSize: "0.75rem",
+                },
+              }}
+            />
+          </div>
+
+          {/* Email */}
+          <div>
+            <label htmlFor="email" className="block mb-1">Email</label>
+            <TextField
+              id="email"
+              name="email"
+              type="email"
+              size="small"
+              fullWidth
+              required
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Enter your email"
+              InputLabelProps={{ shrink: false }}
+              InputProps={{
+                style: {
+                  color: "white",
+                  backgroundColor: "#121212",
+                },
+              }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': { borderColor: "#444" },
+                  '&:hover fieldset': { borderColor: "#888" },
+                  '&.Mui-focused fieldset': { borderColor: "#1976d2" },
+                },
+              }}
+            />
+          </div>
+
+          {/* Password */}
+          <div>
+            <label htmlFor="password" className="block mb-1">Password</label>
+            <TextField
+              id="password"
+              name="password"
+              type="password"
+              size="small"
+              fullWidth
+              required
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Enter your password"
+              InputLabelProps={{ shrink: false }}
+              InputProps={{
+                style: {
+                  color: "white",
+                  backgroundColor: "#121212",
+                },
+              }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': { borderColor: "#444" },
+                  '&:hover fieldset': { borderColor: "#888" },
+                  '&.Mui-focused fieldset': { borderColor: "#1976d2" },
+                },
+              }}
+            />
+          </div>
+
+          {/* Submit */}
+          <Button
+            type="submit"
+            variant="contained"
+            size="small"
             fullWidth
-            required
-            value={formData.firstName}
-            onChange={handleChange}
-          />
-          <TextField
-            label='Location'
-            variant='outlined'
-            name='location'
-            size='small'
-            fullWidth
-            required
-            value={formData.location}
-            onChange={handleChange}
-          />
-          <TextField
-            label='Phone number'
-            variant='outlined'
-            name='phone'
-            type='tel'
-            inputProps={{
-              minLength: 10,
-              maxLength: 10,
-              inputMode: "numeric",
-              pattern: "\\d{10}",
+            sx={{
+              mt: 1,
+              bgcolor: "#1976d2",
+              color: "#fff",
+              textTransform: "none",
+              '&:hover': {
+                bgcolor: "#1565c0",
+              },
             }}
-            helperText='Phone number must be 10 digits'
-            size='small'
-            fullWidth
-            required
-            value={formData.phone}
-            onChange={handleChange}
-          />
-          <TextField
-            label='Email'
-            variant='outlined'
-            name='email'
-            type='email'
-            size='small'
-            fullWidth
-            required
-            value={formData.email}
-            onChange={handleChange}
-          />
-          <TextField
-            label='Password'
-            variant='outlined'
-            name='password'
-            type='password'
-            size='small'
-            fullWidth
-            required
-            value={formData.password}
-            onChange={handleChange}
-          />
-          <Button type='submit' variant='contained' color='primary' className='mt-2' size='small' fullWidth>
+          >
             Register
           </Button>
         </form>
       </div>
-    </div>
+    </main>
   );
 };
 

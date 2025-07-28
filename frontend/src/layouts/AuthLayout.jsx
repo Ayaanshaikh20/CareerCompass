@@ -6,7 +6,7 @@ const AuthLayout = () => {
       <Navbar />
       <div className='flex flex-1 overflow-hidden'>
         <Sidebar />
-        <div className='p-4 w-full overflow-y-auto'>
+        <div className='w-full overflow-y-auto'>
           <Outlet />
         </div>
       </div>

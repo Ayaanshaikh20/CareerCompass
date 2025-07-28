@@ -1,9 +1,12 @@
+import "@radix-ui/themes/styles.css";
+import "../assets/styles.css";
+import "@fontsource/roboto";
+
 //React
 import { useEffect, useState, useMemo } from "react";
 
 //Material UI/Icons
 import {
-  Button,
   Typography,
   TextField,
   Avatar,
@@ -53,6 +56,12 @@ import {
   Legend,
 } from "chart.js";
 
+//Radix
+import { Theme, Button } from "@radix-ui/themes";
+
+//typing writer
+import { Typewriter } from 'react-simple-typewriter';
+
 //Components
 import { customToggleLoading } from "../components/CustomLoading";
 import axiosInstance from "../config/axiosInstance";
@@ -70,6 +79,8 @@ import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 
 export {
+  Typewriter,
+  Theme,
   Menu,
   MenuItem,
   ListItemIcon,

@@ -7,7 +7,7 @@ const axiosInstance = axios.create({
   },
 });
 
-console.log(process.env.NODE_ENV == "production" ? import.meta.env.VITE_PRODUCTION_URL : import.meta.env.VITE_LOCAL_API, 'endpoint')
+console.log(process.env.NODE_ENV == "production" ? import.meta.env.VITE_PRODUCTION_URL : import.meta.env.VITE_LOCAL_API)
 
 // Request interceptor to add access token
 axiosInstance.interceptors.request.use(

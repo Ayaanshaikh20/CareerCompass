@@ -22,88 +22,92 @@ const Navbar = () => {
   };
 
   return (
-    <>
-      <AppBar
-        position='static'
-        elevation={0}
-        sx={{
-          backgroundColor: "#ffffff",
-          borderBottom: "1px solid #e5e7eb",
-        }}
-      >
-        <Toolbar className='w-full flex justify-between items-center px-6 py-1'>
-          {/* Brand Logo and Title */}
-          <div className='flex items-center cursor-pointer' onClick={() => navigate("/")}>
-            <Typography variant='h6' component='div' sx={{ color: "#1E3A8A", fontWeight: 600 }}>
-              Career C
-            </Typography>
-            <img src={compass} alt='compass_logo' className='h-5 w-5' />
-            <Typography variant='h6' component='div' sx={{ color: "#1E3A8A", fontWeight: 600 }}>
-              mpass
-            </Typography>
-          </div>
+    <AppBar
+      position='fixed'
+      elevation={1}
+      sx={{
+        backgroundColor: "#171717",
+        borderBottom: "1px solid #434345",
+      }}
+    >
+      <Toolbar className='w-full flex justify-between items-center px-2 !min-h-0 py-2'>
 
-          {/* Right Side Controls */}
-          <div className='flex items-center gap-3'>
-            {!user ? (
-              <>
-                <Button
-                  onClick={handleClickOpen}
-                  size='small'
-                  sx={{
-                    backgroundColor: "#2563EB",
-                    color: "white",
-                    textTransform: "none",
-                    fontWeight: 500,
-                    px: 2,
-                    "&:hover": {
-                      backgroundColor: "#1D4ED8",
-                    },
-                  }}
-                >
-                  Login
-                </Button>
-                <Button
-                  variant='outlined'
-                  size='small'
-                  onClick={() => navigate("/register")}
-                  sx={{
-                    borderColor: "#2563EB",
-                    color: "#2563EB",
-                    textTransform: "none",
-                    fontWeight: 500,
-                    "&:hover": {
-                      backgroundColor: "#EFF6FF",
-                      borderColor: "#1D4ED8",
-                      color: "#1D4ED8",
-                    },
-                  }}
-                >
-                  Register
-                </Button>
-              </>
-            ) : (
+        {/* Brand Logo and Title */}
+        <div className='flex items-center cursor-pointer space-x-1' onClick={() => navigate("/")}>
+          <Typography
+            variant='h6'
+            component='div'
+            sx={{
+              fontSize: "1.1rem",
+              color: "#ffffff", // Tailwind blue-500
+              fontWeight: 500,
+              letterSpacing: "0.5px",
+            }}
+          >
+            Career
+          </Typography>
+          <img src={compass} alt='compass_logo' className='h-5 w-5' />
+          <Typography
+            variant='h6'
+            component='div'
+            sx={{
+              fontSize: "1.1rem",
+              color: "#ffffff",
+              fontWeight: 500,
+              letterSpacing: "0.5px",
+            }}
+          >
+            Compass
+          </Typography>
+        </div>
+
+        {/* Right Side Controls */}
+        <div className='flex items-center gap-2'>
+          {!user ? (
+            <>
               <Button
-                size='small'
-                onClick={handleLogout}
-                sx={{
-                  backgroundColor: "#2563EB",
-                  color: "white",
-                  textTransform: "none",
-                  fontWeight: 500,
-                  px: 2,
-                  "&:hover": {
-                    backgroundColor: "#1D4ED8",
-                  },
+                onClick={handleClickOpen}
+                variant="solid"
+                size="2"
+                style={{
+                  backgroundColor: "black",
+                  border: "1px solid #434345"
+                }}
+                className=" tracking-wide"
+                radius="large"
+              >
+                Login
+              </Button>
+              <Button
+                onClick={() => navigate("/register")}
+                size="2"
+                variant="solid"
+                style={{
+                  backgroundColor: "white",
+                  color: 'black',
+                  border: "1px solid #434345"
                 }}
               >
-                Logout
+                Register
               </Button>
-            )}
-          </div>
-        </Toolbar>
-      </AppBar>
-    </>
+            </>
+          ) : (
+            <Button
+              onClick={handleLogout}
+              size="2"
+              variant="solid"
+              style={{
+                backgroundColor: "white",
+                color: 'black',
+                border: "1px solid #434345"
+              }}
+            >
+              Logout
+            </Button>
+          )}
+        </div>
+      </Toolbar>
+    </AppBar>
   );
 };
 

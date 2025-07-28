@@ -1,4 +1,4 @@
-import { axios, useState, TextField, Button, Link, useNavigate, toast, useQueryClient, axiosInstance } from "../shared/imports";
+import { useState, TextField, Button, useNavigate, toast, useQueryClient, axiosInstance } from "../shared/imports";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -32,46 +32,111 @@ const Login = () => {
         navigate("/dashboard");
       }
     } catch (error) {
-      console.log(error.message);
       const { status, message } = error?.response?.data || {};
       toast.error(status ? message : "Error logging in user");
     }
   };
 
   return (
-    <>
-      <div className='flex justify-center items-center mt-24'>
-        <div className='bg-white p-6 rounded-lg shadow-lg w-80'>
-          <h2 className='text-2xl font-semibold text-center mb-4'>Login</h2>
-          <form onSubmit={handleSubmit}>
-            <div className='mb-4'>
-              <TextField name='email' label='Email *' fullWidth size='small' variant='outlined' value={formData.email} onChange={handleChange} />
-            </div>
-            <div className='mb-4'>
-              <TextField
-                name='password'
-                label='Password *'
-                type='password'
-                fullWidth
-                size='small'
-                variant='outlined'
-                value={formData.password}
-                onChange={handleChange}
-              />
-            </div>
-            <div className='text-sm mb-4'>
-              Don't have an account?{" "}
-              <Link to='/register' className='text-blue-500 hover:underline'>
-                Register
-              </Link>
-            </div>
-            <Button type='submit' variant='contained' color='primary' fullWidth size='small' className='hover:bg-blue-600 transition'>
-              Login
-            </Button>
-          </form>
+    <main className="min-h-screen flex items-center justify-center bg-[#0f0f0f] px-4 text-white font-sans">
+      <div className="w-full max-w-md bg-[#1a1a1a] border border-[#333] rounded-xl shadow-lg p-8">
+        <h1 className="text-3xl font-bold text-center text-white mb-6">Sign in to your account</h1>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Email */}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-1">Email</label>
+            <TextField
+              name="email"
+              type="email"
+              fullWidth
+              size="small"
+              variant="outlined"
+              value={formData.email}
+              onChange={handleChange}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  backgroundColor: "#121212",
+                  borderRadius: "6px",
+                  color: "#fff",
+                  "& fieldset": {
+                    borderColor: "#3f3f46",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#6366f1",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#6366f1",
+                  },
+                },
+                input: { color: "#fff" },
+              }}
+            />
+          </div>
+
+          {/* Password */}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-1">Password</label>
+            <TextField
+              name="password"
+              type="password"
+              fullWidth
+              size="small"
+              variant="outlined"
+              value={formData.password}
+              onChange={handleChange}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  backgroundColor: "#121212",
+                  borderRadius: "6px",
+                  color: "#fff",
+                  "& fieldset": {
+                    borderColor: "#3f3f46",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#6366f1",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#6366f1",
+                  },
+                },
+                input: { color: "#fff" },
+              }}
+            />
+          </div>
+
+          {/* Submit Button */}
+          <Button
+            type="submit"
+            variant="contained"
+            fullWidth
+            sx={{
+              backgroundColor: "#6366f1",
+              textTransform: "none",
+              fontWeight: "bold",
+              borderRadius: "6px",
+              paddingY: "10px",
+              fontSize: "16px",
+              "&:hover": {
+                backgroundColor: "#4f46e5",
+              },
+            }}
+          >
+            Sign In
+          </Button>
+        </form>
+
+        {/* Extra Links */}
+        <div className="mt-6 text-sm text-gray-400 text-center">
+          Don't have an account?{" "}
+          <span
+            onClick={() => navigate("/register")}
+            className="text-indigo-400 hover:underline cursor-pointer"
+          >
+            Register
+          </span>
         </div>
       </div>
-    </>
+    </main>
   );
 };
 
