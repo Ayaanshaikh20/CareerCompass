@@ -1,4 +1,4 @@
-import { useState, TextField, Button, axios, toast, useNavigate, useQueryClient, axiosInstance } from "../shared/imports";
+import { useState, TextField, Button, toast, useNavigate, useQueryClient, axiosInstance } from "../shared/imports";
 
 const Register = () => {
   const [formData, setFormData] = useState({

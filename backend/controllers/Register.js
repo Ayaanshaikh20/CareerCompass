@@ -88,9 +88,10 @@ const storeUser = async (req, res, next) => {
 
     const userData = {
       user_id: result.rows[0].user_id,
-      firstName,
+      first_name: firstName,
       email,
-      phone,
+      phone_number: phone,
+      location
     };
 
     // Remove password from userDetails for response
