@@ -1,4 +1,4 @@
-import { useState, TextField, Button, useNavigate, toast, useQueryClient, axiosInstance } from "../shared/imports";
+import { useState, TextField, Button, useNavigate, toast, useQueryClient, axiosInstance, customToggleLoading } from "../shared/imports";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -19,6 +19,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    customToggleLoading({ loading: true });
     try {
       const response = await axiosInstance.post("/api/login", formData);
       const { status } = response.data;
@@ -34,6 +35,8 @@ const Login = () => {
     } catch (error) {
       const { status, message } = error?.response?.data || {};
       toast.error(status ? message : "Error logging in user");
+    } finally {
+      customToggleLoading({ loading: false });
     }
   };
 

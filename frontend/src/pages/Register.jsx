@@ -1,4 +1,4 @@
-import { useState, TextField, Button, toast, useNavigate, useQueryClient, axiosInstance } from "../shared/imports";
+import { useState, TextField, Button, toast, useNavigate, useQueryClient, axiosInstance, customToggleLoading } from "../shared/imports";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -22,6 +22,7 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    customToggleLoading({ loading: true });
     try {
       const response = await axiosInstance.post("/api/register", formData);
       const { status } = response.data;
@@ -41,6 +42,8 @@ const Register = () => {
       } else {
         toast.error("Unexpected error occurred");
       }
+    } finally {
+      customToggleLoading({ loading: false });
     }
   };
 
