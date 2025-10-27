@@ -11,18 +11,12 @@ body {
 }
 
 .secondary-button {
-    background-color: white !important;
-    padding: 6px !important;
-    border-radius: 5px !important;
     color: black !important;
-    border: none !important;
+    border: 1px solid black !important;
 }
 
 .primary-button {
-    background-color: palevioletred !important;
-    padding: 6px !important;
-    border: none !important;
-    border-radius: 5px !important;
+    background-color: rgb(14, 10, 11) !important;
     color: white !important;
 }
   
