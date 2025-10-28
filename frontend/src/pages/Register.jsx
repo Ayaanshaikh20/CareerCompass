@@ -48,13 +48,13 @@ const Register = () => {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-[#0f0f0f] px-4 text-white font-sans">
-      <div className="w-full max-w-md bg-[#1a1a1a] border border-[#333] rounded-xl shadow-lg p-8">
-        <h2 className="text-xl font-bold text-white mb-3 text-center">Register</h2>
+    <main className="flex items-center justify-center h-[calc(100vh-70px)] px-4 text-white font-sans">
+      <div className="w-full max-w-md rounded-xl shadow-lg p-8">
+        <h2 className="text-2xl font-bold text-black mb-3 text-center">Register</h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-5 text-sm text-gray-200">
           {/* Firstname */}
           <div>
-            <label htmlFor="firstName" className="block mb-1">Firstname</label>
+            <label htmlFor="firstName" className="block text-sm font-medium text-black mb-1">Firstname</label>
             <TextField
               id="firstName"
               name="firstName"
@@ -64,27 +64,12 @@ const Register = () => {
               required
               value={formData.firstName}
               onChange={handleChange}
-              placeholder="Enter your name"
-              InputLabelProps={{ shrink: false }}
-              InputProps={{
-                style: {
-                  color: "white",
-                  backgroundColor: "#121212",
-                },
-              }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': { borderColor: "#444" },
-                  '&:hover fieldset': { borderColor: "#888" },
-                  '&.Mui-focused fieldset': { borderColor: "#1976d2" },
-                },
-              }}
             />
           </div>
 
           {/* Location */}
           <div>
-            <label htmlFor="location" className="block mb-1">Location</label>
+            <label htmlFor="location" className="block text-sm font-medium text-black mb-1">Location</label>
             <TextField
               id="location"
               name="location"
@@ -94,27 +79,12 @@ const Register = () => {
               required
               value={formData.location}
               onChange={handleChange}
-              placeholder="Enter your location"
-              InputLabelProps={{ shrink: false }}
-              InputProps={{
-                style: {
-                  color: "white",
-                  backgroundColor: "#121212",
-                },
-              }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': { borderColor: "#444" },
-                  '&:hover fieldset': { borderColor: "#888" },
-                  '&.Mui-focused fieldset': { borderColor: "#1976d2" },
-                },
-              }}
             />
           </div>
 
           {/* Phone */}
           <div>
-            <label htmlFor="phone" className="block mb-1">Phone Number</label>
+            <label htmlFor="phone" className="block text-sm font-medium text-black mb-1">Phone Number</label>
             <TextField
               id="phone"
               name="phone"
@@ -131,31 +101,12 @@ const Register = () => {
               helperText="Phone number must be 10 digits"
               value={formData.phone}
               onChange={handleChange}
-              placeholder="Enter your phone"
-              InputLabelProps={{ shrink: false }}
-              InputProps={{
-                style: {
-                  color: "white",
-                  backgroundColor: "#121212",
-                },
-              }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': { borderColor: "#444" },
-                  '&:hover fieldset': { borderColor: "#888" },
-                  '&.Mui-focused fieldset': { borderColor: "#1976d2" },
-                },
-                '& .MuiFormHelperText-root': {
-                  color: "#aaa",
-                  fontSize: "0.75rem",
-                },
-              }}
             />
           </div>
 
           {/* Email */}
           <div>
-            <label htmlFor="email" className="block mb-1">Email</label>
+            <label htmlFor="email" className="block text-sm font-medium text-black mb-1">Email</label>
             <TextField
               id="email"
               name="email"
@@ -165,27 +116,12 @@ const Register = () => {
               required
               value={formData.email}
               onChange={handleChange}
-              placeholder="Enter your email"
-              InputLabelProps={{ shrink: false }}
-              InputProps={{
-                style: {
-                  color: "white",
-                  backgroundColor: "#121212",
-                },
-              }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': { borderColor: "#444" },
-                  '&:hover fieldset': { borderColor: "#888" },
-                  '&.Mui-focused fieldset': { borderColor: "#1976d2" },
-                },
-              }}
             />
           </div>
 
           {/* Password */}
           <div>
-            <label htmlFor="password" className="block mb-1">Password</label>
+            <label htmlFor="password" className="block text-sm font-medium text-black mb-1">Password</label>
             <TextField
               id="password"
               name="password"
@@ -195,21 +131,6 @@ const Register = () => {
               required
               value={formData.password}
               onChange={handleChange}
-              placeholder="Enter your password"
-              InputLabelProps={{ shrink: false }}
-              InputProps={{
-                style: {
-                  color: "white",
-                  backgroundColor: "#121212",
-                },
-              }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': { borderColor: "#444" },
-                  '&:hover fieldset': { borderColor: "#888" },
-                  '&.Mui-focused fieldset': { borderColor: "#1976d2" },
-                },
-              }}
             />
           </div>
 
@@ -218,16 +139,8 @@ const Register = () => {
             type="submit"
             variant="contained"
             size="small"
+            className="primary-button"
             fullWidth
-            sx={{
-              mt: 1,
-              bgcolor: "#1976d2",
-              color: "#fff",
-              textTransform: "none",
-              '&:hover': {
-                bgcolor: "#1565c0",
-              },
-            }}
           >
             Register
           </Button>

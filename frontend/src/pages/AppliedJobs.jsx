@@ -1,31 +1,25 @@
 import {
-  CalendarOutlined,
+  CalendarMonthIcon,
   EditIcon,
-  EnvironmentOutlined,
-  FaPlus,
-  MdOutlineRefresh,
   VisibilityIcon,
   DeleteIcon,
   MoreVertIcon,
+  CloseIcon
 } from "../shared/icons";
 import {
   Button,
   Col,
   DatePicker,
   Descriptions,
-  Drawer,
   Input,
-  MaterialReactTable,
   Row,
   Select,
-  Space,
   axiosInstance,
   customToggleLoading,
   dayjs,
   moment,
   toast,
   useEffect,
-  useMemo,
   useState,
   Chip,
   IconButton,
@@ -33,7 +27,16 @@ import {
   MenuItem,
   ListItemIcon,
   ListItemText,
-  Theme
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Dialog,
+  DialogContent,
+  DialogTitle,
 } from "../shared/imports";
 
 const ActionMenuCell = ({ row, viewDetails, deleteApplication, viewEditApplication }) => {
@@ -43,7 +46,7 @@ const ActionMenuCell = ({ row, viewDetails, deleteApplication, viewEditApplicati
   const handleOpen = (e) => setAnchorEl(e.currentTarget);
   const handleClose = () => setAnchorEl(null);
 
-  const item = row.original;
+  const item = row;
 
   return (
     <>
@@ -212,323 +215,260 @@ const AppliedJobs = () => {
     }
   };
 
-  const columns = useMemo(
-    () => [
-      {
-        accessorKey: "view",
-        header: "",
-        maxSize: 40,
-        Cell: ({ row }) => (
-          <div className=' flex justify-center items-center w-full'>
-            <ActionMenuCell
-              deleteApplication={deleteApplication}
-              viewDetails={viewDetails}
-              viewEditApplication={viewEditApplication}
-              row={row}
-            />
-          </div>
-        ),
-      },
-      {
-        accessorKey: "status",
-        header: "Status",
-        maxSize: 100,
-        Cell: ({ row }) => {
-          const status = row.original.status;
-          const getColor = (status) => {
-            switch (status.toLowerCase()) {
-              case "pending":
-                return "warning";
-              case "approved":
-                return "success";
-              case "rejected":
-                return "error";
-              default:
-                return "default";
-            }
-          };
-          return <Chip label={status} color={getColor(status)} size='small' />;
-        },
-      },
-      {
-        accessorKey: "jobLink",
-        header: "Visit",
-        maxSize: 70,
-        Cell: ({ row }) => (
-          <a className='text-blue-500 items-center w-full underline' href={row.original.jobLink}>
-            Link
-          </a>
-        ),
-      },
-      { accessorKey: "role", header: "Role", minSize: 350 },
-      { accessorKey: "experience", header: "Experience", maxSize: 120 },
-      { accessorKey: "platform", header: "Platform", maxSize: 100 },
-      {
-        accessorKey: "appliedDate",
-        header: "Applied Date",
-        maxSize: 130,
-        Cell: ({ row }) => <span>{moment(row.original.appliedDate).format("DD-MMM-YYYY")}</span>,
-      },
-      {
-        accessorKey: "jobDescription",
-        header: "Job Description",
-        minSize: 400,
-        Cell: ({ row }) => <span className=' text-wrap'>{row.original.jobDescription}</span>,
-      },
-    ],
-    []
-  );
+  const { TextArea } = Input;
 
   return (
-    <section className='h-full p-6 pt-16 bg-zinc-900'>
-      <div className='w-full'>
-        <MaterialReactTable
-          data={applications || []}
-          columns={columns}
-          enableTopToolbar={true}
-          enableSorting={false}
-          initialState={
-            {
-              density: "compact"
-            }
-          }
-          enableBottomToolbar={false}
-          enableColumnFilters={false}
-          enableDensityToggle={false}
-          enableFullScreenToggle={false}
-          enableHiding={false}
-          enableColumnActions={false}
-          enableRowVirtualization={true}
-          enablePagination={false}
-          renderTopToolbarCustomActions={() => {
-            return (
-              <div className=' flex gap-3'>
-                <button
-                  className=' p-2'
-                  onClick={() => {
-                    setOpen(true);
-                  }}
-                >
-                  <FaPlus size={20} className=' text-green-700' />
-                </button>
-                <button onClick={fetchApplications}>
-                  <MdOutlineRefresh size={24} className=' text-blue-600' />
-                </button>
-              </div>
-            );
-          }}
-          muiTableBodyRowProps={{
-            sx: {
-              paddingY: 0.5,
-            },
-          }}
-          muiTableBodyCellProps={{
-            sx: {
-              padding: "8px 8px",
-              whiteSpace: "nowrap",
-            },
-          }}
-          muiTableProps={{
-            sx: {
-              tableLayout: "auto",
-              width: "100%",
-            },
-          }}
-          muiTableContainerProps={{
-            sx: {
-              maxWidth: "100%",
-              overflowX: "auto",
-              "&::-webkit-scrollbar": {
-                height: "3px",
-              },
-              "&::-webkit-scrollbar-thumb": {
-                backgroundColor: "#c1c1c1",
-                borderRadius: "2px",
-              },
-              "&::-webkit-scrollbar-track": {
-                backgroundColor: "#f1f1f1",
-              },
-              height: "calc(100vh - 160px)",
-            },
-          }}
-        />
+    <section className='h-full mt-3 p-3'>
+      <div className=" w-full flex justify-end mb-2">
+        <Button className="" variant="contained" size="small" onClick={() => { setOpen(true) }}>
+          Add Job
+        </Button>
       </div>
-      <Drawer
-        title='Job Details'
-        placement='right'
-        width={480}
-        onClose={() => setIsViewDetailsDrawer(false)}
-        open={isViewDetailsDrawer}
-      >
-        {selectedJob && (
-          <Descriptions
-            bordered
-            column={1}
-            size='small'
-            labelStyle={{ fontWeight: 600, width: 140 }}
-            contentStyle={{ wordBreak: "break-word" }}
+      <TableContainer component={Paper} className="mt-4" sx={{ maxHeight: 500, boxShadow: 3 }}>
+        <Table size="small" stickyHeader sx={{ minWidth: 900 }}>
+          <TableHead>
+            <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
+              <TableCell></TableCell>
+              {[
+                "Status", "Job link", "Role", "Experience",
+                "Platform", "Applied Date"
+              ].map((head, idx) => (
+                <TableCell
+                  key={idx}
+                  align="center"
+                  sx={{ fontWeight: 600, fontSize: 14, whiteSpace: "nowrap" }}
+                >
+                  {head}
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {applications.map((row, index) => (
+              <TableRow
+                key={index}
+                hover
+                sx={{
+                  "& td": { verticalAlign: "top", fontSize: 13, padding: "10px" },
+                }}
+              >
+                <TableCell>
+                  <ActionMenuCell
+                    deleteApplication={deleteApplication}
+                    viewDetails={viewDetails}
+                    viewEditApplication={viewEditApplication}
+                    row={row}
+                  />
+                </TableCell>
+
+                <TableCell align="center">{row.status}</TableCell>
+
+                <TableCell align="center">
+                  <a
+                    href={row.jobLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: "#1976d2", textDecoration: "underline" }}
+                  >
+                    View
+                  </a>
+                </TableCell>
+
+                <TableCell align="center">{row.role}</TableCell>
+                <TableCell align="center">{row.experience}</TableCell>
+                <TableCell align="center">{row.platform}</TableCell>
+                <TableCell align="center">{moment(row.appliedDate).format("DD-MMM-YYYY")}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      {
+        selectedJob && (
+          <Dialog
+            onClose={() => setIsViewDetailsDrawer(false)}
+            open={isViewDetailsDrawer}
+            maxWidth={"md"}
+            fullWidth
           >
-            <Descriptions.Item label='Role'>{selectedJob.role}</Descriptions.Item>
-            <Descriptions.Item label='Employer'>{selectedJob.employer}</Descriptions.Item>
-            <Descriptions.Item label='Package'>{selectedJob.package}</Descriptions.Item>
-            <Descriptions.Item label='Location'>
-              <EnvironmentOutlined /> {selectedJob.location}
-            </Descriptions.Item>
-            <Descriptions.Item label='Experience'>{selectedJob.experience}</Descriptions.Item>
-            <Descriptions.Item label='Platform'>{selectedJob.platform}</Descriptions.Item>
-            <Descriptions.Item label='Job Description'>{selectedJob.jobDescription}</Descriptions.Item>
-            <Descriptions.Item label='Applied Date'>
-              <CalendarOutlined /> {moment(selectedJob.appliedDate).format("DD/MM/YYYY")}
-            </Descriptions.Item>
-            <Descriptions.Item label='Job Link'>
-              <a href={selectedJob.jobLink} target='_blank' rel='noopener noreferrer' style={{ color: "#1677ff" }}>
-                View Posting
-              </a>
-            </Descriptions.Item>
-          </Descriptions>
-        )}
-      </Drawer>
-      <Drawer
-        title={isEditApplication ? "Edit Application" : "New Application"}
+            <DialogTitle>
+              View Job Application
+            </DialogTitle>
+            <DialogContent>
+              <Descriptions
+                bordered
+                column={1}
+                size='small'
+                labelStyle={{ fontWeight: 600, width: 140 }}
+                contentStyle={{ wordBreak: "break-word" }}
+              >
+                <Descriptions.Item label='Role'>{selectedJob.role}</Descriptions.Item>
+                <Descriptions.Item label='Employer'>{selectedJob.employer}</Descriptions.Item>
+                <Descriptions.Item label='Package'>{selectedJob.package}</Descriptions.Item>
+                <Descriptions.Item label='Location'>{selectedJob.location}</Descriptions.Item>
+                <Descriptions.Item label='Experience'>{selectedJob.experience}</Descriptions.Item>
+                <Descriptions.Item label='Platform'>{selectedJob.platform}</Descriptions.Item>
+                <Descriptions.Item label='Job Description'>{selectedJob.jobDescription}</Descriptions.Item>
+                <Descriptions.Item label='Applied Date'>
+                  <CalendarMonthIcon /> {moment(selectedJob.appliedDate).format("DD/MM/YYYY")}
+                </Descriptions.Item>
+                <Descriptions.Item label='Job Link'>
+                  <a href={selectedJob.jobLink} target='_blank' rel='noopener noreferrer' style={{ color: "#1677ff" }}>
+                    View Posting
+                  </a>
+                </Descriptions.Item>
+              </Descriptions>
+            </DialogContent>
+          </Dialog>
+        )
+      }
+      <Dialog
         open={open || isEditApplication}
-        onClose={clearDrawer}
-        width={700}
-        extra={
-          <Theme>
-            <Button variant='solid' size="2" onClick={submitOrEditApplication}>
+        onClose={(event, reason) => {
+          if (reason !== "backdropClick" && reason !== "escapeKeyDown") {
+            clearDrawer();
+          }
+        }}
+        maxWidth={"md"}
+        fullWidth
+      >
+        <DialogTitle className="flex justify-between items-center">
+          <span>{isEditApplication ? "Edit Application" : "New Application"}</span>
+          <IconButton onClick={clearDrawer}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent className=" p-4">
+          <Row gutter={16}>
+            <Col xs={24} md={12} className='mb-4'>
+              <label>Role</label>
+              <Input
+                value={formData.role}
+                onChange={(e) => handleChange("role", e.target.value)}
+              />
+              {errors.role && <p className='text-red-500 text-xs'>{errors.role}</p>}
+            </Col>
+            <Col xs={24} md={12} className='mb-4'>
+              <label>Applied Date</label>
+              <DatePicker
+                style={{ width: "100%" }}
+                format='YYYY-MM-DD'
+                placeholder=""
+                value={formData.appliedDate ? dayjs(formData.appliedDate) : null}
+                onChange={(date, dateString) => handleChange("appliedDate", dateString)}
+                disabledDate={(current) => current && current > dayjs().endOf("day")}
+                getPopupContainer={(trigger) => trigger.parentNode}
+              />
+              {errors.appliedDate && <p className='text-red-500 text-xs'>{errors.appliedDate}</p>}
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col xs={24} md={12} className='mb-4'>
+              <label className='block mb-1'>Package (LPA)</label>
+              <Input
+                name='package'
+                value={formData.package}
+                onChange={(e) => handleChange("package", e.target.value)}
+              />
+              {errors.package && <p className='text-red-500 text-xs'>{errors.package}</p>}
+            </Col>
+            <Col xs={24} md={12} className='mb-4'>
+              <label className='block mb-1'>Employer/Company</label>
+              <Input
+                name='employer'
+                value={formData.employer}
+                onChange={(e) => {
+                  handleChange("employer", e.target.value);
+                }}
+              />
+              {errors.employer && <p className='text-red-500 text-xs'>{errors.employer}</p>}
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col xs={24} md={12} className='mb-4'>
+              <label className='block mb-1'>Location</label>
+              <Input
+                name='location'
+                value={formData.location}
+                onChange={(e) => handleChange("location", e.target.value)}
+              />
+              {errors.location && <p className='text-red-500 text-xs'>{errors.location}</p>}
+            </Col>
+            <Col xs={24} md={12} className='mb-4'>
+              <label className='block mb-1'>Status</label>
+              <Select
+                style={{ width: "100%" }}
+                value={formData.status}
+                onChange={(selectedValue) => handleChange("status", selectedValue)}
+                getPopupContainer={(trigger) => trigger.parentNode}
+              >
+                <Select.Option value='pending'>Pending</Select.Option>
+                <Select.Option value='approved'>Approved</Select.Option>
+                <Select.Option value='rejected'>Rejected</Select.Option>
+              </Select>
+              {errors.status && <p className='text-red-500 text-xs'>{errors.status}</p>}
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col xs={24} md={12} className='mb-4'>
+              <label className='block mb-1'>Link of the job</label>
+              <Input
+                name='jobLink'
+                value={formData.jobLink}
+                onChange={(e) => handleChange("jobLink", e.target.value)}
+              />
+              {errors.jobLink && <p className='text-red-500 text-xs'>{errors.jobLink}</p>}
+            </Col>
+            <Col xs={24} md={12} className='mb-4'>
+              <label className='block mb-1'>Required experience</label>
+              <Input
+                name='experience'
+                value={formData.experience}
+                onChange={(e) => handleChange("experience", e.target.value)}
+              />
+              {errors.experience && <p className='text-red-500 text-xs'>{errors.experience}</p>}
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col xs={24} md={12} className='mb-4'>
+              <label className='block mb-1'>Platform</label>
+              <Select
+                style={{ width: "100%" }}
+                value={formData.platform}
+                onChange={(selectedValue) => handleChange("platform", selectedValue)}
+                getPopupContainer={(trigger) => trigger.parentNode}
+              >
+                <Select.Option value='Linkedin'>Linkedin</Select.Option>
+                <Select.Option value='Naukri'>Naukri</Select.Option>
+                <Select.Option value='Indeed'>Indeed</Select.Option>
+                <Select.Option value='Monster'>Monster</Select.Option>
+                <Select.Option value='Workday'>Workday</Select.Option>
+                <Select.Option value='Other'>Other</Select.Option>
+              </Select>
+              {errors.platform && <p className='text-red-500 text-xs'>{errors.platform}</p>}
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={24} md={24} className='mb-4'>
+              <label className='block mb-1'>Job Description</label>
+              <TextArea
+                name='jobDescription'
+                value={formData.jobDescription}
+                autoSize={{ minRows: 5, maxRows: 5 }}
+                onChange={(e) => {
+                  handleChange("jobDescription", e.target.value);
+                }}
+              />
+              {errors.jobDescription && <p className='text-red-500 text-xs'>{errors.jobDescription}</p>}
+            </Col>
+          </Row>
+          <Row className=" flex justify-end">
+            <Button variant="contained" size="small" onClick={submitOrEditApplication}>
               Submit
             </Button>
-          </Theme>
-        }
-      >
-        <Row gutter={16}>
-          <Col span={12} className='mb-4'>
-            <label>Role</label>
-            <Input
-              value={formData.role}
-              onChange={(e) => handleChange("role", e.target.value)}
-              placeholder='Enter role'
-            />
-            {errors.role && <p className='text-red-500 text-xs'>{errors.role}</p>}
-          </Col>
-          <Col span={12} className='mb-4'>
-            <label>Applied Date</label>
-            <DatePicker
-              style={{ width: "100%" }}
-              format='YYYY-MM-DD'
-              value={formData.appliedDate ? dayjs(formData.appliedDate) : null}
-              onChange={(date, dateString) => handleChange("appliedDate", dateString)}
-              disabledDate={(current) => current && current > dayjs().endOf("day")}
-            />
-            {errors.appliedDate && <p className='text-red-500 text-xs'>{errors.appliedDate}</p>}
-          </Col>
-        </Row>
-        <Row gutter={16}>
-          <Col span={12} className='mb-4'>
-            <label className='block mb-1'>Package (LPA)</label>
-            <Input
-              name='package'
-              value={formData.package}
-              onChange={(e) => handleChange("package", e.target.value)}
-              placeholder='Enter package'
-            />
-            {errors.package && <p className='text-red-500 text-xs'>{errors.package}</p>}
-          </Col>
-          <Col span={12} className='mb-4'>
-            <label className='block mb-1'>Employer/Company</label>
-            <Input
-              name='employer'
-              value={formData.employer}
-              onChange={(e) => {
-                handleChange("employer", e.target.value);
-              }}
-              placeholder='Enter company name'
-            />
-            {errors.employer && <p className='text-red-500 text-xs'>{errors.employer}</p>}
-          </Col>
-        </Row>
-        <Row gutter={16}>
-          <Col span={12} className='mb-4'>
-            <label className='block mb-1'>Location</label>
-            <Input
-              name='location'
-              value={formData.location}
-              onChange={(e) => handleChange("location", e.target.value)}
-              placeholder='Enter location'
-            />
-            {errors.location && <p className='text-red-500 text-xs'>{errors.location}</p>}
-          </Col>
-          <Col span={12} className='mb-4'>
-            <label className='block mb-1'>Status</label>
-            <Select
-              style={{ width: "100%" }}
-              placeholder='Select Status'
-              value={formData.status}
-              onChange={(selectedValue) => handleChange("status", selectedValue)}
-            >
-              <Select.Option value='pending'>Pending</Select.Option>
-              <Select.Option value='approved'>Approved</Select.Option>
-              <Select.Option value='rejected'>Rejected</Select.Option>
-            </Select>
-            {errors.status && <p className='text-red-500 text-xs'>{errors.status}</p>}
-          </Col>
-        </Row>
-        <Row gutter={16}>
-          <Col span={12} className='mb-4'>
-            <label className='block mb-1'>Link of the job</label>
-            <Input
-              name='jobLink'
-              value={formData.jobLink}
-              onChange={(e) => handleChange("jobLink", e.target.value)}
-              placeholder='Enter job link'
-            />
-            {errors.jobLink && <p className='text-red-500 text-xs'>{errors.jobLink}</p>}
-          </Col>
-          <Col span={12} className='mb-4'>
-            <label className='block mb-1'>Required experience</label>
-            <Input
-              name='experience'
-              value={formData.experience}
-              onChange={(e) => handleChange("experience", e.target.value)}
-              placeholder='Enter experience'
-            />
-            {errors.experience && <p className='text-red-500 text-xs'>{errors.experience}</p>}
-          </Col>
-        </Row>
-        <Row gutter={16}>
-          <Col span={12} className='mb-4'>
-            <label className='block mb-1'>Platform</label>
-            <Select
-              style={{ width: "100%" }}
-              placeholder='Select platform'
-              value={formData.platform}
-              onChange={(selectedValue) => handleChange("platform", selectedValue)}
-            >
-              <Select.Option value='Linkedin'>Linkedin</Select.Option>
-              <Select.Option value='Naukri'>Naukri</Select.Option>
-              <Select.Option value='Indeed'>Indeed</Select.Option>
-              <Select.Option value='Monster'>Monster</Select.Option>
-              <Select.Option value='Workday'>Workday</Select.Option>
-              <Select.Option value='Other'>Other</Select.Option>
-            </Select>
-            {errors.platform && <p className='text-red-500 text-xs'>{errors.platform}</p>}
-          </Col>
-        </Row>
-        <Row>
-          <Col span={24} className='mb-4'>
-            <label className='block mb-1'>Job Description</label>
-            <Input
-              name='jobDescription'
-              value={formData.jobDescription}
-              onChange={(e) => {
-                handleChange("jobDescription", e.target.value);
-              }}
-              placeholder='Enter job description'
-            />
-            {errors.jobDescription && <p className='text-red-500 text-xs'>{errors.jobDescription}</p>}
-          </Col>
-        </Row>
-      </Drawer>
+          </Row>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
