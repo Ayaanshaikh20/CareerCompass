@@ -1,3 +1,4 @@
+import "@radix-ui/themes/styles.css";
 import "../assets/styles.css";
 import "@fontsource/roboto";
 
@@ -20,26 +21,13 @@ import {
   MenuItem,
   ListItemIcon,
   ListItemText,
-  Button,
-  Drawer,
-  styled,
-  Paper,
-  TableContainer,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Table,
-  Dialog,
-  DialogContent,
-  DialogTitle,
 } from "@mui/material";
 
 //Material Table
 import { MaterialReactTable } from "material-react-table";
 
 //Ant design
-import { Input, DatePicker, Select, Row, Col, Space, Descriptions } from "antd";
+import { Input, DatePicker, Select, Drawer, Row, Col, Space, Descriptions } from "antd";
 
 //react-router
 import { useNavigate, Route, Routes, Navigate, Outlet, Link, BrowserRouter, useLocation } from "react-router";
@@ -68,6 +56,9 @@ import {
   Legend,
 } from "chart.js";
 
+//Radix
+import { Theme, Button } from "@radix-ui/themes";
+
 //typing writer
 import { Typewriter } from 'react-simple-typewriter';
 
@@ -88,18 +79,8 @@ import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 
 export {
-  DialogContent,
-  DialogTitle,
-  Dialog,
-  Paper,
-  TableContainer,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Table,
-  styled,
   Typewriter,
+  Theme,
   Menu,
   MenuItem,
   ListItemIcon,

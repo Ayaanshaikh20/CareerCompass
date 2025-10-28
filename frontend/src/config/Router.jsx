@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Outlet,
   Navigate,
@@ -26,17 +25,10 @@ const PublicRoutes = () => {
 };
 
 const Router = () => {
-
-  const [openSidebar, setOpenSidebar] = useState(false);
-
-  const handleMenu = () => {
-    setOpenSidebar((prev) => !prev);
-  }
-
   return (
     <Routes>
       {/* Public routes wrapped with PublicRoutes */}
-      <Route element={<MainLayout openSidebar={openSidebar} handleMenu={handleMenu} />}>
+      <Route element={<MainLayout />}>
         <Route path='/' element={<Home />} />
         <Route element={<PublicRoutes />}>
           <Route path='/register' element={<Register />} />
@@ -46,7 +38,7 @@ const Router = () => {
 
       {/* Protected routes with sidebar */}
       <Route element={<AuthRoutes />}>
-        <Route element={<AuthLayout  />}>
+        <Route element={<AuthLayout />}>
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/applied-jobs' element={<AppliedJobs />} />
           <Route path='/settings' element={<Settings />} />

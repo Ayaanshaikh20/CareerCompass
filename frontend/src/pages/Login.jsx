@@ -41,14 +41,13 @@ const Login = () => {
   };
 
   return (
-    <main className="flex w-full justify-center items-center px-4 text-black font-sans h-[calc(100vh-70px)]">
-      <div className="flex flex-col w-full max-w-md justify-center border rounded-xl shadow-lg p-8 bg-white">
-        <h1 className="text-2xl font-bold text-black mb-6">
-          Sign in
-        </h1>
+    <main className="min-h-screen flex items-center justify-center bg-[#0f0f0f] px-4 text-white font-sans">
+      <div className="w-full max-w-md bg-[#1a1a1a] border border-[#333] rounded-xl shadow-lg p-8">
+        <h1 className="text-3xl font-bold text-center text-white mb-6">Sign in to your account</h1>
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Email */}
           <div>
-            <label className="block text-sm font-medium text-black mb-1">Email</label>
+            <label className="block text-sm font-medium text-gray-300 mb-1">Email</label>
             <TextField
               name="email"
               type="email"
@@ -57,10 +56,29 @@ const Login = () => {
               variant="outlined"
               value={formData.email}
               onChange={handleChange}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  backgroundColor: "#121212",
+                  borderRadius: "6px",
+                  color: "#fff",
+                  "& fieldset": {
+                    borderColor: "#3f3f46",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#6366f1",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#6366f1",
+                  },
+                },
+                input: { color: "#fff" },
+              }}
             />
           </div>
+
+          {/* Password */}
           <div>
-            <label className="block text-sm font-medium text-black mb-1">Password</label>
+            <label className="block text-sm font-medium text-gray-300 mb-1">Password</label>
             <TextField
               name="password"
               type="password"
@@ -69,29 +87,59 @@ const Login = () => {
               variant="outlined"
               value={formData.password}
               onChange={handleChange}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  backgroundColor: "#121212",
+                  borderRadius: "6px",
+                  color: "#fff",
+                  "& fieldset": {
+                    borderColor: "#3f3f46",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#6366f1",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#6366f1",
+                  },
+                },
+                input: { color: "#fff" },
+              }}
             />
           </div>
+
+          {/* Submit Button */}
           <Button
-            className="primary-button"
             type="submit"
             variant="contained"
             fullWidth
+            sx={{
+              backgroundColor: "#6366f1",
+              textTransform: "none",
+              fontWeight: "bold",
+              borderRadius: "6px",
+              paddingY: "10px",
+              fontSize: "16px",
+              "&:hover": {
+                backgroundColor: "#4f46e5",
+              },
+            }}
           >
             Sign In
           </Button>
         </form>
+
+        {/* Extra Links */}
         <div className="mt-6 text-sm text-gray-400 text-center">
           Don't have an account?{" "}
           <span
             onClick={() => navigate("/register")}
-            className="text-indigo-600 hover:underline cursor-pointer"
+            className="text-indigo-400 hover:underline cursor-pointer"
           >
             Register
           </span>
         </div>
       </div>
     </main>
-
   );
 };
 

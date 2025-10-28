@@ -1,6 +1,5 @@
 import { Grid2, Box, Avatar, Tooltip, Typography, IconButton } from "../shared/imports";
 import { EditIcon, EmailIcon, PhoneIcon, LocationOnIcon } from "../shared/icons";
-import { Button } from "antd";
 
 const Profile = () => {
   const { first_name, location, phone_number, email } = JSON.parse(localStorage.getItem("user"));
@@ -29,9 +28,9 @@ const Profile = () => {
                 </Typography>
               </Box>
               <Tooltip title='Edit Profile'>
-                <Button>
-                  <span>Edit</span>
-                </Button>
+                <IconButton>
+                  <EditIcon className=" text-yellow-500" />
+                </IconButton>
               </Tooltip>
             </Box>
 

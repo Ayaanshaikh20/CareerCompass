@@ -4,9 +4,9 @@ const AuthLayout = () => {
   return (
     <div className='flex flex-col h-screen'>
       <Navbar />
-      <div className='flex'>
-        {/* <Sidebar /> */}
-        <div className='w-full'>
+      <div className='flex flex-1 overflow-hidden'>
+        <Sidebar />
+        <div className='w-full overflow-y-auto'>
           <Outlet />
         </div>
       </div>
