@@ -8,11 +8,16 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
+import PasswordOutlinedIcon from '@mui/icons-material/PasswordOutlined';
 
 //images
 import compass from "../assets/images/compass.png";
+import Img1 from "../assets/images/log-in.png";
+import Img2 from "../assets/images/sign-up.png"
 
 export {
+  PasswordOutlinedIcon,
   MoreVertIcon,
   MdOutlineRefresh,
   FaPlus,
@@ -25,4 +30,7 @@ export {
   PhoneIcon,
   VisibilityIcon,
   DeleteIcon,
+  EmailOutlinedIcon,
+  Img1,
+  Img2
 };

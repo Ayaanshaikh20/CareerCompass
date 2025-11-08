@@ -1,5 +1,5 @@
-import { Grid2, Box, Avatar, Tooltip, Typography, IconButton } from "../shared/imports";
-import { EditIcon, EmailIcon, PhoneIcon, LocationOnIcon } from "../shared/icons";
+import { Grid2, Box, Avatar, Tooltip, Typography, IconButton } from "../shared/Imports";
+import { EditIcon, EmailIcon, PhoneIcon, LocationOnIcon } from "../shared/Icons";
 
 const Profile = () => {
   const { first_name, location, phone_number, email } = JSON.parse(localStorage.getItem("user"));

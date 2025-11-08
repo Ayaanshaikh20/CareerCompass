@@ -16,7 +16,7 @@ import {
   Legend,
   ToolTip,
   moment,
-} from "../shared/imports";
+} from "../shared/Imports";
 
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 

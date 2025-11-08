@@ -4,7 +4,6 @@ import {
   Routes,
   Route,
   MainLayout,
-  Home,
   Register,
   Login,
   AuthLayout,
@@ -12,11 +11,12 @@ import {
   AppliedJobs,
   Settings,
   Profile,
-} from "../shared/imports";
+  NotFound,
+} from "../shared/Imports";
 
 const AuthRoutes = () => {
   const user = localStorage.getItem("user");
-  return user !== null ? <Outlet /> : <Navigate to='/' />;
+  return user !== null ? <Outlet /> : <Navigate to='/login' />;
 };
 
 const PublicRoutes = () => {
@@ -27,15 +27,24 @@ const PublicRoutes = () => {
 const Router = () => {
   return (
     <Routes>
+      {/* Default redirect */}
+      <Route
+        path="/"
+        element={
+          localStorage.getItem("user") ? (
+            <Navigate to="/dashboard" replace />
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
       {/* Public routes wrapped with PublicRoutes */}
       <Route element={<MainLayout />}>
-        <Route path='/' element={<Home />} />
         <Route element={<PublicRoutes />}>
           <Route path='/register' element={<Register />} />
           <Route path='/login' element={<Login />} />
         </Route>
       </Route>
-
       {/* Protected routes with sidebar */}
       <Route element={<AuthRoutes />}>
         <Route element={<AuthLayout />}>
@@ -45,6 +54,8 @@ const Router = () => {
           <Route path='/profile' element={<Profile />} />
         </Route>
       </Route>
+
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };

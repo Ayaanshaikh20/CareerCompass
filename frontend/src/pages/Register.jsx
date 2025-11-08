@@ -1,4 +1,5 @@
-import { useState, TextField, Button, toast, useNavigate, useQueryClient, axiosInstance, customToggleLoading } from "../shared/imports";
+import { PasswordOutlinedIcon, Img1 } from "../shared/Icons";
+import { useState, toast, useNavigate, useQueryClient, axiosInstance, customToggleLoading, CustomTextField, CustomButton } from "../shared/Imports";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -22,6 +23,12 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    //validate password
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+    if (!passwordRegex.test(formData.password)) {
+      toast.error("Password must be at least 8 characters long contain at least one uppercase letter and one special character", { position: "top-right" });
+      return;
+    }
     customToggleLoading({ loading: true });
     try {
       const response = await axiosInstance.post("/api/register", formData);
@@ -30,8 +37,8 @@ const Register = () => {
         const { message, userData, accessToken, refreshToken } = response.data;
         toast.success(message);
         localStorage.setItem("user", JSON.stringify(userData));
-        localStorage.setItem("refreshToken", refreshToken);
-        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("r_t", refreshToken);
+        localStorage.setItem("a_t", accessToken);
         queryClient.setQueryData(["user"], userData);
         navigate("/dashboard");
       }
@@ -48,189 +55,114 @@ const Register = () => {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-[#0f0f0f] px-4 text-white font-sans">
-      <div className="w-full max-w-md bg-[#1a1a1a] border border-[#333] rounded-xl shadow-lg p-8">
-        <h2 className="text-xl font-bold text-white mb-3 text-center">Register</h2>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5 text-sm text-gray-200">
+    <main className="min-h-screen flex flex-col md:flex-row w-full items-center justify-evenly gap-12 bg-background font-sans">
+      {/* Left Section (Image) */}
+      <div className="w-1/2 md:w-1/2 xl:w-1/4 p-6 hidden lg:flex lg:justify-center">
+        <img
+          src={Img1}
+          alt="Register Illustration"
+          className="w-100 max-w-sm md:max-w-sm lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl"
+        />
+      </div>
+      {/* Right Section (Form) */}
+      <div className="w-full max-w-md rounded-xl p-6 md:p-8">
+        <h1 className="text-xl md:text-3xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-extrabold text-textPrimary mb-3 text-left md:text-left">
+          Register here 👋
+        </h1>
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col w-full mt-10 gap-5 text-sm"
+        >
           {/* Firstname */}
           <div>
-            <label htmlFor="firstName" className="block mb-1">Firstname</label>
-            <TextField
-              id="firstName"
+            <CustomTextField
+              id="firstname"
               name="firstName"
-              variant="outlined"
-              size="small"
-              fullWidth
-              required
+              label="First Name"
+              handleChange={handleChange}
               value={formData.firstName}
-              onChange={handleChange}
-              placeholder="Enter your name"
-              InputLabelProps={{ shrink: false }}
-              InputProps={{
-                style: {
-                  color: "white",
-                  backgroundColor: "#121212",
-                },
-              }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': { borderColor: "#444" },
-                  '&:hover fieldset': { borderColor: "#888" },
-                  '&.Mui-focused fieldset': { borderColor: "#1976d2" },
-                },
-              }}
+              type="text"
+              required
             />
           </div>
 
           {/* Location */}
           <div>
-            <label htmlFor="location" className="block mb-1">Location</label>
-            <TextField
+            <CustomTextField
               id="location"
               name="location"
-              variant="outlined"
-              size="small"
-              fullWidth
-              required
+              label="Location"
+              handleChange={handleChange}
               value={formData.location}
-              onChange={handleChange}
-              placeholder="Enter your location"
-              InputLabelProps={{ shrink: false }}
-              InputProps={{
-                style: {
-                  color: "white",
-                  backgroundColor: "#121212",
-                },
-              }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': { borderColor: "#444" },
-                  '&:hover fieldset': { borderColor: "#888" },
-                  '&.Mui-focused fieldset': { borderColor: "#1976d2" },
-                },
-              }}
+              type="text"
+              required
             />
           </div>
 
           {/* Phone */}
           <div>
-            <label htmlFor="phone" className="block mb-1">Phone Number</label>
-            <TextField
+            <CustomTextField
               id="phone"
               name="phone"
-              type="tel"
-              size="small"
-              fullWidth
-              required
-              inputProps={{
-                minLength: 10,
-                maxLength: 10,
-                inputMode: "numeric",
-                pattern: "\\d{10}",
-              }}
-              helperText="Phone number must be 10 digits"
+              label="Phone Number"
+              handleChange={handleChange}
               value={formData.phone}
-              onChange={handleChange}
-              placeholder="Enter your phone"
-              InputLabelProps={{ shrink: false }}
-              InputProps={{
-                style: {
-                  color: "white",
-                  backgroundColor: "#121212",
-                },
-              }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': { borderColor: "#444" },
-                  '&:hover fieldset': { borderColor: "#888" },
-                  '&.Mui-focused fieldset': { borderColor: "#1976d2" },
-                },
-                '& .MuiFormHelperText-root': {
-                  color: "#aaa",
-                  fontSize: "0.75rem",
-                },
-              }}
+              type="tel"
+              required
             />
           </div>
 
           {/* Email */}
           <div>
-            <label htmlFor="email" className="block mb-1">Email</label>
-            <TextField
+            <CustomTextField
               id="email"
               name="email"
-              type="email"
-              size="small"
-              fullWidth
-              required
+              label="Email"
+              handleChange={handleChange}
               value={formData.email}
-              onChange={handleChange}
-              placeholder="Enter your email"
-              InputLabelProps={{ shrink: false }}
-              InputProps={{
-                style: {
-                  color: "white",
-                  backgroundColor: "#121212",
-                },
-              }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': { borderColor: "#444" },
-                  '&:hover fieldset': { borderColor: "#888" },
-                  '&.Mui-focused fieldset': { borderColor: "#1976d2" },
-                },
-              }}
+              type="email"
+              required
             />
           </div>
 
           {/* Password */}
           <div>
-            <label htmlFor="password" className="block mb-1">Password</label>
-            <TextField
+            <CustomTextField
               id="password"
               name="password"
+              label="Password"
               type="password"
-              size="small"
-              fullWidth
               required
+              helperText={[
+                "At least 8 characters",
+                "One uppercase letter (A–Z)",
+                "One special character (!@#$%^&*)",
+              ]}
+              adornment={<PasswordOutlinedIcon />}
               value={formData.password}
-              onChange={handleChange}
-              placeholder="Enter your password"
-              InputLabelProps={{ shrink: false }}
-              InputProps={{
-                style: {
-                  color: "white",
-                  backgroundColor: "#121212",
-                },
-              }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': { borderColor: "#444" },
-                  '&:hover fieldset': { borderColor: "#888" },
-                  '&.Mui-focused fieldset': { borderColor: "#1976d2" },
-                },
-              }}
+              handleChange={handleChange}
             />
           </div>
 
-          {/* Submit */}
-          <Button
+          {/* Submit Button */}
+          <CustomButton
             type="submit"
-            variant="contained"
-            size="small"
-            fullWidth
-            sx={{
-              mt: 1,
-              bgcolor: "#1976d2",
-              color: "#fff",
-              textTransform: "none",
-              '&:hover': {
-                bgcolor: "#1565c0",
-              },
-            }}
+            variant="primary"
+            key="register"
           >
             Register
-          </Button>
+          </CustomButton>
+
+          {/* Already have an account */}
+          <div className="text-center text-gray-400 text-sm mt-2">
+            Already have an account?{" "}
+            <a
+              href="/login"
+              className="text-blue-500 hover:text-blue-400 font-medium transition-colors duration-200"
+            >
+              Log in
+            </a>
+          </div>
         </form>
       </div>
     </main>

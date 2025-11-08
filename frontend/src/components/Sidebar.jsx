@@ -1,4 +1,4 @@
-import { Link, useLocation } from "../shared/imports";
+import { Link, useLocation } from "../shared/Imports";
 
 const Sidebar = () => {
   const location = useLocation();

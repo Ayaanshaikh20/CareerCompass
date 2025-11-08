@@ -1,4 +1,5 @@
-import { useState, TextField, Button, useNavigate, toast, useQueryClient, axiosInstance, customToggleLoading } from "../shared/imports";
+import { useState, useNavigate, toast, useQueryClient, axiosInstance, customToggleLoading, CustomButton, CustomTextField } from "../shared/Imports";
+import { EmailOutlinedIcon, PasswordOutlinedIcon, Img2 } from "../shared/Icons";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -26,8 +27,8 @@ const Login = () => {
       if (status === 200) {
         const { message, userData, refreshToken, accessToken } = response.data;
         toast.success(message);
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", refreshToken);
+        localStorage.setItem("a_t", accessToken);
+        localStorage.setItem("r_t", refreshToken);
         localStorage.setItem("user", JSON.stringify(userData));
         queryClient.setQueryData(["user"], userData);
         navigate("/dashboard");
@@ -41,91 +42,62 @@ const Login = () => {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-[#0f0f0f] px-4 text-white font-sans">
-      <div className="w-full max-w-md bg-[#1a1a1a] border border-[#333] rounded-xl shadow-lg p-8">
-        <h1 className="text-3xl font-bold text-center text-white mb-6">Sign in to your account</h1>
-        <form onSubmit={handleSubmit} className="space-y-6">
+    <main className="min-h-screen flex flex-col md:flex-row w-full items-center justify-evenly gap-12 bg-background font-sans">
+      {/* Left Section */}
+      <div className="w-1/2 md:w-1/2 xl:w-1/4 p-6 hidden lg:flex lg:justify-center">
+        <img
+          src={Img2}
+          alt="Login illustration"
+          className="w-100 max-w-sm md:max-w-sm lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl"
+        />
+      </div>
+
+      {/* Right Section (Form) */}
+      <div className="w-full md:w-1/2 max-w-md rounded-xl p-6 md:p-8">
+        <h1 className="text-xl md:text-3xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-extrabold text-textPrimary mb-3 text-left md:text-left">
+          Welcome back 👋
+        </h1>
+        <p className="text-textSecondary text-sm md:text-md max-w-md lg:text-md 2xl:text-lg text-left md:text-left">
+          Sign in to continue exploring your personalized dashboard, track progress, and manage your projects effortlessly.
+        </p>
+
+        <form onSubmit={handleSubmit} className="flex flex-col mt-10 gap-5 text-sm">
           {/* Email */}
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">Email</label>
-            <TextField
+            <CustomTextField
+              handleChange={handleChange}
               name="email"
+              label="Email"
               type="email"
-              fullWidth
-              size="small"
-              variant="outlined"
+              id={"email"}
+              required={true}
               value={formData.email}
-              onChange={handleChange}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  backgroundColor: "#121212",
-                  borderRadius: "6px",
-                  color: "#fff",
-                  "& fieldset": {
-                    borderColor: "#3f3f46",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#6366f1",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#6366f1",
-                  },
-                },
-                input: { color: "#fff" },
-              }}
+              adornment={<EmailOutlinedIcon />}
+              key="email"
             />
           </div>
 
           {/* Password */}
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">Password</label>
-            <TextField
+            <CustomTextField
               name="password"
+              label="Password"
               type="password"
-              fullWidth
-              size="small"
-              variant="outlined"
+              id={"password"}
+              required={true}
+              adornment={<PasswordOutlinedIcon />}
               value={formData.password}
-              onChange={handleChange}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  backgroundColor: "#121212",
-                  borderRadius: "6px",
-                  color: "#fff",
-                  "& fieldset": {
-                    borderColor: "#3f3f46",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#6366f1",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#6366f1",
-                  },
-                },
-                input: { color: "#fff" },
-              }}
+              handleChange={handleChange}
             />
           </div>
 
           {/* Submit Button */}
-          <Button
+          <CustomButton
             type="submit"
-            variant="contained"
-            fullWidth
-            sx={{
-              backgroundColor: "#6366f1",
-              textTransform: "none",
-              fontWeight: "bold",
-              borderRadius: "6px",
-              paddingY: "10px",
-              fontSize: "16px",
-              "&:hover": {
-                backgroundColor: "#4f46e5",
-              },
-            }}
-          >
+            variant="primary"
+            key="register" >
             Sign In
-          </Button>
+          </CustomButton>
         </form>
 
         {/* Extra Links */}

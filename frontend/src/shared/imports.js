@@ -1,5 +1,5 @@
 import "@radix-ui/themes/styles.css";
-import "../assets/styles.css";
+import "../assets/styles/styles.css";
 import "@fontsource/roboto";
 
 //React
@@ -21,6 +21,11 @@ import {
   MenuItem,
   ListItemIcon,
   ListItemText,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  InputAdornment,
+  FormHelperText
 } from "@mui/material";
 
 //Material Table
@@ -38,6 +43,10 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 //react dom
 import { createRoot } from "react-dom/client";
+
+//gsap
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 //Tools
 import axios from "axios";
@@ -64,9 +73,8 @@ import { Typewriter } from 'react-simple-typewriter';
 
 //Components
 import { customToggleLoading } from "../components/CustomLoading";
-import axiosInstance from "../config/axiosInstance";
+import axiosInstance from "../config/AxiosInstance";
 import MainLayout from "../layouts/MainLayout";
-import Home from "../pages/Home";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
@@ -77,8 +85,23 @@ import AppliedJobs from "../pages/AppliedJobs";
 import Router from "../config/Router";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
+import NotFound from "../pages/NotFound";
+
+//Utilities
+import { CustomTextField } from "../utilities/Input";
+import { CustomButton } from "../utilities/Button";
 
 export {
+  FormHelperText,
+  NotFound,
+  gsap,
+  ScrollTrigger,
+  CustomButton,
+  CustomTextField,
+  InputAdornment,
+  OutlinedInput,
+  FormControl,
+  InputLabel,
   Typewriter,
   Theme,
   Menu,
@@ -118,7 +141,6 @@ export {
   Link,
   TextField,
   MainLayout,
-  Home,
   Register,
   Login,
   Dashboard,

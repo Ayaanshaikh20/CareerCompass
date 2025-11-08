@@ -1,5 +1,5 @@
-import { Toaster, ReactQueryDevtools, QueryClient, QueryClientProvider, BrowserRouter, createRoot, Router, Theme } from "./shared/imports.js";
-import "./assets/styles.css";
+import { Toaster, ReactQueryDevtools, QueryClient, QueryClientProvider, BrowserRouter, createRoot, Router, Theme } from "./shared/Imports.js";
+import "./assets/styles/styles.css";
 import "@radix-ui/themes/styles.css";
 import "@fontsource/roboto";
 

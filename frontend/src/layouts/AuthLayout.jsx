@@ -1,4 +1,4 @@
-import { Outlet, Sidebar, Navbar } from "../shared/imports";
+import { Outlet, Sidebar, Navbar } from "../shared/Imports";
 
 const AuthLayout = () => {
   return (

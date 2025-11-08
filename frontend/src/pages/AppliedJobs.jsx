@@ -7,7 +7,7 @@ import {
   VisibilityIcon,
   DeleteIcon,
   MoreVertIcon,
-} from "../shared/icons";
+} from "../shared/Icons";
 import {
   Button,
   Col,
@@ -34,7 +34,7 @@ import {
   ListItemIcon,
   ListItemText,
   Theme
-} from "../shared/imports";
+} from "../shared/Imports";
 
 const ActionMenuCell = ({ row, viewDetails, deleteApplication, viewEditApplication }) => {
   const [anchorEl, setAnchorEl] = useState(null);

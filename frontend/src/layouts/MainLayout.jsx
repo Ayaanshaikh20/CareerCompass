@@ -1,4 +1,4 @@
-import { Outlet, Navbar } from "../shared/imports";
+import { Outlet, Navbar } from "../shared/Imports";
 
 const MainLayout = () => {
   return (

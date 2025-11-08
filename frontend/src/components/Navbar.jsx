@@ -1,9 +1,10 @@
-import { AppBar, Button, useQueryClient, useQuery, useNavigate, Toolbar, Typography } from "../shared/imports";
-import { compass } from "../shared/icons";
+import { AppBar, useQueryClient, useQuery, useNavigate, Toolbar, Typography, useLocation, CustomButton } from "../shared/Imports";
+import { compass } from "../shared/Icons";
 
 const Navbar = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const { data: user } = useQuery({
     queryKey: ["user"],
@@ -21,41 +22,32 @@ const Navbar = () => {
     navigate("/");
   };
 
+  const redirectDashboard = () => {
+    if (user) navigate("/dashboard");
+    else navigate("/login");
+  };
+
   return (
     <AppBar
       position='fixed'
-      elevation={1}
+      elevation={0}
       sx={{
-        backgroundColor: "#171717",
-        borderBottom: "1px solid #434345",
+        backgroundColor: "var(--background-color)",
       }}
     >
       <Toolbar className='w-full flex justify-between items-center px-2 !min-h-0 py-2'>
-
         {/* Brand Logo and Title */}
         <div className='flex items-center cursor-pointer space-x-1' onClick={() => navigate("/")}>
           <Typography
-            variant='h6'
-            component='div'
-            sx={{
-              fontSize: "1.1rem",
-              color: "#ffffff", // Tailwind blue-500
-              fontWeight: 500,
-              letterSpacing: "0.5px",
-            }}
+            variant="h6"
+            className=" text-textPrimary"
           >
             Career
           </Typography>
           <img src={compass} alt='compass_logo' className='h-5 w-5' />
           <Typography
-            variant='h6'
-            component='div'
-            sx={{
-              fontSize: "1.1rem",
-              color: "#ffffff",
-              fontWeight: 500,
-              letterSpacing: "0.5px",
-            }}
+            variant="h6"
+            className=" text-textPrimary"
           >
             Compass
           </Typography>
@@ -65,45 +57,29 @@ const Navbar = () => {
         <div className='flex items-center gap-2'>
           {!user ? (
             <>
-              <Button
-                onClick={handleClickOpen}
-                variant="solid"
-                size="2"
-                style={{
-                  backgroundColor: "black",
-                  border: "1px solid #434345"
-                }}
-                className=" tracking-wide"
-                radius="large"
-              >
-                Login
-              </Button>
-              <Button
-                onClick={() => navigate("/register")}
-                size="2"
-                variant="solid"
-                style={{
-                  backgroundColor: "white",
-                  color: 'black',
-                  border: "1px solid #434345"
-                }}
-              >
-                Register
-              </Button>
+              {
+                (pathname == "/login" || pathname == "/register") ? (
+                  <></>
+                ) : (
+                  <>
+                    <CustomButton variant={"primary"} handleClick={handleClickOpen}>
+                      Login
+                    </CustomButton>
+                    <CustomButton variant={"secondary"} handleClick={() => navigate("/register")}>
+                      Register
+                    </CustomButton>
+                  </>)
+              }
             </>
           ) : (
-            <Button
-              onClick={handleLogout}
-              size="2"
-              variant="solid"
-              style={{
-                backgroundColor: "white",
-                color: 'black',
-                border: "1px solid #434345"
-              }}
-            >
-              Logout
-            </Button>
+            <div className=" flex gap-x-5">
+              <CustomButton variant={"primary"} handleClick={redirectDashboard}>
+                Dashboard
+              </CustomButton>
+              <CustomButton variant={"secondary"} handleClick={handleLogout}>
+                Logout
+              </CustomButton>
+            </div>
           )}
         </div>
       </Toolbar>
