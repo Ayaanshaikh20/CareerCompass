@@ -81,7 +81,7 @@ import Dashboard from "../pages/Dashboard";
 import AuthLayout from "../layouts/AuthLayout";
 import Settings from "../pages/Settings";
 import Profile from "../pages/Profile";
-import AppliedJobs from "../pages/AppliedJobs";
+import AppliedJobs from "../components/AppliedJobs";
 import Router from "../config/Router";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";

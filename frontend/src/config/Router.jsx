@@ -8,7 +8,6 @@ import {
   Login,
   AuthLayout,
   Dashboard,
-  AppliedJobs,
   Settings,
   Profile,
   NotFound,
@@ -49,7 +48,6 @@ const Router = () => {
       <Route element={<AuthRoutes />}>
         <Route element={<AuthLayout />}>
           <Route path='/dashboard' element={<Dashboard />} />
-          <Route path='/applied-jobs' element={<AppliedJobs />} />
           <Route path='/settings' element={<Settings />} />
           <Route path='/profile' element={<Profile />} />
         </Route>

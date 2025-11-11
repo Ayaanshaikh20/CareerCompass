@@ -280,8 +280,8 @@ const AppliedJobs = () => {
   );
 
   return (
-    <section className='h-full p-6 pt-16 bg-zinc-900'>
-      <div className='w-full'>
+    <section className=' mt-2'>
+      <div className='w-full border-2'>
         <MaterialReactTable
           data={applications || []}
           columns={columns}
@@ -348,7 +348,8 @@ const AppliedJobs = () => {
               "&::-webkit-scrollbar-track": {
                 backgroundColor: "#f1f1f1",
               },
-              height: "calc(100vh - 160px)",
+              maxHeight: 450,
+              height: 450,
             },
           }}
         />

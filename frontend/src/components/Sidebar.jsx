@@ -3,14 +3,13 @@ import { AccountCircleIcon, compass, DashboardIcon, FaChevronLeft, FaChevronRigh
 
 const Sidebar = () => {
   const location = useLocation();
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const user = JSON.parse(localStorage.getItem("user")) || {};
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const menuItems = [
     { name: "Dashboard", path: "/dashboard", icon: <DashboardIcon fontSize="small" /> },
-    { name: "Applied Jobs", path: "/applied-jobs", icon: <WorkIcon fontSize="small" /> },
     { name: "Profile", path: "/profile", icon: <AccountCircleIcon fontSize="small" /> },
   ];
 
@@ -23,8 +22,8 @@ const Sidebar = () => {
 
   return (
     <aside
-      className={`bg-border
-        h-screen transition-all duration-500 ${isCollapsed ? "w-20" : "w-72"
+      className={`bg-surface border-r-2 border-border
+        h-screen transition-all duration-500 ${isCollapsed ? "w-20" : "w-80"
         } flex flex-col justify-between`}
       onMouseEnter={() => setIsCollapsed(false)}
       onMouseLeave={() => setIsCollapsed(true)}

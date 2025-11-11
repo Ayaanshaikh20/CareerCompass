@@ -42,7 +42,7 @@ const Login = () => {
   };
 
   return (
-    <main className="min-h-screen flex flex-col md:flex-row w-full items-center justify-evenly gap-12 bg-background font-sans">
+    <main className="flex h-[calc(100vh-100px)] flex-col md:flex-row w-full items-center justify-evenly gap-12 bg-background font-sans">
       {/* Left Section */}
       <div className="w-1/2 md:w-1/2 xl:w-1/4 p-6 hidden lg:flex lg:justify-center">
         <img
