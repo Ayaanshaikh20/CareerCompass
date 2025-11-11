@@ -9,6 +9,7 @@ export default {
       colors: {
         background: 'var(--background-color)',
         secondaryBackground: 'var(--secondary-background-color)',
+        darkBackground: 'var(--dark-background-color)',
         buttonText: 'var(--button-text',
         surface: 'var(--surface-color)',
         textPrimary: 'var(--text-primary)',
@@ -20,6 +21,7 @@ export default {
         success: 'var(--success)',
         info: 'var(--info)',
         border: 'var(--border)',
+        danger: 'var(--danger)'
       },
     },
   },

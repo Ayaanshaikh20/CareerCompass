@@ -10,13 +10,25 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import PasswordOutlinedIcon from '@mui/icons-material/PasswordOutlined';
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import WorkIcon from '@mui/icons-material/Work';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 //images
 import compass from "../assets/images/compass.png";
 import Img1 from "../assets/images/log-in.png";
 import Img2 from "../assets/images/sign-up.png"
+import NotFound from "../assets/images/not-found.png"
 
 export {
+  LogoutIcon,
+  AccountCircleIcon,
+  DashboardIcon,
+  WorkIcon,
+  FaChevronLeft,
+  FaChevronRight,
   PasswordOutlinedIcon,
   MoreVertIcon,
   MdOutlineRefresh,
@@ -32,5 +44,6 @@ export {
   DeleteIcon,
   EmailOutlinedIcon,
   Img1,
-  Img2
+  Img2,
+  NotFound
 };

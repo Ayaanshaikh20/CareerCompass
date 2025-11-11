@@ -16,6 +16,7 @@ import {
   Legend,
   ToolTip,
   moment,
+  Chip
 } from "../shared/Imports";
 
 import * as ScrollArea from "@radix-ui/react-scroll-area";
@@ -71,125 +72,59 @@ const Dashboard = () => {
     rejected: applications.filter((app) => app.status === "rejected").length,
   };
 
-  const commonChartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        labels: {
-          color: "#cbd5e1", // Tailwind slate-300
-        },
-      },
-    },
-    scales: {
-      x: {
-        ticks: { color: "#cbd5e1" },
-        grid: { color: "#334155" }, // Tailwind slate-700
-      },
-      y: {
-        beginAtZero: true,
-        ticks: {
-          stepSize: 1,
-          precision: 0,
-          color: "#cbd5e1",
-        },
-        grid: { color: "#334155" },
-      },
-    },
-  };
-
-  const dateLineData = {
-    labels: dateLabels,
-    datasets: [
-      {
-        label: "Applications",
-        data: dateCounts,
-        borderColor: "#6366f1", // Tailwind indigo-500
-        backgroundColor: "#6366f1",
-        tension: 0.4,
-      },
-    ],
-  };
-
-  const monthLineData = {
-    labels: monthLabels,
-    datasets: [
-      {
-        label: "Applications",
-        data: monthCounts,
-        borderColor: "#6366f1",
-        backgroundColor: "#6366f1",
-        tension: 0.4,
-      },
-    ],
-  };
-
-  const pieData = {
-    labels: ["Pending", "Approved", "Rejected"],
-    datasets: [
-      {
-        data: [statusCounts.pending, statusCounts.approved, statusCounts.rejected],
-        backgroundColor: ["#facc15", "#22c55e", "#ef4444"],
-        hoverOffset: 4,
-      },
-    ],
-  };
-
   return (
-    <div className="bg-zinc-900 pt-16 p-6 text-white min-h-screen">
+    <div className="bg-background pt-12 p-6 text-textPrimary min-h-screen">
       <ScrollArea.Root className="w-full h-full rounded overflow-hidden">
         <ScrollArea.Viewport className="w-full h-full">
-          {/* Stat Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { label: "Total Applications", value: applications.length, color: "text-indigo-400" },
-              { label: "Pending", value: statusCounts.pending, color: "text-yellow-400" },
-              { label: "Approved", value: statusCounts.approved, color: "text-green-400" },
-              { label: "Rejected", value: statusCounts.rejected, color: "text-red-400" },
-            ].map(({ label, value, color }, idx) => (
-              <div
-                key={idx}
-                className="bg-zinc-800 border border-zinc-700 shadow rounded-xl p-6 text-center"
-              >
-                <p className={`text-5xl font-bold ${color}`}>{value}</p>
-                <p className="text-zinc-400 mt-2">{label}</p>
-              </div>
-            ))}
-          </div>
+          {/* Stats Card */}
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <div className="bg-surface border border-border shadow rounded-sm p-5">
+              <h2 className="text-lg font-semibold mb-4 text-textPrimary">Application Overview</h2>
+              <ul className="space-y-3">
+                {[
+                  { label: "Total Applications", value: applications.length, color: "text-primary" },
+                  { label: "Pending", value: statusCounts.pending, color: "text-info" },
+                  { label: "Approved", value: statusCounts.approved, color: "text-success" },
+                  { label: "Rejected", value: statusCounts.rejected, color: "text-danger" },
+                ].map(({ label, value, color }, idx) => (
+                  <li
+                    key={idx}
+                    className="flex items-center justify-between border-b border-border pb-2 last:border-none last:pb-0"
+                  >
+                    <Chip className="text-sm text-textSecondary" variant="filled" label={label} size="small" />
+                    <span className={`text-base font-semibold ${color}`}>{value}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          {/* Charts */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-4">
-            <div className="bg-zinc-800 border border-zinc-700 shadow rounded-lg p-4 h-[350px]">
-              <h2 className="text-lg font-semibold mb-2">Application Trends (Date wise)</h2>
-              <div className="h-[250px] w-full">
-                <Line data={dateLineData} options={commonChartOptions} />
-              </div>
-            </div>
-            <div className="bg-zinc-800 border border-zinc-700 shadow rounded-lg p-4 h-[350px]">
-              <h2 className="text-lg font-semibold mb-2">Application Trends (Month wise)</h2>
-              <div className="h-[250px] w-full">
-                <Line data={monthLineData} options={commonChartOptions} />
-              </div>
-            </div>
-            <div className="bg-zinc-800 border border-zinc-700 shadow rounded-lg p-4 h-[350px]">
-              <h2 className="text-lg font-semibold mb-2">Application Status</h2>
-              <div className="h-[250px] w-full flex justify-center items-center">
-                <div className="w-[300px] h-[250px]">
-                  <Pie
-                    data={pieData}
-                    options={{
-                      responsive: true,
-                      maintainAspectRatio: false,
-                      plugins: {
-                        legend: {
-                          labels: {
-                            color: "#cbd5e1",
-                          },
-                        },
-                      },
-                    }}
-                  />
-                </div>
+            {/* Application history */}
+            <div className="bg-surface border border-border shadow rounded-sm p-5">
+              <h2 className="text-lg font-semibold mb-4 text-textPrimary">Applications Over Time</h2>
+              <div className="bg-background rounded-xl p-4 h-[300px] overflow-y-auto space-y-2">
+                {applications.length > 0 ? (
+                  applications.map((app, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-center justify-between bg-surface transition-colors rounded-lg px-4 py-3"
+                    >
+                      <div className="flex flex-col">
+                        <span className="text-sm font-medium text-zinc-100">{app.role}</span>
+                        <span className="text-xs text-zinc-400">Role</span>
+                      </div>
+                      <div className="flex flex-col text-right">
+                        <span className="text-sm font-medium text-zinc-100">
+                          {new Date(app.appliedDate).toLocaleDateString()}
+                        </span>
+                        <span className="text-xs text-zinc-400">Applied Date</span>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center text-zinc-500 text-sm py-10">
+                    No applications found
+                  </div>
+                )}
               </div>
             </div>
           </div>

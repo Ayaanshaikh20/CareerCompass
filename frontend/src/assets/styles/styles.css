@@ -12,6 +12,7 @@ body {
 
 :root {
   --background-color: #F9FAFB;
+  --dark-background-color: #b1b4b8;
   --secondary-background-color: #dbeafe;
   --surface-color: #FFFFFF;
   --text-primary: #111827;
@@ -23,6 +24,7 @@ body {
   --button-secondary: #E5E7EB;
   --success: #10B981;
   --info: #F59E0B;
-  --border: #E5E7EB;
+  --border: #d6d7db;
+  --danger: #EF4444;
 }
   

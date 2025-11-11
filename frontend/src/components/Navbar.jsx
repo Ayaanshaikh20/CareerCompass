@@ -22,15 +22,10 @@ const Navbar = () => {
     navigate("/");
   };
 
-  const redirectDashboard = () => {
-    if (user) navigate("/dashboard");
-    else navigate("/login");
-  };
-
   return (
     <AppBar
-      position='fixed'
-      elevation={0}
+      position="static"
+      elevation={pathname !== "/login" && pathname !== "/register" ? 3 : 0}
       sx={{
         backgroundColor: "var(--background-color)",
       }}
@@ -73,9 +68,6 @@ const Navbar = () => {
             </>
           ) : (
             <div className=" flex gap-x-5">
-              <CustomButton variant={"primary"} handleClick={redirectDashboard}>
-                Dashboard
-              </CustomButton>
               <CustomButton variant={"secondary"} handleClick={handleLogout}>
                 Logout
               </CustomButton>
