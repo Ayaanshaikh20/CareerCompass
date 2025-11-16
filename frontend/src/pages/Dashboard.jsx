@@ -121,7 +121,7 @@ const Dashboard = () => {
                   applications.map((app, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center my-3 justify-between border border-1 bg-surface transition-colors rounded-lg px-4 py-3 shadow-sm hover:shadow-md hover:bg-accent/20 cursor-pointer"
+                      className="flex items-center my-3 justify-between border border-2 bg-surface transition-colors rounded-lg px-4 py-3 shadow-sm hover:shadow-md hover:bg-accent/20 cursor-pointer"
                     >
                       <div className="flex flex-col">
                         <span className="text-sm font-semibold text-textPrimary">{app.role}</span>
@@ -185,11 +185,8 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-          {/* End of Stats Card */}
           {/* Applied Jobs */}
-          <div>
-            <AppliedJobs />
-          </div>
+          <AppliedJobs fetchApplications={fetchApplications} setApplications={setApplications} applications={applications} />
         </ScrollArea.Viewport>
       </ScrollArea.Root>
     </div>

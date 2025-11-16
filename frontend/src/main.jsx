@@ -10,7 +10,7 @@ createRoot(document.getElementById("root")).render(
     <Theme>
       <ReactQueryDevtools initialIsOpen={false} />
       <BrowserRouter>
-        <Toaster />
+        <Toaster position="top-right" />
 
         <Router />
       </BrowserRouter>

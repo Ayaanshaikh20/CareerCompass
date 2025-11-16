@@ -79,6 +79,7 @@ const Register = () => {
               id="firstname"
               name="firstName"
               label="First Name"
+              placeholder={"First name"}
               handleChange={handleChange}
               value={formData.firstName}
               type="text"
@@ -92,6 +93,7 @@ const Register = () => {
               id="location"
               name="location"
               label="Location"
+              placeholder={"Location"}
               handleChange={handleChange}
               value={formData.location}
               type="text"
@@ -105,6 +107,7 @@ const Register = () => {
               id="phone"
               name="phone"
               label="Phone Number"
+              placeholder={"Phone number"}
               handleChange={handleChange}
               value={formData.phone}
               type="tel"
@@ -118,6 +121,7 @@ const Register = () => {
               id="email"
               name="email"
               label="Email"
+              placeholder={"Email"}
               handleChange={handleChange}
               value={formData.email}
               type="email"
@@ -131,6 +135,7 @@ const Register = () => {
               id="password"
               name="password"
               label="Password"
+              placeholder={"Password"}
               type="password"
               required
               helperText={[

@@ -1,4 +1,4 @@
-import { CustomButton } from "../utilities/Button";
+import { CustomButton } from "../utilities/CustomButton";
 import { useNavigate } from "../shared/Imports";
 import { NotFound as NotFoundIcon } from "../shared/Icons";
 

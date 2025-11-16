@@ -25,7 +25,8 @@ import {
   InputLabel,
   OutlinedInput,
   InputAdornment,
-  FormHelperText
+  FormHelperText,
+  Divider
 } from "@mui/material";
 
 //Material Table
@@ -88,10 +89,11 @@ import Sidebar from "../components/Sidebar";
 import NotFound from "../pages/NotFound";
 
 //Utilities
-import { CustomTextField } from "../utilities/Input";
-import { CustomButton } from "../utilities/Button";
+import { CustomTextField } from "../utilities/CustomTextField";
+import { CustomButton } from "../utilities/CustomButton";
 
 export {
+  Divider,
   FormHelperText,
   NotFound,
   gsap,

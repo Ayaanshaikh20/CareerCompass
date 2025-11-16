@@ -14,13 +14,10 @@ import {
   DatePicker,
   Descriptions,
   Drawer,
-  Input,
   MaterialReactTable,
   Row,
   Select,
-  Space,
   axiosInstance,
-  customToggleLoading,
   dayjs,
   moment,
   toast,
@@ -33,7 +30,9 @@ import {
   MenuItem,
   ListItemIcon,
   ListItemText,
-  Theme
+  Theme,
+  Divider,
+  CustomTextField,
 } from "../shared/Imports";
 
 const ActionMenuCell = ({ row, viewDetails, deleteApplication, viewEditApplication }) => {
@@ -47,49 +46,72 @@ const ActionMenuCell = ({ row, viewDetails, deleteApplication, viewEditApplicati
 
   return (
     <>
-      <IconButton size='small' onClick={handleOpen}>
+      <IconButton size="small" onClick={handleOpen}>
         <MoreVertIcon />
       </IconButton>
-      <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          elevation: 3,
+          sx: {
+            borderRadius: 2,
+          },
+        }}
+      >
         <MenuItem
           onClick={() => {
             handleClose();
             viewDetails(item);
           }}
+          sx={{
+            "&:hover": { bgcolor: "rgba(255,165,0,0.15)" }, // orange tint
+          }}
         >
           <ListItemIcon>
-            <VisibilityIcon fontSize='small' sx={{ color: "orange" }} />
+            <VisibilityIcon fontSize="small" sx={{ color: "orange" }} />
           </ListItemIcon>
-          <ListItemText primary='View' />
+          <ListItemText primary="View" />
         </MenuItem>
+
         <MenuItem
           onClick={() => {
             handleClose();
             viewEditApplication(item);
           }}
+          sx={{
+            "&:hover": { bgcolor: "rgba(0,128,0,0.12)" }, // green tint
+          }}
         >
           <ListItemIcon>
-            <EditIcon fontSize='small' sx={{ color: "green" }} />
+            <EditIcon fontSize="small" sx={{ color: "green" }} />
           </ListItemIcon>
-          <ListItemText primary='Edit' />
+          <ListItemText primary="Edit" />
         </MenuItem>
+        <Divider />
         <MenuItem
           onClick={() => {
             handleClose();
             deleteApplication(item);
           }}
+          sx={{
+            color: "red",
+            "&:hover": { bgcolor: "rgba(255,0,0,0.12)" }, // red tint
+          }}
         >
           <ListItemIcon>
-            <DeleteIcon fontSize='small' sx={{ color: "red" }} />
+            <DeleteIcon fontSize="small" sx={{ color: "red" }} />
           </ListItemIcon>
-          <ListItemText primary='Delete' />
+          <ListItemText primary="Delete" />
         </MenuItem>
       </Menu>
     </>
   );
 };
 
-const AppliedJobs = () => {
+const AppliedJobs = ({fetchApplications, applications}) => {
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState({});
   const { user_id } = JSON.parse(localStorage.getItem("user"));
@@ -107,14 +129,9 @@ const AppliedJobs = () => {
     status: "",
   };
   const [formData, setFormData] = useState(defaultFormData);
-  const [applications, setApplications] = useState([]);
   const [isViewDetailsDrawer, setIsViewDetailsDrawer] = useState(false);
   const [selectedJob, setSelectedJob] = useState(null);
   const [isEditApplication, setIsEditApplication] = useState(false);
-
-  useEffect(() => {
-    fetchApplications();
-  }, []);
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -157,24 +174,6 @@ const AppliedJobs = () => {
       if (!error.customSessionExpired) {
         toast.error(message || "Error submitting form");
       }
-    }
-  };
-
-  const fetchApplications = async () => {
-    try {
-      customToggleLoading({ loading: true });
-      const response = await axiosInstance.get(`/api/applications?user_id=${user_id}`);
-      const { status, applications, message } = response.data;
-      if (status === 200) {
-        setApplications(applications);
-      }
-    } catch (error) {
-      const { message } = error?.response?.data || {};
-      if (!error.customSessionExpired) {
-        toast.error(message || "Error fetching applications");
-      }
-    } finally {
-      customToggleLoading({ loading: false });
     }
   };
 
@@ -232,7 +231,7 @@ const AppliedJobs = () => {
       {
         accessorKey: "status",
         header: "Status",
-        maxSize: 100,
+        maxSize: 50,
         Cell: ({ row }) => {
           const status = row.original.status;
           const getColor = (status) => {
@@ -251,36 +250,32 @@ const AppliedJobs = () => {
         },
       },
       {
+        accessorKey: "appliedDate",
+        header: "Applied Date",
+        maxSize: 70,
+        Cell: ({ row }) => <span className=" font-bold">{moment(row.original.appliedDate).format("DD-MMM-YYYY")}</span>,
+      },
+      {
         accessorKey: "jobLink",
         header: "Visit",
-        maxSize: 70,
+        maxSize: 40,
         Cell: ({ row }) => (
           <a className='text-blue-500 items-center w-full underline' href={row.original.jobLink}>
             Link
           </a>
         ),
       },
-      { accessorKey: "role", header: "Role", minSize: 350 },
+      { accessorKey: "role", header: "Role", minSize: 300 },
       { accessorKey: "experience", header: "Experience", maxSize: 120 },
-      { accessorKey: "platform", header: "Platform", maxSize: 100 },
-      {
-        accessorKey: "appliedDate",
-        header: "Applied Date",
-        maxSize: 130,
-        Cell: ({ row }) => <span>{moment(row.original.appliedDate).format("DD-MMM-YYYY")}</span>,
-      },
-      {
-        accessorKey: "jobDescription",
-        header: "Job Description",
-        minSize: 400,
-        Cell: ({ row }) => <span className=' text-wrap'>{row.original.jobDescription}</span>,
-      },
+      { accessorKey: "platform", header: "Platform", maxSize: 100 }
     ],
     []
   );
 
   return (
     <section className=' mt-2'>
+
+      {/* Applications Table */}
       <div className='w-full border-2'>
         <MaterialReactTable
           data={applications || []}
@@ -293,6 +288,7 @@ const AppliedJobs = () => {
             }
           }
           enableBottomToolbar={false}
+          columnResizeMode="onEnd"
           enableColumnFilters={false}
           enableDensityToggle={false}
           enableFullScreenToggle={false}
@@ -348,12 +344,14 @@ const AppliedJobs = () => {
               "&::-webkit-scrollbar-track": {
                 backgroundColor: "#f1f1f1",
               },
-              maxHeight: 450,
-              height: 450,
+              maxHeight: 410,
+              height: 410,
             },
           }}
         />
       </div>
+
+      {/* Drawer for Viewing Job Details */}
       <Drawer
         title='Job Details'
         placement='right'
@@ -389,6 +387,9 @@ const AppliedJobs = () => {
           </Descriptions>
         )}
       </Drawer>
+
+
+      {/* Drawer for Adding/Editing Application */}
       <Drawer
         title={isEditApplication ? "Edit Application" : "New Application"}
         open={open || isEditApplication}
@@ -405,10 +406,9 @@ const AppliedJobs = () => {
         <Row gutter={16}>
           <Col span={12} className='mb-4'>
             <label>Role</label>
-            <Input
+            <CustomTextField
               value={formData.role}
-              onChange={(e) => handleChange("role", e.target.value)}
-              placeholder='Enter role'
+              handleChange={(e) => handleChange("role", e.target.value)}
             />
             {errors.role && <p className='text-red-500 text-xs'>{errors.role}</p>}
           </Col>
@@ -427,73 +427,23 @@ const AppliedJobs = () => {
         <Row gutter={16}>
           <Col span={12} className='mb-4'>
             <label className='block mb-1'>Package (LPA)</label>
-            <Input
+            <CustomTextField
               name='package'
               value={formData.package}
-              onChange={(e) => handleChange("package", e.target.value)}
-              placeholder='Enter package'
+              handleChange={(e) => handleChange("package", e.target.value)}
             />
             {errors.package && <p className='text-red-500 text-xs'>{errors.package}</p>}
           </Col>
           <Col span={12} className='mb-4'>
             <label className='block mb-1'>Employer/Company</label>
-            <Input
+            <CustomTextField
               name='employer'
               value={formData.employer}
-              onChange={(e) => {
+              handleChange={(e) => {
                 handleChange("employer", e.target.value);
               }}
-              placeholder='Enter company name'
             />
             {errors.employer && <p className='text-red-500 text-xs'>{errors.employer}</p>}
-          </Col>
-        </Row>
-        <Row gutter={16}>
-          <Col span={12} className='mb-4'>
-            <label className='block mb-1'>Location</label>
-            <Input
-              name='location'
-              value={formData.location}
-              onChange={(e) => handleChange("location", e.target.value)}
-              placeholder='Enter location'
-            />
-            {errors.location && <p className='text-red-500 text-xs'>{errors.location}</p>}
-          </Col>
-          <Col span={12} className='mb-4'>
-            <label className='block mb-1'>Status</label>
-            <Select
-              style={{ width: "100%" }}
-              placeholder='Select Status'
-              value={formData.status}
-              onChange={(selectedValue) => handleChange("status", selectedValue)}
-            >
-              <Select.Option value='pending'>Pending</Select.Option>
-              <Select.Option value='approved'>Approved</Select.Option>
-              <Select.Option value='rejected'>Rejected</Select.Option>
-            </Select>
-            {errors.status && <p className='text-red-500 text-xs'>{errors.status}</p>}
-          </Col>
-        </Row>
-        <Row gutter={16}>
-          <Col span={12} className='mb-4'>
-            <label className='block mb-1'>Link of the job</label>
-            <Input
-              name='jobLink'
-              value={formData.jobLink}
-              onChange={(e) => handleChange("jobLink", e.target.value)}
-              placeholder='Enter job link'
-            />
-            {errors.jobLink && <p className='text-red-500 text-xs'>{errors.jobLink}</p>}
-          </Col>
-          <Col span={12} className='mb-4'>
-            <label className='block mb-1'>Required experience</label>
-            <Input
-              name='experience'
-              value={formData.experience}
-              onChange={(e) => handleChange("experience", e.target.value)}
-              placeholder='Enter experience'
-            />
-            {errors.experience && <p className='text-red-500 text-xs'>{errors.experience}</p>}
           </Col>
         </Row>
         <Row gutter={16}>
@@ -514,17 +464,66 @@ const AppliedJobs = () => {
             </Select>
             {errors.platform && <p className='text-red-500 text-xs'>{errors.platform}</p>}
           </Col>
+          <Col span={12} className='mb-4'>
+            <label className='block mb-1'>Status</label>
+            <Select
+              style={{ width: "100%" }}
+              placeholder='Select Status'
+              value={formData.status}
+              onChange={(selectedValue) => handleChange("status", selectedValue)}
+            >
+              <Select.Option value='pending'>Pending</Select.Option>
+              <Select.Option value='approved'>Approved</Select.Option>
+              <Select.Option value='rejected'>Rejected</Select.Option>
+            </Select>
+            {errors.status && <p className='text-red-500 text-xs'>{errors.status}</p>}
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={12} className='mb-4'>
+            <label className='block mb-1'>Link of the job</label>
+            <CustomTextField
+              name='jobLink'
+              value={formData.jobLink}
+              handleChange={(e) => handleChange("jobLink", e.target.value)}
+            />
+            {errors.jobLink && <p className='text-red-500 text-xs'>{errors.jobLink}</p>}
+          </Col>
+          <Col span={12} className='mb-4'>
+            <label className='block mb-1'>Required experience</label>
+            <CustomTextField
+              name='experience'
+              value={formData.experience}
+              handleChange={(e) => handleChange("experience", e.target.value)}
+              type={"number"}
+            />
+            {errors.experience && <p className='text-red-500 text-xs'>{errors.experience}</p>}
+          </Col>
+        </Row>
+        <Row>
+          <Col span={24} className='mb-4'>
+            <label className='block mb-1'>Address</label>
+            <CustomTextField
+              name='location'
+              rows={4}
+              isMultiline={true}
+              value={formData.location}
+              handleChange={(e) => handleChange("location", e.target.value)}
+            />
+            {errors.location && <p className='text-red-500 text-xs'>{errors.location}</p>}
+          </Col>
         </Row>
         <Row>
           <Col span={24} className='mb-4'>
             <label className='block mb-1'>Job Description</label>
-            <Input
+            <CustomTextField
               name='jobDescription'
               value={formData.jobDescription}
-              onChange={(e) => {
+              rows={4}
+              isMultiline={true}
+              handleChange={(e) => {
                 handleChange("jobDescription", e.target.value);
               }}
-              placeholder='Enter job description'
             />
             {errors.jobDescription && <p className='text-red-500 text-xs'>{errors.jobDescription}</p>}
           </Col>

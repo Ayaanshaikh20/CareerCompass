@@ -6,6 +6,7 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -69,6 +70,7 @@ const Login = () => {
               name="email"
               label="Email"
               type="email"
+              placeholder={"Email"}
               id={"email"}
               required={true}
               value={formData.email}
@@ -82,6 +84,7 @@ const Login = () => {
             <CustomTextField
               name="password"
               label="Password"
+              placeholder={"Password"}
               type="password"
               id={"password"}
               required={true}
