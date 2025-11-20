@@ -43,9 +43,9 @@ const Register = () => {
         navigate("/dashboard");
       }
     } catch (error) {
-      const errorData = error.response?.data;
-      if (errorData?.status) {
-        toast.error(errorData.message);
+      const { data, status } = error?.response;
+      if (status) {
+        toast.error(data);
       } else {
         toast.error("Unexpected error occurred");
       }

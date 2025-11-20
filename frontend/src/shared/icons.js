@@ -15,6 +15,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import WorkIcon from '@mui/icons-material/Work';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { MdPushPin } from "react-icons/md";
 
 //images
 import compass from "../assets/images/compass.png";
@@ -23,6 +24,7 @@ import Img2 from "../assets/images/sign-up.png"
 import NotFound from "../assets/images/not-found.png"
 
 export {
+  MdPushPin,
   LogoutIcon,
   AccountCircleIcon,
   DashboardIcon,

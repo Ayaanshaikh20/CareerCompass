@@ -39,10 +39,8 @@ const Dashboard = () => {
         setApplications(applications);
       }
     } catch (error) {
-      const { message } = error?.response?.data || {};
-      if (!error.customSessionExpired) {
-        toast.error(message || "Error fetching applications");
-      }
+      const { data } = error?.response || {};
+      toast.error(data || "Error fetching applications");
     } finally {
       customToggleLoading({ loading: false });
     }
@@ -92,7 +90,7 @@ const Dashboard = () => {
       <ScrollArea.Root className="w-full h-full rounded overflow-hidden">
         <ScrollArea.Viewport className="w-full h-full">
           {/* Stats Card */}
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="bg-surface border border-border shadow rounded-sm p-5">
               <h2 className="text-lg font-semibold mb-4 text-textPrimary border-b-2">Application Overview</h2>
               <ul className="space-y-3">
@@ -121,7 +119,7 @@ const Dashboard = () => {
                   applications.map((app, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center my-3 justify-between border border-2 bg-surface transition-colors rounded-lg px-4 py-3 shadow-sm hover:shadow-md hover:bg-accent/20 cursor-pointer"
+                      className="flex items-center my-3 justify-between border border-border bg-surface transition-colors rounded-lg px-4 py-3 shadow-sm hover:shadow-md hover:bg-accent/20 cursor-pointer"
                     >
                       <div className="flex flex-col">
                         <span className="text-sm font-semibold text-textPrimary">{app.role}</span>
@@ -148,40 +146,8 @@ const Dashboard = () => {
                 Frequent Platforms
               </h2>
               {/* Make the chart fill the card space */}
-              <div className="w-full h-56">
+              <div className="w-full h-64">
                 <Line data={frequentPlatformsData} options={{ maintainAspectRatio: false, ...frequentPlatformsOptions }} />
-              </div>
-            </div>
-            {/* Complete Profile */}
-            <div className="bg-surface border border-border shadow rounded-sm p-5 flex flex-col justify-between">
-              <div>
-                <h2 className="text-lg font-semibold mb-4 text-textPrimary border-b-2">Complete Your Profile</h2>
-                <p className="text-textSecondary text-sm mb-4">
-                  A complete profile increases your chances of getting noticed by employers. Add more details to stand out!
-                </p>
-                <div className="flex flex-col space-y-2">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-6 h-6 rounded-full bg-primary"></div>
-                    <p className="text-textPrimary">Add a profile picture</p>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-6 h-6 rounded-full bg-primary"></div>
-                    <p className="text-textPrimary">Complete your bio</p>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-6 h-6 rounded-full bg-primary"></div>
-                    <p className="text-textPrimary">Add your education</p>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <div className="w-6 h-6 rounded-full bg-primary"></div>
-                    <p className="text-textPrimary">Add your experience</p>
-                  </div>
-                </div>
-              </div>
-              <div className="flex justify-end">
-                <button className="bg-primary text-white px-4 py-2 rounded hover:bg-primaryHover transition">
-                  Complete Profile
-                </button>
               </div>
             </div>
           </div>

@@ -26,7 +26,8 @@ import {
   OutlinedInput,
   InputAdornment,
   FormHelperText,
-  Divider
+  Divider,
+  Paper
 } from "@mui/material";
 
 //Material Table
@@ -91,8 +92,14 @@ import NotFound from "../pages/NotFound";
 //Utilities
 import { CustomTextField } from "../utilities/CustomTextField";
 import { CustomButton } from "../utilities/CustomButton";
+import { muiTableBodyCellProps, muiTableBodyRowProps, muiTableContainerProps, muiTableProps } from "../utilities/TableStyles";
 
 export {
+  muiTableBodyCellProps,
+  muiTableBodyRowProps,
+  muiTableContainerProps,
+  muiTableProps,
+  Paper,
   Divider,
   FormHelperText,
   NotFound,

@@ -35,15 +35,15 @@ const Login = () => {
         navigate("/dashboard");
       }
     } catch (error) {
-      const { status, message } = error?.response?.data || {};
-      toast.error(status ? message : "Error logging in user");
+      const { status, data } = error?.response || {};
+      toast.error(status ? data : "Error logging in user");
     } finally {
       customToggleLoading({ loading: false });
     }
   };
 
   return (
-    <main className="flex h-[calc(100vh-100px)] flex-col md:flex-row w-full items-center justify-evenly gap-12 bg-background font-sans">
+    <main className="flex h-[calc(100vh-50px)] flex-col md:flex-row w-full items-center justify-evenly gap-12 bg-background font-sans">
       {/* Left Section */}
       <div className="w-1/2 md:w-1/2 xl:w-1/4 p-6 hidden lg:flex lg:justify-center">
         <img

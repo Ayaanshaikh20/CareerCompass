@@ -8,7 +8,7 @@ const CustomButton = ({ children, handleClick, variant, type }) => {
                 type={type}
                 size="2"
                 variant="solid"
-                className="bg-primary text-buttonText w-full hover:bg-primaryHover px-5"
+                className="bg-primary text-buttonText w-full shadow-lg hover:bg-primaryHover px-5"
             >
                 {children}
             </Button>
@@ -18,7 +18,7 @@ const CustomButton = ({ children, handleClick, variant, type }) => {
                 type={type}
                 size="2"
                 variant="solid"
-                className="bg-secondary text-textSecondary w-full hover:bg-secondaryHover px-5"
+                className="bg-secondary text-textSecondary shadow-lg w-full hover:bg-secondaryHover px-5"
             >
                 {children}
             </Button>

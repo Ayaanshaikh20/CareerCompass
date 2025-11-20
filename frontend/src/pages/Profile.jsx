@@ -1,57 +1,129 @@
-import { Grid2, Box, Avatar, Tooltip, Typography, IconButton } from "../shared/Imports";
-import { EditIcon, EmailIcon, PhoneIcon, LocationOnIcon } from "../shared/Icons";
+import { CustomButton, CustomTextField, useState } from "../shared/Imports";
 
 const Profile = () => {
-  const { first_name, location, phone_number, email } = JSON.parse(localStorage.getItem("user"));
+  const { first_name, last_name, location, phone_number, email } = JSON.parse(localStorage.getItem("user"));
+  const [userData, setUserData] = useState({
+    personalDetails: {
+      firstName: first_name,
+      lastName: last_name,
+      location: location,
+      phone: phone_number,
+      email: email
+    },
+    experience: [],
+    education: [],
+    skills: [],
+    resume: null
+  });
+  const [formChanged, setFormChanged] = useState(false);
+
+  //Destructure userData
+  const { personalDetails } = userData;
+  const { firstName, lastName, location: address, phone, email: emailId } = personalDetails;
+
+  const handleChange = (name, value, section) => {
+    setUserData((prevData) => {
+      return {
+        ...prevData,
+        [section]: {
+          ...prevData[section],
+          [name]: value
+        }
+      }
+    });
+    setFormChanged(true);
+  }
+
+  console.log("User Data:", userData);
 
   return (
-    <section className='h-full p-6 pt-16 bg-background' >
-      <Box p={4} maxWidth={1000}>
-        <Grid2 container spacing={4}>
-          <Grid2 xs={12} md={4}>
-            <Avatar
-              sx={{
-                width: "100%",
-                height: "auto",
-                maxWidth: 300,
-                boxShadow: 3,
-              }}
-              variant='rounded'
-            />
-          </Grid2>
-
-          <Grid2 xs={12} md={8}>
-            <Box display='flex' justifyContent='space-between' alignItems='center'>
-              <Box>
-                <Typography variant='h4' fontWeight={600}>
-                  {first_name}
-                </Typography>
-              </Box>
-              <Tooltip title='Edit Profile'>
-                <IconButton>
-                  <EditIcon />
-                </IconButton>
-              </Tooltip>
-            </Box>
-
-            <Box mt={3}>
-              <Box display='flex' alignItems='center' mb={1.5}>
-                <EmailIcon sx={{ mr: 1 }} />
-                <Typography>{email}</Typography>
-              </Box>
-              <Box display='flex' alignItems='center' mb={1.5}>
-                <PhoneIcon sx={{ mr: 1 }} />
-                <Typography>{phone_number}</Typography>
-              </Box>
-              <Box display='flex' alignItems='center'>
-                <LocationOnIcon sx={{ mr: 1 }} />
-                <Typography>{location}</Typography>
-              </Box>
-            </Box>
-          </Grid2>
-        </Grid2>
-      </Box>
-    </section>
+    <>
+      <main className=" w-full flex justify-between gap-5 bg-background pt-12 p-6 text-textPrimary min-h-screen">
+        {/* Profile section */}
+        <section className="bg-surface border border-border flex flex-col justify-between shadow rounded-sm p-6 w-full">
+          <div>
+            <h2 className="text-xl font-semibold text-textPrimary border-b-2 pb-1 mb-6">
+              Complete Profile
+            </h2>
+            <div className="mt-6 space-y-5">
+              <span className=" border-b-2 pb-1 mb-6">Personal Details</span>
+              {/* Row 1 */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="flex flex-col">
+                  <label className="text-sm text-textSecondary mb-1">
+                    First Name
+                  </label>
+                  <CustomTextField
+                    value={firstName}
+                    name={"firstname"}
+                    className="w-full"
+                    handleChange={(e) => handleChange("firstName", e.target.value, "personalDetails")}
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <label className="text-sm text-textSecondary mb-1">
+                    Last Name
+                  </label>
+                  <CustomTextField
+                    value={lastName}
+                    name={"lastname"}
+                    className="w-full"
+                    handleChange={(e) => handleChange("lastName", e.target.value, "personalDetails")}
+                  />
+                </div>
+              </div>
+              {/* Location */}
+              <div className="flex flex-col">
+                <label className="text-sm text-textSecondary mb-1">
+                  Location
+                </label>
+                <CustomTextField
+                  value={address}
+                  className="w-full sm:w-72"
+                  handleChange={(e) => handleChange("location", e.target.value, "personalDetails")}
+                />
+              </div>
+              {/* Phone */}
+              <div className="flex flex-col">
+                <label className="text-sm text-textSecondary mb-1">
+                  Phone Number
+                </label>
+                <CustomTextField
+                  value={phone}
+                  className="w-full sm:w-72"
+                  handleChange={(e) => handleChange("phone", e.target.value, "personalDetails")}
+                />
+              </div>
+              {/* Email */}
+              <div className="flex flex-col">
+                <label className="text-sm text-textSecondary mb-1">
+                  Email
+                </label>
+                <CustomTextField
+                  value={emailId}
+                  className="w-full sm:w-72"
+                  handleChange={(e) => handleChange("email", e.target.value, "personalDetails")}
+                />
+              </div>
+            </div>
+          </div>
+          {/* Save Changes Button */}
+          <div className="flex justify-end mt-10">
+            <CustomButton
+              variant={formChanged ? "primary" : "disabled"}
+              className=""
+              handleClick={() => console.log("Save Changes clicked")}
+              disabled={!formChanged}
+            >
+              Save Changes
+            </CustomButton>
+          </div>
+        </section>
+        {/* Preview section */}
+        <section className=" w-full">
+        </section>
+      </main>
+    </>
   );
 };
 

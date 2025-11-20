@@ -21,7 +21,6 @@ import {
   dayjs,
   moment,
   toast,
-  useEffect,
   useMemo,
   useState,
   Chip,
@@ -33,6 +32,10 @@ import {
   Theme,
   Divider,
   CustomTextField,
+  muiTableBodyRowProps,
+  muiTableBodyCellProps,
+  muiTableProps,
+  muiTableContainerProps,
 } from "../shared/Imports";
 
 const ActionMenuCell = ({ row, viewDetails, deleteApplication, viewEditApplication }) => {
@@ -111,7 +114,7 @@ const ActionMenuCell = ({ row, viewDetails, deleteApplication, viewEditApplicati
   );
 };
 
-const AppliedJobs = ({fetchApplications, applications}) => {
+const AppliedJobs = ({ fetchApplications, applications }) => {
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState({});
   const { user_id } = JSON.parse(localStorage.getItem("user"));
@@ -170,10 +173,8 @@ const AppliedJobs = ({fetchApplications, applications}) => {
         await fetchApplications();
       }
     } catch (error) {
-      const { message } = error?.response?.data || {};
-      if (!error.customSessionExpired) {
-        toast.error(message || "Error submitting form");
-      }
+      const { data } = error?.response || {};
+      toast.error(data || "Error submitting form");
     }
   };
 
@@ -204,10 +205,8 @@ const AppliedJobs = ({fetchApplications, applications}) => {
         toast.success("Application deleted successfully");
       }
     } catch (error) {
-      const { message } = error?.response?.data || {};
-      if (!error.customSessionExpired) {
-        toast.error(message || "Error deleting application");
-      }
+      const { data } = error?.response || {};
+      toast.error(data || "Error deleting application");
     }
   };
 
@@ -313,41 +312,10 @@ const AppliedJobs = ({fetchApplications, applications}) => {
               </div>
             );
           }}
-          muiTableBodyRowProps={{
-            sx: {
-              paddingY: 0.5,
-            },
-          }}
-          muiTableBodyCellProps={{
-            sx: {
-              padding: "8px 8px",
-              whiteSpace: "nowrap",
-            },
-          }}
-          muiTableProps={{
-            sx: {
-              tableLayout: "auto",
-              width: "100%",
-            },
-          }}
-          muiTableContainerProps={{
-            sx: {
-              maxWidth: "100%",
-              overflowX: "auto",
-              "&::-webkit-scrollbar": {
-                height: "3px",
-              },
-              "&::-webkit-scrollbar-thumb": {
-                backgroundColor: "#c1c1c1",
-                borderRadius: "2px",
-              },
-              "&::-webkit-scrollbar-track": {
-                backgroundColor: "#f1f1f1",
-              },
-              maxHeight: 410,
-              height: 410,
-            },
-          }}
+          muiTableBodyRowProps={muiTableBodyRowProps}
+          muiTableBodyCellProps={muiTableBodyCellProps}
+          muiTableProps={muiTableProps}
+          muiTableContainerProps={muiTableContainerProps}
         />
       </div>
 
@@ -398,7 +366,7 @@ const AppliedJobs = ({fetchApplications, applications}) => {
         extra={
           <Theme>
             <Button variant='solid' size="2" onClick={submitOrEditApplication}>
-              Submit
+              Add
             </Button>
           </Theme>
         }
@@ -429,6 +397,7 @@ const AppliedJobs = ({fetchApplications, applications}) => {
             <label className='block mb-1'>Package (LPA)</label>
             <CustomTextField
               name='package'
+              type={"number"}
               value={formData.package}
               handleChange={(e) => handleChange("package", e.target.value)}
             />

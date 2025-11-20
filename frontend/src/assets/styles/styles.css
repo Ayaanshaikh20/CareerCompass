@@ -11,7 +11,7 @@ body {
 }
 
 :root {
-  --background-color: #F9FAFB;
+  --background-color: #f2f3f3;
   --dark-background-color: #b1b4b8;
   --secondary-background-color: #dbeafe;
   --surface-color: #FFFFFF;
@@ -21,7 +21,7 @@ body {
   --button-primary: #3B82F6;
   --hover-button-primary: #2563EB;
   --hover-button-secondary: #D1D5DB;
-  --button-secondary: #E5E7EB;
+  --button-secondary: #121825;
   --success: #10B981;
   --info: #F59E0B;
   --border: #d6d7db;
