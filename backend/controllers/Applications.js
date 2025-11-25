@@ -1,4 +1,4 @@
-const { Router, application } = require("express");
+const { Router } = require("express");
 const { verifyAccessToken } = require("../config/generateTokens");
 const pool = require("../config/dbConnect");
 
