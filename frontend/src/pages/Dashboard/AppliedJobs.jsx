@@ -7,7 +7,7 @@ import {
   VisibilityIcon,
   DeleteIcon,
   MoreVertIcon,
-} from "../shared/Icons";
+} from "../../shared/Icons";
 import {
   Button,
   Col,
@@ -36,7 +36,7 @@ import {
   muiTableBodyCellProps,
   muiTableProps,
   muiTableContainerProps,
-} from "../shared/Imports";
+} from "../../shared/Imports";
 
 const ActionMenuCell = ({ row, viewDetails, deleteApplication, viewEditApplication }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -259,7 +259,7 @@ const AppliedJobs = ({ fetchApplications, applications }) => {
         header: "Visit",
         maxSize: 40,
         Cell: ({ row }) => (
-          <a className='text-blue-500 items-center w-full underline' href={row.original.jobLink}>
+          <a target="_blank" className='text-blue-500 items-center w-full underline' href={row.original.jobLink}>
             Link
           </a>
         ),

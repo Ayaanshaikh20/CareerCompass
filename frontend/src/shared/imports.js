@@ -46,10 +46,6 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 //react dom
 import { createRoot } from "react-dom/client";
 
-//gsap
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
 //Tools
 import axios from "axios";
 import dayjs from "dayjs";
@@ -70,20 +66,17 @@ import {
 //Radix
 import { Theme, Button } from "@radix-ui/themes";
 
-//typing writer
-import { Typewriter } from 'react-simple-typewriter';
-
 //Components
 import { customToggleLoading } from "../components/CustomLoading";
 import axiosInstance from "../config/AxiosInstance";
 import MainLayout from "../layouts/MainLayout";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
-import Dashboard from "../pages/Dashboard";
+import Dashboard from "../pages/Dashboard/Dashboard";
 import AuthLayout from "../layouts/AuthLayout";
 import Settings from "../pages/Settings";
 import Profile from "../pages/Profile";
-import AppliedJobs from "../components/AppliedJobs";
+import AppliedJobs from "../pages/Dashboard/AppliedJobs";
 import Router from "../config/Router";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
@@ -103,15 +96,12 @@ export {
   Divider,
   FormHelperText,
   NotFound,
-  gsap,
-  ScrollTrigger,
   CustomButton,
   CustomTextField,
   InputAdornment,
   OutlinedInput,
   FormControl,
   InputLabel,
-  Typewriter,
   Theme,
   Menu,
   MenuItem,

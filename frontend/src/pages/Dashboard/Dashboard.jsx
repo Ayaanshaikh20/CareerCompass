@@ -16,7 +16,7 @@ import {
   ToolTip,
   Chip,
   AppliedJobs
-} from "../shared/Imports";
+} from "../../shared/Imports";
 
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 
@@ -86,7 +86,7 @@ const Dashboard = () => {
 
 
   return (
-    <div className="bg-background pt-12 p-6 text-textPrimary min-h-screen">
+    <div className="bg-background pt-4 p-3 text-textPrimary min-h-screen">
       <ScrollArea.Root className="w-full h-full rounded overflow-hidden">
         <ScrollArea.Viewport className="w-full h-full">
           {/* Stats Card */}

@@ -1,4 +1,4 @@
-import { CustomButton, CustomTextField, useState } from "../shared/Imports";
+import { axiosInstance, CustomButton, CustomTextField, useState } from "../shared/Imports";
 
 const Profile = () => {
   const { first_name, last_name, location, phone_number, email } = JSON.parse(localStorage.getItem("user"));
@@ -31,10 +31,17 @@ const Profile = () => {
         }
       }
     });
-    setFormChanged(true);
-  }
+    setFormChanged(true)
+  };
 
-  console.log("User Data:", userData);
+  const submitChanges = async () => {
+    try {
+      let result = await axiosInstance.post("/api/edit-profile", userData)
+      console.log(result, 'result');
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -112,7 +119,7 @@ const Profile = () => {
             <CustomButton
               variant={formChanged ? "primary" : "disabled"}
               className=""
-              handleClick={() => console.log("Save Changes clicked")}
+              handleClick={submitChanges}
               disabled={!formChanged}
             >
               Save Changes

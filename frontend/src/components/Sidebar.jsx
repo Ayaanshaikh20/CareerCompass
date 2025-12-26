@@ -30,7 +30,7 @@ const Sidebar = () => {
   return (
     <aside
       className={`bg-surface border-r-2 border-border
-        h-screen transition-all duration-200 ${isCollapsed && !isPinned ? "w-20" : "w-80"
+        h-screen transition-all duration-200 ${isCollapsed && !isPinned ? "w-20" : "w-70"
         } flex flex-col justify-between`}
       onMouseEnter={() => {
         if (!isPinned) setIsCollapsed(false);
@@ -55,7 +55,7 @@ const Sidebar = () => {
                     CareerCompass
                   </h1>
                   <p className="text-xs text-textSecondary text-nowrap">
-                    Welcome, {user?.first_name}
+                    Hi, {user?.first_name}
                   </p>
                 </div>
                 <button

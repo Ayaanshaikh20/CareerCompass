@@ -35,8 +35,8 @@ const Login = () => {
         navigate("/dashboard");
       }
     } catch (error) {
-      const { status, data } = error?.response || {};
-      toast.error(status ? data : "Error logging in user");
+      const { status, message } = error?.response?.data || {};
+      toast.error(status ? message : "Error logging in user");
     } finally {
       customToggleLoading({ loading: false });
     }
