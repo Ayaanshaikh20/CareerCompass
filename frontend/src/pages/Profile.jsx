@@ -1,34 +1,44 @@
-import { axiosInstance, CustomButton, CustomTextField, useState } from "../shared/Imports";
+import { axiosInstance, CustomButton, CustomTextField, customToggleLoading, toast, useQueryClient, useState, useEffect } from "../shared/Imports";
 
 const Profile = () => {
-  const { first_name, last_name, location, phone_number, email } = JSON.parse(localStorage.getItem("user"));
-  const [userData, setUserData] = useState({
-    personalDetails: {
-      firstName: first_name,
-      lastName: last_name,
-      location: location,
-      phone: phone_number,
-      email: email
-    },
-    experience: [],
-    education: [],
-    skills: [],
-    resume: null
+  const queryClient = useQueryClient();
+  const user_id = localStorage.getItem("uid");
+  const [user, setUser] = useState({
+    location: "",
+    firstName: "",
+    email: "",
+    phone: ""
   });
   const [formChanged, setFormChanged] = useState(false);
 
   //Destructure userData
-  const { personalDetails } = userData;
-  const { firstName, lastName, location: address, phone, email: emailId } = personalDetails;
+  const { firstName, location, phone, email } = user || {};
 
-  const handleChange = (name, value, section) => {
-    setUserData((prevData) => {
+  useEffect(() => {
+    fetchUser()
+  }, []);
+
+  const fetchUser = async () => {
+    try {
+      customToggleLoading({ loading: true })
+      const result = await axiosInstance.get(`/api/fetch-user?userId=${user_id}`);
+      const { status, userDetails } = result.data;
+      if (status == 200) {
+        setUser(userDetails);
+      }
+    } catch (error) {
+      const { data } = error?.response || {};
+      toast.error(data || "Error updating user");
+    } finally {
+      customToggleLoading({ loading: false })
+    }
+  };
+
+  const handleChange = (name, value) => {
+    setUser((prev) => {
       return {
-        ...prevData,
-        [section]: {
-          ...prevData[section],
-          [name]: value
-        }
+        ...prev,
+        [name]: value
       }
     });
     setFormChanged(true)
@@ -36,16 +46,24 @@ const Profile = () => {
 
   const submitChanges = async () => {
     try {
-      let result = await axiosInstance.post("/api/edit-profile", userData)
-      console.log(result, 'result');
+      customToggleLoading({ loading: true });
+      const result = await axiosInstance.post("/api/edit-profile", user)
+      const { status, message } = result.data;
+      if (status == 200) {
+        toast.success(message);
+        queryClient.setQueryData(["userDetails"], user);
+      }
     } catch (error) {
-      console.log(error);
+      const { data } = error?.response || {};
+      toast.error(data || "Error updating user");
+    } finally {
+      customToggleLoading({ loading: false })
     }
   };
 
   return (
     <>
-      <main className=" w-full flex justify-between gap-5 bg-background pt-12 p-6 text-textPrimary min-h-screen">
+      <main className=" w-full flex justify-between gap-5 bg-background pt-4 p-3 text-textPrimary min-h-screen">
         {/* Profile section */}
         <section className="bg-surface border border-border flex flex-col justify-between shadow rounded-sm p-6 w-full">
           <div>
@@ -62,12 +80,12 @@ const Profile = () => {
                   </label>
                   <CustomTextField
                     value={firstName}
-                    name={"firstname"}
+                    name={"firstName"}
                     className="w-full"
-                    handleChange={(e) => handleChange("firstName", e.target.value, "personalDetails")}
+                    handleChange={(e) => handleChange(e.target.name, e.target.value)}
                   />
                 </div>
-                <div className="flex flex-col">
+                {/* <div className="flex flex-col">
                   <label className="text-sm text-textSecondary mb-1">
                     Last Name
                   </label>
@@ -75,9 +93,9 @@ const Profile = () => {
                     value={lastName}
                     name={"lastname"}
                     className="w-full"
-                    handleChange={(e) => handleChange("lastName", e.target.value, "personalDetails")}
+                    handleChange={(e) => handleChange("lastName", e.target.value)}
                   />
-                </div>
+                </div> */}
               </div>
               {/* Location */}
               <div className="flex flex-col">
@@ -85,9 +103,10 @@ const Profile = () => {
                   Location
                 </label>
                 <CustomTextField
-                  value={address}
+                  value={location}
+                  name={"location"}
                   className="w-full sm:w-72"
-                  handleChange={(e) => handleChange("location", e.target.value, "personalDetails")}
+                  handleChange={(e) => handleChange(e.target.name, e.target.value)}
                 />
               </div>
               {/* Phone */}
@@ -97,8 +116,9 @@ const Profile = () => {
                 </label>
                 <CustomTextField
                   value={phone}
+                  name={"phone"}
                   className="w-full sm:w-72"
-                  handleChange={(e) => handleChange("phone", e.target.value, "personalDetails")}
+                  handleChange={(e) => handleChange(e.target.name, e.target.value)}
                 />
               </div>
               {/* Email */}
@@ -107,9 +127,10 @@ const Profile = () => {
                   Email
                 </label>
                 <CustomTextField
-                  value={emailId}
+                  value={email}
+                  name={"email"}
                   className="w-full sm:w-72"
-                  handleChange={(e) => handleChange("email", e.target.value, "personalDetails")}
+                  handleChange={(e) => handleChange(e.target.name, e.target.value)}
                 />
               </div>
             </div>

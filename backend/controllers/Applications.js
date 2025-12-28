@@ -14,9 +14,9 @@ const fetchApplication = async (req, res, next) => {
     //request data
     const { user_id } = req.query;
 
-    sqlQuery = `SELECT * FROM applications WHERE user_id='${user_id}'`;
+    sqlQuery = `SELECT * FROM applications WHERE user_id=$1`;
 
-    const result = await con.query(sqlQuery);
+    const result = await con.query(sqlQuery, [user_id]);
 
     if (!result || result.rows.length === 0) {
       return res.status(200).json({

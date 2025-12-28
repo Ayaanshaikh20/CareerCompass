@@ -4,11 +4,8 @@ const { verifyAccessToken } = require("../config/generateTokens");
 const pool = require("../config/dbConnect");
 
 const editApplication = async (req, res, next) => {
-
   let sqlQuery, con;
-
   try {
-
     // connect db
     con = await pool.connect()
 
@@ -36,13 +33,14 @@ const editApplication = async (req, res, next) => {
       });
     }
     next();
-
   } catch (error) {
     res.status(500).json({
       status: 500,
       message: error.message,
       error: error.message,
     });
+  } finally {
+    if(con) con.release();
   }
 };
 

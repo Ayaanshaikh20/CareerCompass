@@ -32,9 +32,9 @@ const checkUserExist = async (req, res, next) => {
     const { email } = res.locals.userDetails;
 
     //check user query;
-    sqlQuery = `SELECT * FROM register_users WHERE email='${email}'`
+    sqlQuery = `SELECT * FROM register_users WHERE email=$1`
 
-    const result = await con.query(sqlQuery);
+    const result = await con.query(sqlQuery, [email]);
 
     if (result.rows.length > 0) {
       return res.status(400).json({ status: 400, message: "Email already registered" });
@@ -78,19 +78,19 @@ const storeUser = async (req, res, next) => {
     phone_number, 
     email, 
     password) VALUES (
-    '${newUser.firstName}', 
-    '${newUser.location}', 
-    '${newUser.phone}', 
-    '${newUser.email}', 
-    '${newUser.password}') RETURNING *`;
+    $1, 
+    $2, 
+    $3, 
+    $4, 
+    $5) RETURNING *`;
 
-    const result = await con.query(sqlQuery);
+    const result = await con.query(sqlQuery, [newUser.firstName, newUser.location, newUser.phone, newUser.email, newUser.password]);
 
     const userData = {
-      user_id: result.rows[0].user_id,
-      first_name: firstName,
+      userId: result.rows[0].user_id,
+      firstName: firstName,
       email,
-      phone_number: phone,
+      phone,
       location
     };
 

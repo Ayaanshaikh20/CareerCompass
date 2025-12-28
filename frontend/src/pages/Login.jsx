@@ -2,14 +2,13 @@ import { useState, useNavigate, toast, useQueryClient, axiosInstance, customTogg
 import { EmailOutlinedIcon, PasswordOutlinedIcon, Img2 } from "../shared/Icons";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const [passwordVisible, setPasswordVisible] = useState(false);
-
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,11 +26,12 @@ const Login = () => {
       const { status } = response.data;
       if (status === 200) {
         const { message, userData, refreshToken, accessToken } = response.data;
+        const { userId } = userData;
         toast.success(message);
         localStorage.setItem("a_t", accessToken);
         localStorage.setItem("r_t", refreshToken);
-        localStorage.setItem("user", JSON.stringify(userData));
-        queryClient.setQueryData(["user"], userData);
+        localStorage.setItem("uid", JSON.stringify(userId));
+        queryClient.setQueryData(["userDetails"], userData);
         navigate("/dashboard");
       }
     } catch (error) {

@@ -14,12 +14,12 @@ import {
 } from "../shared/Imports";
 
 const AuthRoutes = () => {
-  const user = localStorage.getItem("user");
+  const user = localStorage.getItem("uid");
   return user !== null ? <Outlet /> : <Navigate to='/login' />;
 };
 
 const PublicRoutes = () => {
-  const user = localStorage.getItem("user");
+  const user = localStorage.getItem("uid");
   return user ? <Navigate to='/dashboard' /> : <Outlet />;
 };
 

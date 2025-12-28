@@ -5,6 +5,7 @@ const axiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  timeout: 10000, // 10 seconds timeout
 });
 
 console.log(process.env.NODE_ENV == "production" ? import.meta.env.VITE_PRODUCTION_URL : import.meta.env.VITE_LOCAL_API)
@@ -14,11 +15,13 @@ axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("a_t");
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers['Authorization'] = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  function (error) {
+    return Promise.reject(error)
+  }
 );
 
 // Response interceptor to refresh token on 403
@@ -41,7 +44,7 @@ axiosInstance.interceptors.response.use(
 
         localStorage.setItem("a_t", newAccessToken);
 
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
 
         return axiosInstance(originalRequest);
       } catch (err) {

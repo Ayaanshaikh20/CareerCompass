@@ -12,9 +12,9 @@ const validateUser = async (req, res, next) => {
 
     const { email: userEmail, password: reqPass } = req.body;
 
-    sqlQuery = `SELECT * FROM register_users WHERE email='${userEmail}'`;
+    sqlQuery = `SELECT * FROM register_users WHERE email=$1`;
 
-    const result = await con.query(sqlQuery);
+    const result = await con.query(sqlQuery, [userEmail]);
 
     const user = result.rows[0];
 
@@ -37,10 +37,10 @@ const validateUser = async (req, res, next) => {
     }
 
     const userObject = {
-      user_id,
-      first_name,
-      location,
-      phone_number,
+      userId: user_id,
+      firstName: first_name,
+      location: location,
+      phone: phone_number,
       email,
       password: userPass,
     };
@@ -63,7 +63,7 @@ const validateUser = async (req, res, next) => {
       status: 500,
     });
   } finally {
-    if(con) con.release();
+    if (con) con.release();
   }
 };
 

@@ -25,3 +25,5 @@ CREATE TABLE applications (
     location VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE INDEX idx_applications_user_id ON applications(user_id);

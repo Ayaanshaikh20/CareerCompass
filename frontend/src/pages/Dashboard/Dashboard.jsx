@@ -23,7 +23,7 @@ import * as ScrollArea from "@radix-ui/react-scroll-area";
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, ArcElement, ToolTip, Legend);
 
 const Dashboard = () => {
-  const { user_id } = JSON.parse(localStorage.getItem("user"));
+  const user_id = JSON.parse(localStorage.getItem("uid"));
   const [applications, setApplications] = useState([]);
 
   useEffect(() => {

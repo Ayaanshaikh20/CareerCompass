@@ -3,9 +3,16 @@ import { AccountCircleIcon, compass, DashboardIcon, LogoutIcon, MdPushPin } from
 
 const Sidebar = () => {
   const location = useLocation();
-  const [isCollapsed, setIsCollapsed] = useState(true);
-  const user = JSON.parse(localStorage.getItem("user")) || {};
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  const [isCollapsed, setIsCollapsed] = useState(true);
+
+  const { data: user } = useQuery({
+    queryKey: ["userDetails"],
+    queryFn: () => queryClient.getQueryData(["userDetails"]),
+    enabled: false
+  });
   const { data: isPinned } = useQuery({
     queryKey: ["isPinned"],
     queryFn: () => queryClient.getQueryData(["isPinned"]) || false,
@@ -13,7 +20,6 @@ const Sidebar = () => {
     staleTime: Infinity,
     gcTime: Infinity,
   });
-  const navigate = useNavigate();
 
   const menuItems = [
     { name: "Dashboard", path: "/dashboard", icon: <DashboardIcon fontSize="small" /> },
@@ -22,8 +28,7 @@ const Sidebar = () => {
 
   const handleLogout = () => {
     localStorage.clear();
-    queryClient.getQueryData(["user"]);
-    queryClient.setQueryData(["user"], null);
+    queryClient.clear();
     navigate("/");
   };
 
@@ -45,7 +50,7 @@ const Sidebar = () => {
         <div className={`flex items-center ${isCollapsed ? "justify-center" : "justify-between"}  p-4 border-b border-darkBackground`}>
           <div className="flex items-center gap-3">
             <div className="bg-background rounded-full w-9 h-9 flex items-center justify-center font-bold">
-              {user?.first_name ? user.first_name.charAt(0).toUpperCase() : "U"}
+              {user?.firstName ? user.firstName.charAt(0).toUpperCase() : "U"}
             </div>
             {(!isCollapsed || isPinned) && (
               <div className=" flex items-center">
@@ -54,8 +59,8 @@ const Sidebar = () => {
                     <img src={compass} className="h-4 w-4" />
                     CareerCompass
                   </h1>
-                  <p className="text-xs text-textSecondary text-nowrap">
-                    Hi, {user?.first_name}
+                  <p className="text-xs text-textSecondary">
+                    Hi, {user?.firstName}
                   </p>
                 </div>
                 <button

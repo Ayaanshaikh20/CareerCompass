@@ -35,11 +35,12 @@ const Register = () => {
       const { status } = response.data;
       if (status === 201) {
         const { message, userData, accessToken, refreshToken } = response.data;
+        const { userId } = userData;
         toast.success(message);
-        localStorage.setItem("user", JSON.stringify(userData));
+        localStorage.setItem("uid", JSON.stringify(userId));
         localStorage.setItem("r_t", refreshToken);
         localStorage.setItem("a_t", accessToken);
-        queryClient.setQueryData(["user"], userData);
+        queryClient.setQueryData(["userDetails"], userData);
         navigate("/dashboard");
       }
     } catch (error) {
@@ -55,7 +56,7 @@ const Register = () => {
   };
 
   return (
-    <main className="h-[calc(100vh-100px)] flex flex-col md:flex-row w-full items-center justify-evenly gap-12 bg-background font-sans">
+    <main className="flex flex-col h-[calc(100vh-50px)] md:flex-row w-full items-center justify-evenly gap-12 bg-background font-sans">
       {/* Left Section (Image) */}
       <div className="w-1/2 md:w-1/2 xl:w-1/4 p-6 hidden lg:flex lg:justify-center">
         <img
