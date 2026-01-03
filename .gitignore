@@ -21,3 +21,5 @@
 /backend/.env.production
 /backend/.env.test
 /backend/.eslintrc.js
+
+career_compass.pem
