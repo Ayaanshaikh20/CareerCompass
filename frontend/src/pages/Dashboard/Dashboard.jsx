@@ -33,7 +33,7 @@ const Dashboard = () => {
   const fetchApplications = async () => {
     try {
       customToggleLoading({ loading: true });
-      const response = await axiosInstance.get(`/api/applications?user_id=${user_id}`);
+      const response = await axiosInstance.get(`/applications?user_id=${user_id}`);
       const { status, applications } = response.data;
       if (status === 200) {
         setApplications(applications);

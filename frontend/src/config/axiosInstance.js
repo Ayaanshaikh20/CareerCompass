@@ -1,14 +1,14 @@
 import { toast, axios } from "../shared/Imports";
 
 const axiosInstance = axios.create({
-  baseURL: process.env.NODE_ENV == "production" ? import.meta.env.VITE_PRODUCTION_URL : import.meta.env.VITE_LOCAL_API,
+  baseURL: import.meta.env.VITE_API_URL,
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 10000, // 10 seconds timeout
+  timeout: 15000, // 10 seconds timeout
 });
 
-console.log(process.env.NODE_ENV == "production" ? import.meta.env.VITE_PRODUCTION_URL : import.meta.env.VITE_LOCAL_API)
+console.log(import.meta.env.VITE_API_URL);
 
 // Request interceptor to add access token
 axiosInstance.interceptors.request.use(
@@ -36,7 +36,7 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true;
       const refreshToken = localStorage.getItem("r_t");
       try {
-        const res = await axios.post("/api/refresh-token", {
+        const res = await axiosInstance.post("/refresh-token", {
           token: refreshToken,
         });
 

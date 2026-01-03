@@ -22,7 +22,7 @@ const Login = () => {
     e.preventDefault();
     customToggleLoading({ loading: true });
     try {
-      const response = await axiosInstance.post("/api/login", formData);
+      const response = await axiosInstance.post("/login", formData);
       const { status } = response.data;
       if (status === 200) {
         const { message, userData, refreshToken, accessToken } = response.data;

@@ -31,7 +31,7 @@ const Register = () => {
     }
     customToggleLoading({ loading: true });
     try {
-      const response = await axiosInstance.post("/api/register", formData);
+      const response = await axiosInstance.post("/register", formData);
       const { status } = response.data;
       if (status === 201) {
         const { message, userData, accessToken, refreshToken } = response.data;

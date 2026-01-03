@@ -11,7 +11,7 @@ const AuthLayout = () => {
 
   const fetchUser = async () => {
     try {
-      const result = await axiosInstance.get(`/api/fetch-user?userId=${userId}`);
+      const result = await axiosInstance.get(`/fetch-user?userId=${userId}`);
       const { status, userDetails } = result.data;
       if (status == 200) {
         queryClient.setQueryData(["userDetails"], userDetails)

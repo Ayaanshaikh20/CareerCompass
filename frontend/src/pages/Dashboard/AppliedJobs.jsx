@@ -161,7 +161,7 @@ const AppliedJobs = ({ fetchApplications, applications }) => {
   const submitOrEditApplication = async () => {
     if (!validate()) return;
 
-    const url = isEditApplication ? "/api/edit-application" : "/api/new-application";
+    const url = isEditApplication ? "/edit-application" : "/new-application";
     try {
       const response = await axiosInstance.post(url, formData);
       const { status, message } = response.data;
@@ -198,7 +198,7 @@ const AppliedJobs = ({ fetchApplications, applications }) => {
   const deleteApplication = async (selectedApplication) => {
     try {
       const { user_id, id } = selectedApplication;
-      let response = await axiosInstance.delete(`/api/delete-application?user_id=${user_id}&application_id=${id}`);
+      let response = await axiosInstance.delete(`/delete-application?user_id=${user_id}&application_id=${id}`);
       const { status } = response.data;
       if (status === 200) {
         await fetchApplications();

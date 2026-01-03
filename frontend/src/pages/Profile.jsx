@@ -21,7 +21,7 @@ const Profile = () => {
   const fetchUser = async () => {
     try {
       customToggleLoading({ loading: true })
-      const result = await axiosInstance.get(`/api/fetch-user?userId=${user_id}`);
+      const result = await axiosInstance.get(`/fetch-user?userId=${user_id}`);
       const { status, userDetails } = result.data;
       if (status == 200) {
         setUser(userDetails);
@@ -47,7 +47,7 @@ const Profile = () => {
   const submitChanges = async () => {
     try {
       customToggleLoading({ loading: true });
-      const result = await axiosInstance.post("/api/edit-profile", user)
+      const result = await axiosInstance.post("/edit-profile", user)
       const { status, message } = result.data;
       if (status == 200) {
         toast.success(message);
