@@ -1,6 +1,5 @@
 const { Router } = require("express");
 const router = Router();
-const { verifyAccessToken } = require("../config/generateTokens");
 const pool = require("../config/dbConnect");
 
 const fetchUser = async (req, res, next) => {
@@ -34,7 +33,7 @@ const fetchUser = async (req, res, next) => {
     }
 };
 
-router.get("/api/fetch-user", verifyAccessToken, fetchUser, async (req, res) => {
+router.get("/api/fetch-user", fetchUser, async (req, res) => {
     const { userDetails } = res.locals;
     res.status(200).json({
         status: 200,

@@ -1,6 +1,5 @@
 const { Router } = require("express");
 const router = Router();
-const { verifyAccessToken } = require("../config/generateTokens");
 const pool = require("../config/dbConnect");
 
 const deleteApplication = async (req, res, next) => {
@@ -26,7 +25,7 @@ const deleteApplication = async (req, res, next) => {
   }
 };
 
-router.delete("/api/delete-application", verifyAccessToken, deleteApplication, async (req, res) => {
+router.delete("/api/delete-application", deleteApplication, async (req, res) => {
   res.status(200).json({
     status: 200,
     message: "Application deleted successfully",

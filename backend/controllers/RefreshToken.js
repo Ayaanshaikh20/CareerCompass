@@ -10,17 +10,18 @@ router.post("/api/refresh-token", async (req, res) => {
     // connect db
     con = await pool.connect();
 
-    const refreshToken = req.body.token;
+    const { r_t: refreshToken } = req.cookies;
 
     if (!refreshToken) return res.sendStatus(401);
 
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, decoded) => {
 
-      if (err) return res.sendStatus(403);
+      //user not verified so unauthorized and log them out
+      if (err) return res.sendStatus(401);
 
-      const { firstName, email, phone, location, password } = decoded;
+      const { id } = decoded;
 
-      sqlQuery = `SELECT * FROM register_users WHERE email='${email}'`
+      sqlQuery = `SELECT * FROM register_users WHERE user_id='${id}'`;
 
       const result = await con.query(sqlQuery);
 
@@ -28,20 +29,21 @@ router.post("/api/refresh-token", async (req, res) => {
 
       if (!user) return res.sendStatus(404);
 
-      const newAccessToken = generateAccessToken({ firstName, email, phone, location, password });
+      generateAccessToken(id, res);
 
       res.status(200).json({
         status: 200,
         message: "Access token generated",
-        accessToken: newAccessToken
+        data: {
+          userId: id,
+        },
       });
     });
   } catch (error) {
     res.status(500).json({ status: 500, message: error.message });
   } finally {
-    if (con) con.release()
+    if (con) con.release();
   }
-
 });
 
 module.exports = router;

@@ -1,6 +1,6 @@
-import { CustomButton } from "../utilities/CustomButton";
-import { useNavigate } from "../shared/Imports";
-import { NotFound as NotFoundIcon } from "../shared/Icons";
+import { CustomButton } from "../../utilities/CustomButton";
+import { useNavigate } from "../../shared/Imports";
+import { NotFound as NotFoundIcon } from "../../shared/Icons";
 
 const NotFound = () => {
   const navigate = useNavigate();

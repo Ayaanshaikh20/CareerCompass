@@ -67,20 +67,20 @@ import {
 import { Theme, Button } from "@radix-ui/themes";
 
 //Components
-import { customToggleLoading } from "../components/CustomLoading";
+import { customToggleLoading } from "../utilities/CustomLoading";
 import axiosInstance from "../config/AxiosInstance";
 import MainLayout from "../layouts/MainLayout";
-import Register from "../pages/Register";
-import Login from "../pages/Login";
-import Dashboard from "../pages/Dashboard/Dashboard";
+import Register from "../pages/Auth/Register";
+import Login from "../pages/Auth/Login";
+import Dashboard from "../pages/Main/Dashboard";
 import AuthLayout from "../layouts/AuthLayout";
-import Settings from "../pages/Settings";
-import Profile from "../pages/Profile";
-import AppliedJobs from "../pages/Dashboard/AppliedJobs";
+import Settings from "../pages/Main/Settings";
+import Profile from "../pages/Main/Profile";
+import AppliedJobs from "../pages/Main/AppliedJobs";
 import Router from "../config/Router";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
-import NotFound from "../pages/NotFound";
+import NotFound from "../pages/Main/NotFound";
 
 //Utilities
 import { CustomTextField } from "../utilities/CustomTextField";

@@ -1,4 +1,4 @@
-import { axiosInstance, CustomButton, CustomTextField, customToggleLoading, toast, useQueryClient, useState, useEffect } from "../shared/Imports";
+import { axiosInstance, CustomButton, CustomTextField, customToggleLoading, toast, useQueryClient, useState, useEffect } from "../../shared/Imports";
 
 const Profile = () => {
   const queryClient = useQueryClient();

@@ -1,28 +1,13 @@
 import { toast, axios } from "../shared/Imports";
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: import.meta.env.NODE_ENV === "production" ? import.meta.env.VITE_API_URL_PROD : import.meta.env.VITE_API_URL_DEV,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
   timeout: 15000, // 10 seconds timeout
 });
-
-console.log(import.meta.env.VITE_API_URL);
-
-// Request interceptor to add access token
-axiosInstance.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("a_t");
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
-    }
-    return config;
-  },
-  function (error) {
-    return Promise.reject(error)
-  }
-);
 
 // Response interceptor to refresh token on 403
 axiosInstance.interceptors.response.use(
@@ -31,24 +16,17 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
 
     const status = error.response?.status;
-
+    
+    // retry new token
     if (status === 403 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      const refreshToken = localStorage.getItem("r_t");
       try {
-        const res = await axiosInstance.post("/refresh-token", {
-          token: refreshToken,
-        });
-
-        const { accessToken: newAccessToken } = res.data;
-
-        localStorage.setItem("a_t", newAccessToken);
-
-        originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
-
+        originalRequest._retry = true;
+        await axios.post(`${axiosInstance.defaults.baseURL}/refresh-token`, {}, { withCredentials: true });
         return axiosInstance(originalRequest);
-      } catch (err) {
+      } catch (error) {
         toast.error("Session expired");
+        //logout user after short delay call api to clear cookies
+        await axios.post(`${axiosInstance.defaults.baseURL}/logout`, {}, { withCredentials: true });
         setTimeout(() => {
           localStorage.clear();
           window.location.href = "/login";
@@ -60,7 +38,7 @@ axiosInstance.interceptors.response.use(
       }
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export default axiosInstance;

@@ -5,43 +5,26 @@ const bcrypt = require("bcrypt");
 
 const router = Router();
 
-// Middleware: Generate JWT Tokens
-const generateTokens = (req, res, next) => {
-  //generate access token
-  const accessToken = generateAccessToken(req.body);
-  //generate refresh token
-  const refreshToken = generateRefreshToken(req.body);
-
-  res.locals.userDetails = {
-    ...req.body,
-    accessToken,
-    refreshToken,
-  };
-  next();
-};
-
 //check user exists
 const checkUserExist = async (req, res, next) => {
   let sqlQuery, con;
   try {
-
     //connect db
-    con = await pool.connect()
+    con = await pool.connect();
 
     // Extract email from request body
     const { email } = res.locals.userDetails;
 
     //check user query;
-    sqlQuery = `SELECT * FROM register_users WHERE email=$1`
+    sqlQuery = `SELECT * FROM register_users WHERE email=$1`;
 
     const result = await con.query(sqlQuery, [email]);
 
     if (result.rows.length > 0) {
       return res.status(400).json({ status: 400, message: "Email already registered" });
-    };
+    }
 
     next();
-
   } catch (error) {
     res.status(500).json({ status: 500, message: error.message });
   } finally {
@@ -49,15 +32,28 @@ const checkUserExist = async (req, res, next) => {
   }
 };
 
+// Middleware: Generate JWT Tokens
+const generateTokens = (req, res, next) => {
+  //generate access token
+  generateAccessToken(req.body, res);
+
+  //generate refresh token
+  generateRefreshToken(req.body, res);
+
+  res.locals.userDetails = {
+    ...req.body,
+  };
+  next();
+};
+
 // Middleware: Store User in DB
 const storeUser = async (req, res, next) => {
   let sqlQuery, con;
   try {
-
     //connect db
     con = await pool.connect();
 
-    const { email, firstName, location, password, phone, accessToken, refreshToken } = res.locals.userDetails;
+    const { email, firstName, location, password, phone } = res.locals.userDetails;
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -91,13 +87,11 @@ const storeUser = async (req, res, next) => {
       firstName: firstName,
       email,
       phone,
-      location
+      location,
     };
 
     // Remove password from userDetails for response
     res.locals.userData = userData;
-    res.locals.accessToken = accessToken;
-    res.locals.refreshToken = refreshToken;
 
     next();
   } catch (error) {
@@ -108,19 +102,13 @@ const storeUser = async (req, res, next) => {
 };
 
 // Register Route
-router.post("/api/register",
-  generateTokens,
-  checkUserExist,
-  storeUser,
-  (req, res) => {
-    const { userData, accessToken, refreshToken } = res.locals;
-    res.status(201).json({
-      status: 201,
-      message: "User registered successfully",
-      userData,
-      accessToken,
-      refreshToken,
-    });
+router.post("/api/register", checkUserExist, generateTokens, storeUser, (req, res) => {
+  const { userData } = res.locals;
+  res.status(201).json({
+    status: 201,
+    message: "User registered successfully",
+    userData,
   });
+});
 
 module.exports = router;

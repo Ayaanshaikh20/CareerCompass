@@ -117,7 +117,7 @@ const ActionMenuCell = ({ row, viewDetails, deleteApplication, viewEditApplicati
 const AppliedJobs = ({ fetchApplications, applications }) => {
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState({});
-  const user_id = JSON.parse(localStorage.getItem("uid"));
+  const user_id = localStorage.getItem("uid");
   const defaultFormData = {
     userId: user_id,
     role: "",

@@ -8,7 +8,7 @@ const validateUser = async (req, res, next) => {
   let sqlQuery, con;
   try {
     // connect db
-    con = await pool.connect()
+    con = await pool.connect();
 
     const { email: userEmail, password: reqPass } = req.body;
 
@@ -25,7 +25,7 @@ const validateUser = async (req, res, next) => {
       });
     }
 
-    const { user_id, first_name, location, phone_number, email, password: userPass } = user;
+    const { user_id, first_name, location, phone_number, email } = user;
 
     const isMatch = await bcrypt.compare(reqPass, user.password);
 
@@ -42,21 +42,17 @@ const validateUser = async (req, res, next) => {
       location: location,
       phone: phone_number,
       email,
-      password: userPass,
     };
 
-    const accessToken = generateAccessToken(userObject);
-    const refreshToken = generateRefreshToken(userObject);
+    generateAccessToken(user_id, res);
 
-    const { password, ...userWithoutPassword } = userObject;
+    generateRefreshToken(user_id, res);
 
-    res.locals.userData = userWithoutPassword;
-    res.locals.accessToken = accessToken;
-    res.locals.refreshToken = refreshToken;
+    res.locals.userData = userObject;
 
     next();
-
   } catch (error) {
+    console.log("Login error:", error);
     res.status(500).json({
       message: "Internal server error",
       mainError: error.message,
@@ -68,13 +64,11 @@ const validateUser = async (req, res, next) => {
 };
 
 router.post("/api/login", validateUser, async (req, res) => {
-  const { userData, accessToken, refreshToken } = res.locals;
+  const { userData } = res.locals;
   res.status(200).json({
     message: "Login success",
     status: 200,
     userData,
-    accessToken,
-    refreshToken,
   });
 });
 

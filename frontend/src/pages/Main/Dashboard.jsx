@@ -15,7 +15,7 @@ import {
   Legend,
   ToolTip,
   Chip,
-  AppliedJobs
+  AppliedJobs,
 } from "../../shared/Imports";
 
 import * as ScrollArea from "@radix-ui/react-scroll-area";
@@ -23,7 +23,7 @@ import * as ScrollArea from "@radix-ui/react-scroll-area";
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, ArcElement, ToolTip, Legend);
 
 const Dashboard = () => {
-  const user_id = JSON.parse(localStorage.getItem("uid"));
+  const user_id = localStorage.getItem("uid");
   const [applications, setApplications] = useState([]);
 
   useEffect(() => {
@@ -58,12 +58,7 @@ const Dashboard = () => {
     datasets: [
       {
         label: "Frequent Platforms",
-        data: Array.from(
-          new Set(applications.map((app) => app.platform))
-        ).map(
-          (platform) =>
-            applications.filter((app) => app.platform === platform).length
-        ),
+        data: Array.from(new Set(applications.map((app) => app.platform))).map((platform) => applications.filter((app) => app.platform === platform).length),
         backgroundColor: "rgba(75, 192, 192, 0.2)",
         borderColor: "rgba(75, 192, 192, 1)",
         borderWidth: 1,
@@ -77,13 +72,12 @@ const Dashboard = () => {
     scales: {
       y: {
         ticks: {
-          precision: 0,   // ✅ removes decimals
-          stepSize: 1,    // ✅ counts only whole numbers
+          precision: 0, // ✅ removes decimals
+          stepSize: 1, // ✅ counts only whole numbers
         },
       },
     },
   };
-
 
   return (
     <div className="bg-background pt-4 p-3 text-textPrimary min-h-screen">
@@ -100,10 +94,7 @@ const Dashboard = () => {
                   { label: "Approved", value: statusCounts.approved, color: "text-success" },
                   { label: "Rejected", value: statusCounts.rejected, color: "text-danger" },
                 ].map(({ label, value, color }, idx) => (
-                  <li
-                    key={idx}
-                    className="flex items-center justify-between border-b border-border pb-2 last:border-none last:pb-0"
-                  >
+                  <li key={idx} className="flex items-center justify-between border-b border-border pb-2 last:border-none last:pb-0">
                     <Chip className="text-sm text-textSecondary" variant="filled" label={label} size="small" />
                     <span className={`text-base font-semibold ${color}`}>{value}</span>
                   </li>
@@ -126,25 +117,19 @@ const Dashboard = () => {
                         <span className="text-xs text-textSecondary">{app.employer}</span>
                       </div>
                       <div className="flex flex-col text-right">
-                        <span className="text-sm font-medium text-textPrimary">
-                          {new Date(app.appliedDate).toLocaleDateString()}
-                        </span>
+                        <span className="text-sm font-medium text-textPrimary">{new Date(app.appliedDate).toLocaleDateString()}</span>
                         <span className="text-xs text-textSecondary">Applied Date</span>
                       </div>
                     </div>
                   ))
                 ) : (
-                  <div className="text-center text-zinc-500 text-sm py-10">
-                    No applications found
-                  </div>
+                  <div className="text-center text-zinc-500 text-sm py-10">No applications found</div>
                 )}
               </div>
             </div>
             {/* Application history */}
             <div className="bg-surface space-y-4 border border-border shadow rounded-sm p-5">
-              <h2 className="text-lg font-semibold mb-4 text-textPrimary border-b-2">
-                Frequent Platforms
-              </h2>
+              <h2 className="text-lg font-semibold mb-4 text-textPrimary border-b-2">Frequent Platforms</h2>
               {/* Make the chart fill the card space */}
               <div className="w-full h-64">
                 <Line data={frequentPlatformsData} options={{ maintainAspectRatio: false, ...frequentPlatformsOptions }} />

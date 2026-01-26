@@ -1,4 +1,4 @@
-import { CustomButton, Link, useLocation, useNavigate, useQuery, useQueryClient, useState } from "../shared/Imports";
+import { axiosInstance, CustomButton, Link, useLocation, useNavigate, useQuery, useQueryClient, useState } from "../shared/Imports";
 import { AccountCircleIcon, compass, DashboardIcon, LogoutIcon, MdPushPin } from "../shared/Icons"
 
 const Sidebar = () => {
@@ -26,7 +26,8 @@ const Sidebar = () => {
     { name: "Profile", path: "/profile", icon: <AccountCircleIcon fontSize="small" /> },
   ];
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await axiosInstance.post("/logout");
     localStorage.clear();
     queryClient.clear();
     navigate("/");

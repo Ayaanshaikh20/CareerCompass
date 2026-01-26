@@ -1,5 +1,4 @@
 const { Router } = require("express");
-const { verifyAccessToken } = require("../config/generateTokens");
 const pool = require("../config/dbConnect");
 
 const router = Router();
@@ -52,7 +51,7 @@ const fetchApplication = async (req, res, next) => {
   }
 };
 
-router.get("/api/applications", verifyAccessToken, fetchApplication, async (req, res) => {
+router.get("/api/applications", fetchApplication, async (req, res) => {
   const { applications } = res.locals;
   res.status(200).json({
     status: 200,

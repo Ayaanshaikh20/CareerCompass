@@ -1,6 +1,5 @@
 const { Router } = require("express");
 const router = Router();
-const { verifyAccessToken } = require("../config/generateTokens");
 const pool = require("../config/dbConnect");
 
 // Controller
@@ -49,7 +48,7 @@ const createApplication = async (req, res, next) => {
 };
 
 // Route
-router.post("/api/new-application", verifyAccessToken, createApplication, async (req, res) => {
+router.post("/api/new-application", createApplication, async (req, res) => {
   const { newApplication } = res.locals;
   res.status(201).json({
     status: 201,
