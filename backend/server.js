@@ -29,6 +29,13 @@ app.get("/health", async (req, res) => {
   res.send(`Backend up and running`)
 });
 
+/* ===========================
+   START SERVER
+=========================== */
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
+
 app.use(verifyAccessToken);
 app.use(require("./controllers/Applications"));
 app.use(require("./controllers/NewApplication"));
@@ -36,10 +43,3 @@ app.use(require("./controllers/EditApplication"));
 app.use(require("./controllers/DeleteApplication"));
 app.use(require("./controllers/EditProfile"));
 app.use(require("./controllers/FetchUser"));
-
-/* ===========================
-   START SERVER
-=========================== */
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
