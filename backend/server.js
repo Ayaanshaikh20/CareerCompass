@@ -26,7 +26,7 @@ app.use(require("./controllers/Logout"));
 
 //Health check
 app.get("/health", async (req, res) => {
-  res.send(`Backend up and running at ${process.env.NODE_ENV}`)
+  res.send(`Backend up and running`)
 });
 
 app.use(verifyAccessToken);

@@ -22,4 +22,5 @@
 /backend/.env.test
 /backend/.eslintrc.js
 
-career_compass.pem
+cc-key.pem
+ec2-setup.md
