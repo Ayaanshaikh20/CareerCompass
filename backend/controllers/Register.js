@@ -13,7 +13,7 @@ const checkUserExist = async (req, res, next) => {
     con = await pool.connect();
 
     // Extract email from request body
-    const { email } = res.locals.userDetails;
+    const { email } = req.body;
 
     //check user query;
     sqlQuery = `SELECT * FROM register_users WHERE email=$1`;
@@ -23,6 +23,10 @@ const checkUserExist = async (req, res, next) => {
     if (result.rows.length > 0) {
       return res.status(400).json({ status: 400, message: "Email already registered" });
     }
+
+    res.locals.userDetails = {
+      ...req.body,
+    };
 
     next();
   } catch (error) {
@@ -40,9 +44,6 @@ const generateTokens = (req, res, next) => {
   //generate refresh token
   generateRefreshToken(req.body, res);
 
-  res.locals.userDetails = {
-    ...req.body,
-  };
   next();
 };
 
