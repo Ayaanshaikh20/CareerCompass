@@ -29,11 +29,9 @@ app.get("/health", async (req, res) => {
   res.send(`Backend up and running`)
 });
 
-/* ===========================
-   START SERVER
-=========================== */
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+//Start message
+app.get("/", (req, res) => {
+  res.send("Career Compass API is live! Use /health to check status. ✅✅");
 });
 
 app.use(verifyAccessToken);
@@ -43,3 +41,11 @@ app.use(require("./controllers/EditApplication"));
 app.use(require("./controllers/DeleteApplication"));
 app.use(require("./controllers/EditProfile"));
 app.use(require("./controllers/FetchUser"));
+
+/* ===========================
+   START SERVER
+=========================== */
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
+
