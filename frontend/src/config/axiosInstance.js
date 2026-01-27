@@ -1,7 +1,7 @@
 import { toast, axios } from "../shared/Imports";
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.NODE_ENV === "production" ? import.meta.env.VITE_API_URL_PROD : import.meta.env.VITE_API_URL_DEV,
+  baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
