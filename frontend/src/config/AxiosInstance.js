@@ -1,9 +1,8 @@
 import { toast, axios } from "../shared/Imports";
 
-const API_URL =
-  import.meta.env.MODE === "development"
-    ? import.meta.env.VITE_API_URL_LOCAL
-    : import.meta.env.VITE_API_URL_PROD;
+const API_URL = import.meta.env.MODE === "development" ? import.meta.env.VITE_API_URL_LOCAL : import.meta.env.VITE_API_URL_PROD;
+
+console.log("API_URL:", API_URL);
 
 const axiosInstance = axios.create({
   baseURL: API_URL,
@@ -21,7 +20,7 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
 
     const status = error.response?.status;
-    
+
     // retry new token
     if (status === 403 && !originalRequest._retry) {
       try {
