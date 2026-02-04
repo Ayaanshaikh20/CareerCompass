@@ -27,8 +27,8 @@ const Profile = () => {
         setUser(userDetails);
       }
     } catch (error) {
-      const { data } = error?.response || {};
-      toast.error(data || "Error updating user");
+      const { message } = error?.response?.data || {};
+      toast.error(message || "Something went wrong");
     } finally {
       customToggleLoading({ loading: false })
     }
@@ -54,8 +54,8 @@ const Profile = () => {
         queryClient.setQueryData(["userDetails"], user);
       }
     } catch (error) {
-      const { data } = error?.response || {};
-      toast.error(data || "Error updating user");
+      const { message } = error?.response?.data || {};
+      toast.error(message || "Something went wrong");
     } finally {
       customToggleLoading({ loading: false })
     }

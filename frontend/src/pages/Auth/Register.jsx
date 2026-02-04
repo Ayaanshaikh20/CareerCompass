@@ -42,12 +42,8 @@ const Register = () => {
         navigate("/dashboard");
       }
     } catch (error) {
-      const { data, status } = error?.response;
-      if (status) {
-        toast.error(data);
-      } else {
-        toast.error("Unexpected error occurred");
-      }
+      const { message } = error?.response?.data;
+      toast.error(message || "Something went wrong");
     } finally {
       customToggleLoading({ loading: false });
     }

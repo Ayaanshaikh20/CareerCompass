@@ -2,30 +2,14 @@ import { AppBar, useQueryClient, useQuery, useNavigate, Toolbar, Typography, use
 import { compass } from "../shared/Icons";
 
 const Navbar = () => {
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-
-  const { data: user } = useQuery({
-    queryKey: ["userDetails"],
-    queryFn: () => JSON.parse(localStorage.getItem("user")),
-  });
-
-  const handleClickOpen = () => {
-    navigate("/login");
-  };
-
-  const handleLogout = () => {
-    localStorage.clear();
-    queryClient.getQueryData(["userDetails"]);
-    queryClient.setQueryData(["userDetails"], null);
-    navigate("/");
-  };
 
   return (
     <AppBar
       position="sticky"
-      elevation={pathname !== "/login" && pathname !== "/register" ? 3 : 0}
+      className=" font-sans"
+      elevation={0}
       sx={{
         backgroundColor: "var(--background-color)",
         borderBottom: "1px solid var(--dark-background-color)",
@@ -41,32 +25,6 @@ const Navbar = () => {
           <Typography variant="h6" className=" text-textPrimary">
             Compass
           </Typography>
-        </div>
-
-        {/* Right Side Controls */}
-        <div className="flex items-center gap-2">
-          {!user ? (
-            <>
-              {pathname == "/login" || pathname == "/register" ? (
-                <></>
-              ) : (
-                <>
-                  <CustomButton variant={"primary"} handleClick={handleClickOpen}>
-                    Login
-                  </CustomButton>
-                  <CustomButton variant={"secondary"} handleClick={() => navigate("/register")}>
-                    Register
-                  </CustomButton>
-                </>
-              )}
-            </>
-          ) : (
-            <div className=" flex gap-x-5">
-              <CustomButton variant={"secondary"} handleClick={handleLogout}>
-                Logout
-              </CustomButton>
-            </div>
-          )}
         </div>
       </Toolbar>
     </AppBar>

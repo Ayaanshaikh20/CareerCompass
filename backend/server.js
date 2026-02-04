@@ -19,6 +19,8 @@ app.use(express.json());
 /* ===========================
    API ROUTES (FIRST)
 =========================== */
+app.use(require("./controllers/ForgetPassword"));
+app.use(require("./controllers/ResetPassword"));
 app.use(require("./controllers/Register"));
 app.use(require("./controllers/Login"));
 app.use(require("./controllers/RefreshToken"));
@@ -26,7 +28,7 @@ app.use(require("./controllers/Logout"));
 
 //Health check
 app.get("/health", async (req, res) => {
-  res.send(`Backend up and running`)
+  res.send(`Backend up and running`);
 });
 
 //Start message
@@ -48,4 +50,3 @@ app.use(require("./controllers/FetchUser"));
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
-

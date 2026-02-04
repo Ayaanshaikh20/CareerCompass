@@ -16,8 +16,7 @@ const logoutUser = async (req, res, next) => {
     next();
   } catch (error) {
     res.status(500).json({
-      message: "Internal server error",
-      mainError: error.message,
+      message: "Error logging out user",
       status: 500,
     });
   }

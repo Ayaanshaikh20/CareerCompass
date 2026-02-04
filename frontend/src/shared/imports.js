@@ -37,7 +37,7 @@ import { MaterialReactTable } from "material-react-table";
 import { Input, DatePicker, Select, Drawer, Row, Col, Space, Descriptions } from "antd";
 
 //react-router
-import { useNavigate, Route, Routes, Navigate, Outlet, Link, BrowserRouter, useLocation } from "react-router";
+import { useNavigate, Route, Routes, Navigate, Outlet, Link, BrowserRouter, useLocation, useSearchParams } from "react-router";
 
 //tanstack query
 import { useQueryClient, QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
@@ -80,6 +80,8 @@ import AppliedJobs from "../pages/Main/AppliedJobs";
 import Router from "../config/Router";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
+import ForgotPassword from "../pages/Auth/ForgotPassword";
+import ResetPassword from "../pages/Auth/ResetPassword";
 import NotFound from "../pages/Main/NotFound";
 
 //Utilities
@@ -87,7 +89,14 @@ import { CustomTextField } from "../utilities/CustomTextField";
 import { CustomButton } from "../utilities/CustomButton";
 import { muiTableBodyCellProps, muiTableBodyRowProps, muiTableContainerProps, muiTableProps } from "../utilities/TableStyles";
 
+//Services
+import emailService from "../services/email"; 
+
 export {
+  useSearchParams,
+  ResetPassword,
+  emailService,
+  ForgotPassword,
   muiTableBodyCellProps,
   muiTableBodyRowProps,
   muiTableContainerProps,

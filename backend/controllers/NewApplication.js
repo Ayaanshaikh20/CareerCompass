@@ -39,8 +39,7 @@ const createApplication = async (req, res, next) => {
   } catch (error) {
     res.status(500).json({
       status: 500,
-      message: error.message,
-      error: error.message,
+      message: "Error creating new application",
     });
   } finally {
     if (con) con.release();

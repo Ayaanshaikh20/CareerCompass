@@ -17,8 +17,8 @@ const AuthLayout = () => {
         queryClient.setQueryData(["userDetails"], userDetails)
       }
     } catch (error) {
-      const { data } = error?.response || {};
-      toast.error(data || "Error updating user");
+      const { message } = error?.response?.data || {};
+      toast.error(message || "Something went wrong");
     }
   };
 

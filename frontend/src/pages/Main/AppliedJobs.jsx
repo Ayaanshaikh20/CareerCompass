@@ -173,8 +173,8 @@ const AppliedJobs = ({ fetchApplications, applications }) => {
         await fetchApplications();
       }
     } catch (error) {
-      const { data } = error?.response || {};
-      toast.error(data || "Error submitting form");
+      const { message } = error?.response?.data || {};
+      toast.error(message || "Something went wrong");
     }
   };
 
@@ -198,15 +198,15 @@ const AppliedJobs = ({ fetchApplications, applications }) => {
   const deleteApplication = async (selectedApplication) => {
     try {
       const { user_id, id } = selectedApplication;
-      let response = await axiosInstance.delete(`/delete-application?user_id=${user_id}&application_id=${id}`);
+      const response = await axiosInstance.delete(`/delete-application?user_id=${user_id}&application_id=${id}`);
       const { status } = response.data;
       if (status === 200) {
         await fetchApplications();
         toast.success("Application deleted successfully");
       }
     } catch (error) {
-      const { data } = error?.response || {};
-      toast.error(data || "Error deleting application");
+      const { message } = error?.response?.data || {};
+      toast.error(message || "Something went wrong");
     }
   };
 

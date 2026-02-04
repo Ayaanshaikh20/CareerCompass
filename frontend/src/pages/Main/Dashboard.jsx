@@ -39,8 +39,8 @@ const Dashboard = () => {
         setApplications(applications);
       }
     } catch (error) {
-      const { data } = error?.response || {};
-      toast.error(data || "Error fetching applications");
+      const { message } = error?.response?.data || {};
+      toast.error(message || "Something went wrong");
     } finally {
       customToggleLoading({ loading: false });
     }

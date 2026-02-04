@@ -35,8 +35,7 @@ const editApplication = async (req, res, next) => {
   } catch (error) {
     res.status(500).json({
       status: 500,
-      message: error.message,
-      error: error.message,
+      message: "Error updating application",
     });
   } finally {
     if(con) con.release();

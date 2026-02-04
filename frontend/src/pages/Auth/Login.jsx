@@ -1,4 +1,4 @@
-import { useState, useNavigate, toast, useQueryClient, axiosInstance, customToggleLoading, CustomButton, CustomTextField } from "../../shared/Imports";
+import { useState, useNavigate, toast, useQueryClient, axiosInstance, customToggleLoading, CustomButton, CustomTextField, Link } from "../../shared/Imports";
 import { EmailOutlinedIcon, PasswordOutlinedIcon, Img2 } from "../../shared/Icons";
 
 const Login = () => {
@@ -33,8 +33,8 @@ const Login = () => {
         navigate("/dashboard");
       }
     } catch (error) {
-      const { status, message } = error?.response?.data || {};
-      toast.error(status ? message : "Error logging in user");
+      const { message } = error?.response?.data || {};
+      toast.error(message || "Something went wrong");
     } finally {
       customToggleLoading({ loading: false });
     }
@@ -85,6 +85,7 @@ const Login = () => {
                 value={formData.password}
                 handleChange={handleChange}
               />
+              <span className=" text-xs">Forgot password? <Link className=" text-blue-400" to={'/forgot-password'} >Click here</Link></span>
             </div>
 
             {/* Submit Button */}

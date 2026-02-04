@@ -30,7 +30,7 @@ const checkUserExist = async (req, res, next) => {
 
     next();
   } catch (error) {
-    res.status(500).json({ status: 500, message: error.message });
+    res.status(500).json({ status: 500, message: "Error registering user" });
   } finally {
     if (con) con.release();
   }
@@ -96,7 +96,7 @@ const storeUser = async (req, res, next) => {
 
     next();
   } catch (error) {
-    res.status(500).json({ status: 500, message: error.message });
+    res.status(500).json({ status: 500, message: "Error registering user" });
   } finally {
     if (con) con.release();
   }
