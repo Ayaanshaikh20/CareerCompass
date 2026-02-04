@@ -1,5 +1,5 @@
 service: career-compass-api
-frameworkVersion: "3.x"
+frameworkVersion: "4.x"
 provider:
   name: aws
   runtime: nodejs18.x

@@ -103,7 +103,7 @@ const storeUser = async (req, res, next) => {
 };
 
 // Register Route
-router.post("/api/register", checkUserExist, generateTokens, storeUser, (req, res) => {
+router.post("/register", checkUserExist, generateTokens, storeUser, (req, res) => {
   const { userData } = res.locals;
   res.status(201).json({
     status: 201,

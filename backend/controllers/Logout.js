@@ -22,7 +22,7 @@ const logoutUser = async (req, res, next) => {
   }
 };
 
-router.post("/api/logout", logoutUser, async (req, res) => {
+router.post("/logout", logoutUser, async (req, res) => {
   res.status(200).json({
     status: 200,
     message: "Logged out successfully",

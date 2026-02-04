@@ -20,6 +20,7 @@
 /backend/.env.production
 /backend/.env.test
 /backend/.eslintrc.js
+/backend/.serverless
 
 cc-key.pem
 ec2-setup.md

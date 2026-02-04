@@ -33,7 +33,7 @@ const fetchUser = async (req, res, next) => {
     }
 };
 
-router.get("/api/fetch-user", fetchUser, async (req, res) => {
+router.get("/fetch-user", fetchUser, async (req, res) => {
     const { userDetails } = res.locals;
     res.status(200).json({
         status: 200,

@@ -76,7 +76,7 @@ const resetPassword = async (req, res, next) => {
   }
 };
 
-router.post("/api/reset-password", resetPassword, async (req, res) => {
+router.post("/reset-password", resetPassword, async (req, res) => {
   res.status(200).json({
     status: 200,
     message: "Password changed successfully. Please login with your new password.",

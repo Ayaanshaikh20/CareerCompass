@@ -54,6 +54,7 @@ const validateUser = async (req, res, next) => {
   } catch (error) {
     res.status(500).json({
       message: "Error validating user",
+      mainError: error.message,
       status: 500,
     });
   } finally {
@@ -61,7 +62,7 @@ const validateUser = async (req, res, next) => {
   }
 };
 
-router.post("/api/login", validateUser, async (req, res) => {
+router.post("/login", validateUser, async (req, res) => {
   const { userData } = res.locals;
   res.status(200).json({
     message: "Login success",

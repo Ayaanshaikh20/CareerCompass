@@ -43,7 +43,7 @@ const editApplication = async (req, res, next) => {
 };
 
 // Route
-router.post("/api/edit-application", editApplication, async (req, res) => {
+router.post("/edit-application", editApplication, async (req, res) => {
   res.status(200).json({
     status: 200,
     message: "Application updated successfully",
