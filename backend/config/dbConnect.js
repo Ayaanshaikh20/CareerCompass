@@ -1,33 +1,18 @@
 const { Pool } = require("pg");
-require("dotenv").config();
+const config = require("./env");
 
-// Simplify: Just use one config object. 
-// On EC2, these variables will come from your .env file.
+const isProd = config.env === "production";
+
 const pool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
-  // NO SSL needed for localhost connections
+  connectionString: config.databaseUrl,
+  ssl: isProd ? { rejectUnauthorized: false } : false,
+  max: 2, // VERY IMPORTANT for Lambda + Neon
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 5000,
 });
 
-pool.on("error", (err) => {
-  console.error("Unexpected error on idle client", err);
-  process.exit(-1);
+pool.on("connect", () => {
+  console.log(`✅ Connected to ${isProd ? "Neon (PROD)" : "Local PG"}`);
 });
-
-(async () => {
-  try {
-    const client = await pool.connect();
-    console.log("✅ Database connected successfully to:", process.env.DB_NAME);
-    client.release();
-  } catch (err) {
-    console.error("❌ Database connection error:", err.message);
-    // Pro-tip: Log the variables to see what's missing (hide password though!)
-    console.log("Attempted connection with User:", process.env.DB_USER, "on Host:", process.env.DB_HOST);
-    process.exit(1);
-  }
-})();
 
 module.exports = pool;

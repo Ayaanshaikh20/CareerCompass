@@ -27,3 +27,13 @@ CREATE TABLE applications (
 );
 
 CREATE INDEX idx_applications_user_id ON applications(user_id);
+
+CREATE TABLE public.forget_password
+(
+    id uuid PRIMARY KEY,
+    email varchar(255) NOT NULL,
+    token varchar(64) NOT NULL,
+    expires_in timestamp NOT NULL,
+    is_used boolean DEFAULT false,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP
+);

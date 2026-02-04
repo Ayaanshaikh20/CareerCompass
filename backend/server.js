@@ -4,13 +4,15 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const { verifyAccessToken } = require("./config/generateTokens");
 require("dotenv").config();
+const config = require("./config/env");
+const serverless = require("serverless-http");
 
 const port = process.env.PORT || 8000;
 
 app.use(cookieParser());
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: config.frontendUrl,
     credentials: true,
   }),
 );
@@ -47,6 +49,10 @@ app.use(require("./controllers/FetchUser"));
 /* ===========================
    START SERVER
 =========================== */
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+if (config.env === "development") {
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+  });
+}
+
+module.exports = app;

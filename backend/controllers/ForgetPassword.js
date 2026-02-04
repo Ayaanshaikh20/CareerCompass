@@ -2,6 +2,7 @@ const crypto = require("crypto");
 const { Router } = require("express");
 const pool = require("../config/dbConnect");
 const expressRateLimit = require("express-rate-limit");
+const config = require("../config/env");
 
 const router = Router();
 
@@ -13,6 +14,8 @@ const limiterMiddleware = expressRateLimit({
     message: "Too many requests, please try again after 5 minutes",
   },
 });
+
+const isProd = process.env.NODE_ENV === "production";
 
 const forgotPassword = async (req, res, next) => {
   let sqlQuery, con;
@@ -68,7 +71,7 @@ const forgotPassword = async (req, res, next) => {
 
     await con.query(sqlQuery, [resObject.id, resObject.resetPasswordToken, resObject.resetPasswordExpires, resObject.email]);
 
-    const resetLink = `${process.env.FRONTEND_URL}/reset-password?t=${token}`;
+    const resetLink = `${config.frontendUrl}/reset-password?t=${token}`;
 
     res.locals.tokenDetails = {
       resetLink,
