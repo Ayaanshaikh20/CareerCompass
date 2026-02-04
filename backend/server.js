@@ -60,8 +60,6 @@ app.use(require("./controllers/FetchUser"));
 /* ===========================
    START SERVER
 =========================== */
-if (config.env === "development") {
-  app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-  });
-}
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
