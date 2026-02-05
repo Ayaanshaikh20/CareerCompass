@@ -5,9 +5,6 @@ const cookieParser = require("cookie-parser");
 const { verifyAccessToken } = require("./config/generateTokens");
 require("dotenv").config();
 const config = require("./config/env");
-const cron = require("node-cron");
-const axios = require("axios");
-
 const port = process.env.PORT || 8000;
 
 app.use(cookieParser());
@@ -17,15 +14,6 @@ app.use(
     credentials: true,
   }),
 );
-
-// Schedule a task to run every 10 minutes
-cron.schedule("*/10 * * * *", async () => {
-  try {
-    console.log("Running scheduled task every 10 minutes...");
-  } catch (error) {
-    console.error("Error in cron job:", error.message);
-  }
-});
 
 app.use(express.json());
 

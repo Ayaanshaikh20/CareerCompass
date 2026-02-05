@@ -47,7 +47,7 @@ const createApplication = async (req, res, next) => {
 };
 
 // Route
-router.post("/new-application", createApplication, async (req, res) => {
+router.post("/api/new-application", createApplication, async (req, res) => {
   const { newApplication } = res.locals;
   res.status(201).json({
     status: 201,

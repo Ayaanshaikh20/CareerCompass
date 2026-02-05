@@ -88,7 +88,7 @@ const forgotPassword = async (req, res, next) => {
   }
 };
 
-router.post("/forget-password", limiterMiddleware, forgotPassword, async (req, res) => {
+router.post("/api/forget-password", limiterMiddleware, forgotPassword, async (req, res) => {
   const { tokenDetails } = res.locals;
   res.status(200).json({
     status: 200,

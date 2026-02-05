@@ -51,7 +51,7 @@ const fetchApplication = async (req, res, next) => {
   }
 };
 
-router.get("/applications", fetchApplication, async (req, res) => {
+router.get("/api/applications", fetchApplication, async (req, res) => {
   const { applications } = res.locals;
   res.status(200).json({
     status: 200,

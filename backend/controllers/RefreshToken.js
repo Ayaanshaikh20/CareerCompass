@@ -4,7 +4,7 @@ const { generateAccessToken } = require("../config/generateTokens");
 const jwt = require("jsonwebtoken");
 const pool = require("../config/dbConnect");
 
-router.post("/refresh-token", async (req, res) => {
+router.post("/api/refresh-token", async (req, res) => {
   let sqlQuery, con;
   try {
     // connect db

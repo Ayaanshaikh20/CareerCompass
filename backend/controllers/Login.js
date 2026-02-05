@@ -62,7 +62,7 @@ const validateUser = async (req, res, next) => {
   }
 };
 
-router.post("/login", validateUser, async (req, res) => {
+router.post("/api/login", validateUser, async (req, res) => {
   const { userData } = res.locals;
   res.status(200).json({
     message: "Login success",

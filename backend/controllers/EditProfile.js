@@ -24,7 +24,7 @@ const updateProfile = async (req, res, next) => {
     }
 };
 
-router.post("/edit-profile", updateProfile, async (req, res) => {
+router.post("/api/edit-profile", updateProfile, async (req, res) => {
     res.status(200).json({
         status: 200,
         message: "Profile updated successfully",
