@@ -33,7 +33,7 @@ axiosInstance.interceptors.response.use(
         await axios.post(`${axiosInstance.defaults.baseURL}/logout`, {}, { withCredentials: true });
         setTimeout(() => {
           localStorage.clear();
-          window.location.href = "/login";
+          window.location.href = "/";
         }, [1500]);
         return Promise.reject({
           customSessionExpired: true,
