@@ -1,10 +1,12 @@
-import { Toaster, ReactQueryDevtools, QueryClient, QueryClientProvider, BrowserRouter, createRoot, Router, Theme } from "./shared/Imports.js";
+import { Toaster, ReactQueryDevtools, QueryClient, QueryClientProvider, BrowserRouter, createRoot, Router, Theme, ModuleRegistry, AllCommunityModule } from "./shared/Imports.js";
 import "./assets/styles/styles.css";
 import "@radix-ui/themes/styles.css";
 import "@fontsource/roboto";
 import "../email.config.js";
 
 const queryClient = new QueryClient();
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 createRoot(document.getElementById("root")).render(
   <QueryClientProvider client={queryClient}>
@@ -15,5 +17,5 @@ createRoot(document.getElementById("root")).render(
         <Router />
       </BrowserRouter>
     </Theme>
-  </QueryClientProvider>
+  </QueryClientProvider>,
 );

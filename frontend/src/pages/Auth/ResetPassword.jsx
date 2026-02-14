@@ -1,4 +1,4 @@
-import { CustomTextField, CustomButton, axiosInstance, toast, useState, Link, useSearchParams, useNavigate } from "../../shared/Imports";
+import { CustomTextField, axiosInstance, toast, useState, Link, useSearchParams, useNavigate } from "../../shared/Imports";
 import { PasswordOutlinedIcon } from "../../shared/Icons";
 
 const ResetPassword = () => {
@@ -92,9 +92,17 @@ const ResetPassword = () => {
               adornment={<PasswordOutlinedIcon />}
             />
 
-            <CustomButton type="submit" variant={passwordreset ? "disabled" : "primary"}>
-              {"Reset Password"}
-            </CustomButton>
+            <button
+              type="submit"
+              disabled={passwordreset}
+              className={`w-full py-2 rounded font-medium transition-colors ${
+                passwordreset
+                  ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                  : "bg-blue-600 text-white hover:bg-blue-700"
+              }`}
+            >
+              Reset Password
+            </button>
           </form>
         )}
       </div>

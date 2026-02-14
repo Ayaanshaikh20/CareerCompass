@@ -8,23 +8,24 @@ const generateAccessToken = (userId, res) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
+    maxAge: 2 * 60 * 1000, // 2 minutes in milliseconds
   });
 };
 
 const generateRefreshToken = (userId, res) => {
   const token = jwt.sign({ id: userId }, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: "5m",
+    expiresIn: "1d",
   });
   res.cookie("r_t", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
+    maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day in milliseconds
   });
 };
 
 const verifyAccessToken = (req, res, next) => {
   const { a_t } = req.cookies;
-  if (!a_t) return res.sendStatus(401);
   jwt.verify(a_t, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
     if (err) {
       // Check if the error is due to token expiration

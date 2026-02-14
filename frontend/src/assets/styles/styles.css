@@ -32,3 +32,348 @@ body {
   --border: #d6d7db;
   --danger: #ef4444;
 }
+
+/* AG Grid customizations - Jira/Atlassian style */
+.ag-theme-quartz {
+  --ag-font-size: 12px !important;
+  --ag-header-font-size: 12px !important;
+  --ag-header-height: 36px !important;
+  --ag-row-height: 40px !important;
+  --ag-borders: none !important;
+  --ag-border-color: transparent !important;
+  --ag-background-color: #ffffff !important;
+  --ag-row-hover-color: #f5f5f5 !important;
+}
+
+.ag-theme-quartz .ag-header-cell {
+  background-color: #fafbfc !important;
+  border: none !important;
+  border-bottom: 1px solid #dfe1e6 !important;
+  font-weight: 600 !important;
+  color: #44525a !important;
+}
+
+.ag-theme-quartz .ag-header-cell:last-child {
+  border-right: none !important;
+}
+
+.ag-theme-quartz .ag-cell {
+  border: none !important;
+  /* border-right: 1px solid #ebecf0 !important; */
+  border-bottom: 1px solid #d5d6da !important;
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+}
+
+.ag-theme-quartz .ag-cell:last-child {
+  border-right: none !important;
+}
+
+.ag-theme-quartz .ag-row-even {
+  background-color: #ffffff !important;
+}
+
+.ag-theme-quartz .ag-row-odd {
+  background-color: #f9fafb !important;
+}
+
+.ag-theme-quartz .ag-row:hover {
+  background-color: #f5f5f5 !important;
+}
+
+.ag-theme-quartz .ag-row {
+  border: none !important;
+}
+
+/* Remove shadows and borders */
+.ag-root-wrapper {
+  border: none !important;
+}
+
+.ag-theme-quartz.ag-dnd-ghost {
+  border: none !important;
+}
+
+.ag-theme-quartz .ag-paging-panel {
+  background-color: #ffffff !important;
+  border-top: 1px solid #dfe1e6 !important;
+  padding: 6px 12px !important;
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+/* Pagination buttons */
+.ag-theme-quartz .ag-paging-button {
+  background-color: #ffffff !important;
+  border: 1px solid #b6c2cf !important;
+  color: #172b4d !important;
+  padding: 3px 6px !important;
+  margin: 0 1px !important;
+  border-radius: 2px !important;
+  font-size: 11px !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+  min-width: 28px !important;
+}
+
+.ag-theme-quartz .ag-paging-button:hover:not([disabled]) {
+  background-color: #ebecf0 !important;
+  border-color: #8590a2 !important;
+  color: #172b4d !important;
+}
+
+.ag-theme-quartz .ag-paging-button[disabled] {
+  opacity: 0.4 !important;
+  cursor: not-allowed !important;
+}
+
+.ag-theme-quartz .ag-paging-button.ag-paging-button-active {
+  background-color: #0052CC !important;
+  border-color: #0052CC !important;
+  color: white !important;
+  font-weight: 600 !important;
+}
+
+/* Pagination input/text */
+.ag-theme-quartz .ag-paging-page-size-container {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-size: 11px !important;
+  color: #172b4d !important;
+}
+
+.ag-theme-quartz .ag-paging-page-size-button-wrapper {
+  display: flex !important;
+  align-items: center !important;
+  gap: 3px !important;
+}
+
+.ag-paging-page-size-button,
+.ag-paging-page-size-button:disabled {
+  background-color: #ffffff !important;
+  border: 1px solid #b6c2cf !important;
+  color: #172b4d !important;
+  padding: 3px 6px !important;
+  border-radius: 2px !important;
+  font-size: 11px !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+.ag-paging-page-size-button:hover {
+  background-color: #ebecf0 !important;
+  border-color: #8590a2 !important;
+}
+
+/* Dark mode styles */
+.ag-theme-quartz-dark {
+  --ag-font-size: 12px !important;
+  --ag-header-font-size: 12px !important;
+  --ag-header-height: 36px !important;
+  --ag-row-height: 40px !important;
+  --ag-borders: none !important;
+  --ag-border-color: transparent !important;
+  --ag-background-color: #1f2937 !important;
+  --ag-row-hover-color: #374151 !important;
+}
+
+.ag-theme-quartz-dark .ag-header-cell {
+  background-color: #111827 !important;
+  border: none !important;
+  border-bottom: 1px solid #374151 !important;
+  font-weight: 600 !important;
+  color: #d1d5db !important;
+}
+
+.ag-theme-quartz-dark .ag-header-cell:last-child {
+  border-right: none !important;
+}
+
+.ag-theme-quartz-dark .ag-cell {
+  border: none !important;
+  border-bottom: 1px solid #374151 !important;
+  padding-left: 12px !important;
+  padding-right: 12px !important;
+  color: #e5e7eb !important;
+}
+
+.ag-theme-quartz-dark .ag-cell:last-child {
+  border-right: none !important;
+}
+
+.ag-theme-quartz-dark .ag-row-even {
+  background-color: #1f2937 !important;
+}
+
+.ag-theme-quartz-dark .ag-row-odd {
+  background-color: #111827 !important;
+}
+
+.ag-theme-quartz-dark .ag-row:hover {
+  background-color: #374151 !important;
+}
+
+.ag-theme-quartz-dark .ag-row {
+  border: none !important;
+}
+
+.ag-theme-quartz-dark .ag-root-wrapper {
+  background-color: #1f2937 !important;
+}
+
+.ag-theme-quartz-dark .ag-body-viewport {
+  background-color: #1f2937 !important;
+}
+
+.ag-theme-quartz-dark .ag-center-cols-viewport {
+  background-color: #1f2937 !important;
+}
+
+.ag-theme-quartz-dark .ag-paging-panel {
+  background-color: #1f2937 !important;
+  border-top: 1px solid #374151 !important;
+  padding: 6px 12px !important;
+  display: flex !important;
+  justify-content: flex-end !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.ag-theme-quartz-dark .ag-paging-button {
+  background-color: #374151 !important;
+  border: 1px solid #4b5563 !important;
+  color: #e5e7eb !important;
+  padding: 3px 6px !important;
+  margin: 0 1px !important;
+  border-radius: 2px !important;
+  font-size: 11px !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+  min-width: 28px !important;
+}
+
+.ag-theme-quartz-dark .ag-paging-button:hover:not([disabled]) {
+  background-color: #4b5563 !important;
+  border-color: #6b7280 !important;
+  color: #f3f4f6 !important;
+}
+
+.ag-theme-quartz-dark .ag-paging-button[disabled] {
+  opacity: 0.4 !important;
+  cursor: not-allowed !important;
+}
+
+.ag-theme-quartz-dark .ag-paging-button.ag-paging-button-active {
+  background-color: #3b82f6 !important;
+  border-color: #3b82f6 !important;
+  color: white !important;
+  font-weight: 600 !important;
+}
+
+.ag-theme-quartz-dark .ag-paging-page-size-container {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  font-size: 11px !important;
+  color: #e5e7eb !important;
+}
+
+.ag-theme-quartz-dark .ag-paging-page-size-button-wrapper {
+  display: flex !important;
+  align-items: center !important;
+  gap: 3px !important;
+}
+
+.ag-theme-quartz-dark .ag-paging-page-size-button,
+.ag-theme-quartz-dark .ag-paging-page-size-button:disabled {
+  background-color: #374151 !important;
+  border: 1px solid #4b5563 !important;
+  color: #e5e7eb !important;
+  padding: 3px 6px !important;
+  border-radius: 2px !important;
+  font-size: 11px !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+.ag-theme-quartz-dark .ag-paging-page-size-button:hover {
+  background-color: #4b5563 !important;
+  border-color: #6b7280 !important;
+}
+
+
+/* Ant Design Dark Mode Overrides */
+.dark .ant-input,
+.dark .ant-input-number,
+.dark .ant-picker,
+.dark .ant-select-selector {
+  background-color: #374151 !important;
+  border-color: #4b5563 !important;
+  color: #f3f4f6 !important;
+}
+
+.dark .ant-input::placeholder,
+.dark .ant-input-number-input::placeholder {
+  color: #9ca3af !important;
+}
+
+.dark .ant-input:hover,
+.dark .ant-input-number:hover,
+.dark .ant-picker:hover,
+.dark .ant-select-selector:hover {
+  border-color: #6b7280 !important;
+}
+
+.dark .ant-input:focus,
+.dark .ant-input-number:focus,
+.dark .ant-picker-focused,
+.dark .ant-select-focused .ant-select-selector {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+}
+
+.dark .ant-select-arrow,
+.dark .ant-picker-suffix {
+  color: #9ca3af !important;
+}
+
+.dark .ant-input-password-icon {
+  color: #9ca3af !important;
+}
+
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Dark mode scrollbar */
+.dark ::-webkit-scrollbar-track {
+  background: #374151;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #6b7280;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}

@@ -1,4 +1,4 @@
-import { AppBar, useQueryClient, useQuery, useNavigate, Toolbar, Typography, useLocation, CustomButton } from "../shared/Imports";
+import { AppBar, useQueryClient, useQuery, useNavigate, Toolbar, Typography, useLocation } from "../shared/Imports";
 import { compass } from "../shared/Icons";
 
 const Navbar = () => {

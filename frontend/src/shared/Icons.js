@@ -8,6 +8,7 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import CloseIcon from "@mui/icons-material/Close";
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import PasswordOutlinedIcon from '@mui/icons-material/PasswordOutlined';
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
@@ -16,6 +17,9 @@ import WorkIcon from '@mui/icons-material/Work';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { MdPushPin } from "react-icons/md";
+import LightModeIcon from '@mui/icons-material/LightMode';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 //images
 import compass from "../assets/images/compass.png";
@@ -24,11 +28,14 @@ import Img2 from "../assets/images/sign-up.png"
 import NotFound from "../assets/images/not-found.png"
 
 export {
+  LightModeIcon,
+  DarkModeIcon,
   MdPushPin,
   LogoutIcon,
   AccountCircleIcon,
   DashboardIcon,
   WorkIcon,
+  SettingsIcon,
   FaChevronLeft,
   FaChevronRight,
   PasswordOutlinedIcon,
@@ -44,6 +51,7 @@ export {
   PhoneIcon,
   VisibilityIcon,
   DeleteIcon,
+  CloseIcon,
   EmailOutlinedIcon,
   Img1,
   Img2,

@@ -1,4 +1,4 @@
-import { useState, useNavigate, toast, useQueryClient, axiosInstance, customToggleLoading, CustomButton, CustomTextField, Link } from "../../shared/Imports";
+import { useState, useNavigate, toast, useQueryClient, axiosInstance, customToggleLoading, CustomTextField, Link } from "../../shared/Imports";
 import { EmailOutlinedIcon, PasswordOutlinedIcon, Img2 } from "../../shared/Icons";
 
 const Login = () => {
@@ -89,9 +89,12 @@ const Login = () => {
             </div>
 
             {/* Submit Button */}
-            <CustomButton type="submit" variant="primary" key="register">
+            <button
+              type="submit"
+              className="w-full py-2 bg-blue-600 text-white rounded font-medium hover:bg-blue-700 transition-colors"
+            >
               Sign In
-            </CustomButton>
+            </button>
           </form>
 
           {/* Extra Links */}

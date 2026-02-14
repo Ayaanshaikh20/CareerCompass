@@ -1,5 +1,5 @@
 import { PasswordOutlinedIcon, Img1 } from "../../shared/Icons";
-import { useState, toast, useNavigate, useQueryClient, axiosInstance, customToggleLoading, CustomTextField, CustomButton } from "../../shared/Imports";
+import { useState, toast, useNavigate, useQueryClient, axiosInstance, customToggleLoading, CustomTextField } from "../../shared/Imports";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -98,9 +98,12 @@ const Register = () => {
             />
 
             {/* Submit Button */}
-            <CustomButton type="submit" variant="primary">
+            <button
+              type="submit"
+              className="w-full py-2 bg-blue-600 text-white rounded font-medium hover:bg-blue-700 transition-colors"
+            >
               Register
-            </CustomButton>
+            </button>
 
             {/* Login link */}
             <div className="text-center text-gray-400 text-sm">

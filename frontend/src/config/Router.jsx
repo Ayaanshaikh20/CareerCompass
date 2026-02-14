@@ -1,4 +1,20 @@
-import { Outlet, Navigate, Routes, Route, MainLayout, Register, Login, AuthLayout, Dashboard, Settings, Profile, NotFound, ForgotPassword, ResetPassword } from "../shared/Imports";
+import {
+  Outlet,
+  Navigate,
+  Routes,
+  Route,
+  MainLayout,
+  Register,
+  Login,
+  AuthLayout,
+  Dashboard,
+  Settings,
+  Profile,
+  NotFound,
+  ForgotPassword,
+  ResetPassword,
+  Applications,
+} from "../shared/Imports";
 
 const AuthRoutes = () => {
   const user = localStorage.getItem("uid");
@@ -28,6 +44,7 @@ const Router = () => {
       <Route element={<AuthRoutes />}>
         <Route element={<AuthLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/applications" element={<Applications />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/profile" element={<Profile />} />
         </Route>

@@ -17,6 +17,7 @@
     "@radix-ui/themes": "^3.2.1",
     "@tanstack/react-query": "^5.71.1",
     "@tanstack/react-query-devtools": "^5.71.1",
+    "ag-grid-react": "^35.0.1",
     "antd": "^5.24.9",
     "axios": "^1.8.4",
     "dayjs": "^1.11.13",

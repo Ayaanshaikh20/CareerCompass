@@ -1,4 +1,4 @@
-import { axiosInstance, CustomButton, CustomTextField, customToggleLoading, toast, useQueryClient, useState, useEffect } from "../../shared/Imports";
+import { axiosInstance, CustomTextField, customToggleLoading, toast, useQueryClient, useState, useEffect } from "../../shared/Imports";
 
 const Profile = () => {
   const queryClient = useQueryClient();
@@ -10,6 +10,15 @@ const Profile = () => {
     phone: ""
   });
   const [formChanged, setFormChanged] = useState(false);
+  const [isDark, setIsDark] = useState(localStorage.getItem("isDark") === "true");
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setIsDark(localStorage.getItem("isDark") === "true");
+    };
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
 
   //Destructure userData
   const { firstName, location, phone, email } = user || {};
@@ -62,96 +71,102 @@ const Profile = () => {
   };
 
   return (
-    <>
-      <main className=" w-full flex justify-between gap-5 bg-background pt-4 p-3 text-textPrimary min-h-screen">
-        {/* Profile section */}
-        <section className="bg-surface border border-border flex flex-col justify-between shadow rounded-sm p-6 w-full">
-          <div>
-            <h2 className="text-xl font-semibold text-textPrimary border-b-2 pb-1 mb-6">
-              Complete Profile
-            </h2>
-            <div className="mt-6 space-y-5">
-              <span className=" border-b-2 pb-1 mb-6">Personal Details</span>
-              {/* Row 1 */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="flex flex-col">
-                  <label className="text-sm text-textSecondary mb-1">
-                    First Name
-                  </label>
-                  <CustomTextField
-                    value={firstName}
-                    name={"firstName"}
-                    className="w-full"
-                    handleChange={(e) => handleChange(e.target.name, e.target.value)}
-                  />
+    <main className="w-full bg-gray-50 dark:bg-gray-950 p-4 min-h-screen">
+      <div className="max-w-4xl mx-auto">
+        <section className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm rounded-lg p-6">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 pb-3 mb-6 border-b border-gray-200 dark:border-gray-700">
+            Profile Settings
+          </h2>
+          
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">Personal Information</h3>
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1.5">
+                      First Name
+                    </label>
+                    <CustomTextField
+                      value={firstName}
+                      name="firstName"
+                      className="w-full"
+                      handleChange={(e) => handleChange(e.target.name, e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1.5">
+                      Email
+                    </label>
+                    <CustomTextField
+                      value={email}
+                      name="email"
+                      type="email"
+                      className="w-full"
+                      handleChange={(e) => handleChange(e.target.name, e.target.value)}
+                    />
+                  </div>
                 </div>
-                {/* <div className="flex flex-col">
-                  <label className="text-sm text-textSecondary mb-1">
-                    Last Name
-                  </label>
-                  <CustomTextField
-                    value={lastName}
-                    name={"lastname"}
-                    className="w-full"
-                    handleChange={(e) => handleChange("lastName", e.target.value)}
-                  />
-                </div> */}
-              </div>
-              {/* Location */}
-              <div className="flex flex-col">
-                <label className="text-sm text-textSecondary mb-1">
-                  Location
-                </label>
-                <CustomTextField
-                  value={location}
-                  name={"location"}
-                  className="w-full sm:w-72"
-                  handleChange={(e) => handleChange(e.target.name, e.target.value)}
-                />
-              </div>
-              {/* Phone */}
-              <div className="flex flex-col">
-                <label className="text-sm text-textSecondary mb-1">
-                  Phone Number
-                </label>
-                <CustomTextField
-                  value={phone}
-                  name={"phone"}
-                  className="w-full sm:w-72"
-                  handleChange={(e) => handleChange(e.target.name, e.target.value)}
-                />
-              </div>
-              {/* Email */}
-              <div className="flex flex-col">
-                <label className="text-sm text-textSecondary mb-1">
-                  Email
-                </label>
-                <CustomTextField
-                  value={email}
-                  name={"email"}
-                  className="w-full sm:w-72"
-                  handleChange={(e) => handleChange(e.target.name, e.target.value)}
-                />
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1.5">
+                      Phone Number
+                    </label>
+                    <CustomTextField
+                      value={phone}
+                      name="phone"
+                      type="tel"
+                      className="w-full"
+                      handleChange={(e) => handleChange(e.target.name, e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1.5">
+                      Location
+                    </label>
+                    <CustomTextField
+                      value={location}
+                      name="location"
+                      className="w-full"
+                      handleChange={(e) => handleChange(e.target.name, e.target.value)}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          {/* Save Changes Button */}
-          <div className="flex justify-end mt-10">
-            <CustomButton
-              variant={formChanged ? "primary" : "disabled"}
-              className=""
-              handleClick={submitChanges}
+
+          <div className="flex justify-end gap-3 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+            <button
+              onClick={() => {
+                fetchUser();
+                setFormChanged(false);
+              }}
               disabled={!formChanged}
+              className={`px-4 py-1.5 text-sm font-medium rounded transition-colors ${
+                formChanged
+                  ? "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600"
+                  : "bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed border border-gray-200 dark:border-gray-700"
+              }`}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={submitChanges}
+              disabled={!formChanged}
+              className={`px-4 py-1.5 text-sm font-medium rounded transition-colors ${
+                formChanged
+                  ? "bg-blue-600 text-white hover:bg-blue-700 shadow-sm"
+                  : "bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-600 cursor-not-allowed"
+              }`}
             >
               Save Changes
-            </CustomButton>
+            </button>
           </div>
         </section>
-        {/* Preview section */}
-        <section className=" w-full">
-        </section>
-      </main>
-    </>
+      </div>
+    </main>
   );
 };
 

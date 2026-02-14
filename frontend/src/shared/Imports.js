@@ -3,38 +3,28 @@ import "../assets/styles/styles.css";
 import "@fontsource/roboto";
 
 //React
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 
 //Material UI/Icons
 import {
   Typography,
-  TextField,
-  Avatar,
-  Box,
-  Grid2,
-  IconButton,
-  Tooltip,
   AppBar,
   Toolbar,
-  Chip,
+  IconButton,
   Menu,
   MenuItem,
   ListItemIcon,
   ListItemText,
-  FormControl,
-  InputLabel,
-  OutlinedInput,
-  InputAdornment,
   FormHelperText,
-  Divider,
-  Paper
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 
-//Material Table
-import { MaterialReactTable } from "material-react-table";
-
 //Ant design
-import { Input, DatePicker, Select, Drawer, Row, Col, Space, Descriptions } from "antd";
+import { DatePicker, Select } from "antd";
 
 //react-router
 import { useNavigate, Route, Routes, Navigate, Outlet, Link, BrowserRouter, useLocation, useSearchParams } from "react-router";
@@ -43,6 +33,10 @@ import { useNavigate, Route, Routes, Navigate, Outlet, Link, BrowserRouter, useL
 import { useQueryClient, QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
+//ag-grid
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
+import { AgGridReact } from 'ag-grid-react';
+
 //react dom
 import { createRoot } from "react-dom/client";
 
@@ -50,8 +44,7 @@ import { createRoot } from "react-dom/client";
 import axios from "axios";
 import dayjs from "dayjs";
 import toast, { Toaster } from "react-hot-toast";
-import moment from "moment";
-import { Line, Pie } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -64,7 +57,7 @@ import {
 } from "chart.js";
 
 //Radix
-import { Theme, Button } from "@radix-ui/themes";
+import { Theme } from "@radix-ui/themes";
 
 //Components
 import { customToggleLoading } from "../utilities/CustomLoading";
@@ -76,49 +69,38 @@ import Dashboard from "../pages/Main/Dashboard";
 import AuthLayout from "../layouts/AuthLayout";
 import Settings from "../pages/Main/Settings";
 import Profile from "../pages/Main/Profile";
-import AppliedJobs from "../pages/Main/AppliedJobs";
 import Router from "../config/Router";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import ForgotPassword from "../pages/Auth/ForgotPassword";
 import ResetPassword from "../pages/Auth/ResetPassword";
 import NotFound from "../pages/Main/NotFound";
+import Applications from "../pages/Main/Applications";
 
 //Utilities
 import { CustomTextField } from "../utilities/CustomTextField";
-import { CustomButton } from "../utilities/CustomButton";
-import { muiTableBodyCellProps, muiTableBodyRowProps, muiTableContainerProps, muiTableProps } from "../utilities/TableStyles";
 
 //Services
 import emailService from "../services/email"; 
 
 export {
+  AgGridReact,
+  AllCommunityModule,
+  ModuleRegistry,
+  Applications,
   useSearchParams,
   ResetPassword,
   emailService,
   ForgotPassword,
-  muiTableBodyCellProps,
-  muiTableBodyRowProps,
-  muiTableContainerProps,
-  muiTableProps,
-  Paper,
-  Divider,
   FormHelperText,
   NotFound,
-  CustomButton,
   CustomTextField,
-  InputAdornment,
-  OutlinedInput,
-  FormControl,
-  InputLabel,
   Theme,
   Menu,
   MenuItem,
   ListItemIcon,
   ListItemText,
-  Chip,
   Line,
-  Pie,
   ChartJS,
   CategoryScale,
   LinearScale,
@@ -140,14 +122,9 @@ export {
   ReactQueryDevtools,
   QueryClientProvider,
   QueryClient,
-  Avatar,
-  Box,
-  Grid2,
   IconButton,
-  Tooltip,
   useQueryClient,
   Link,
-  TextField,
   MainLayout,
   Register,
   Login,
@@ -155,30 +132,24 @@ export {
   AuthLayout,
   Settings,
   Profile,
-  AppliedJobs,
   Route,
   Routes,
   Navigate,
   Outlet,
   useEffect,
   useState,
-  useMemo,
-  Button,
   Typography,
-  MaterialReactTable,
-  Input,
   DatePicker,
   Select,
-  Drawer,
-  Row,
-  Col,
-  Space,
-  Descriptions,
   customToggleLoading,
   axios,
   dayjs,
   toast,
-  moment,
   axiosInstance,
   useNavigate,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 };

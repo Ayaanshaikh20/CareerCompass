@@ -14,11 +14,7 @@ import {
   ArcElement,
   Legend,
   ToolTip,
-  Chip,
-  AppliedJobs,
 } from "../../shared/Imports";
-
-import * as ScrollArea from "@radix-ui/react-scroll-area";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, ArcElement, ToolTip, Legend);
 
@@ -80,68 +76,76 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="bg-background pt-4 p-3 text-textPrimary min-h-screen">
-      <ScrollArea.Root className="w-full h-full rounded overflow-hidden">
-        <ScrollArea.Viewport className="w-full h-full">
-          {/* Stats Card */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="bg-surface border border-border shadow rounded-sm p-5">
-              <h2 className="text-lg font-semibold mb-4 text-textPrimary border-b-2">Application Overview</h2>
-              <ul className="space-y-3">
-                {[
-                  { label: "Total Applications", value: applications.length, color: "text-primary" },
-                  { label: "Pending", value: statusCounts.pending, color: "text-info" },
-                  { label: "Approved", value: statusCounts.approved, color: "text-success" },
-                  { label: "Rejected", value: statusCounts.rejected, color: "text-danger" },
-                ].map(({ label, value, color }, idx) => (
-                  <li key={idx} className="flex items-center justify-between border-b border-border pb-2 last:border-none last:pb-0">
-                    <Chip className="text-sm text-textSecondary" variant="filled" label={label} size="small" />
-                    <span className={`text-base font-semibold ${color}`}>{value}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            {/* Application history */}
-            <div className="bg-surface space-y-4 border border-border shadow rounded-sm p-5">
-              <h2 className="text-lg font-semibold mb-4 text-textPrimary border-b-2">Applications Over Time</h2>
-              {/* Scrollable area after 3 items */}
-              <div className="max-h-64 pr-3 overflow-y-auto custom-scrollbar">
-                {applications.length > 0 ? (
-                  applications.map((app, idx) => (
-                    <div
-                      key={idx}
-                      className="flex items-center my-3 justify-between border border-border bg-surface transition-colors rounded-lg px-4 py-3 shadow-sm hover:shadow-md hover:bg-accent/20 cursor-pointer"
-                    >
-                      <div className="flex flex-col">
-                        <span className="text-sm font-semibold text-textPrimary">{app.role}</span>
-                        <span className="text-xs text-textSecondary">{app.employer}</span>
-                      </div>
-                      <div className="flex flex-col text-right">
-                        <span className="text-sm font-medium text-textPrimary">{new Date(app.appliedDate).toLocaleDateString()}</span>
-                        <span className="text-xs text-textSecondary">Applied Date</span>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-center text-zinc-500 text-sm py-10">No applications found</div>
-                )}
+    <div className="bg-slate-100 dark:bg-gray-900 pt-6 px-4 text-gray-900 dark:text-gray-100 min-h-screen font-sans">
+      {/* Header */}
+      <div className="max-w-7xl mx-auto mb-6">
+        <h1 className="text-xl font-bold mb-1">Dashboard</h1>
+        <p className="text-gray-600 dark:text-gray-400 text-xs">Track your job applications at a glance</p>
+      </div>
+
+      {/* Stats Card */}
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {[
+          { label: "Total Applications", value: applications.length, color: "from-blue-500 to-blue-600", icon: "📋" },
+          { label: "Pending", value: statusCounts.pending, color: "from-amber-500 to-amber-600", icon: "⏳" },
+          { label: "Approved", value: statusCounts.approved, color: "from-green-500 to-green-600", icon: "✅" },
+          { label: "Rejected", value: statusCounts.rejected, color: "from-red-500 to-red-600", icon: "❌" },
+        ].map(({ label, value, color, icon }, idx) => (
+          <div key={idx} className={`bg-gradient-to-br ${color} rounded-lg p-5 text-white shadow-md`}>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs opacity-90">{label}</p>
+                <p className="text-2xl font-bold mt-2">{value}</p>
               </div>
-            </div>
-            {/* Application history */}
-            <div className="bg-surface space-y-4 border border-border shadow rounded-sm p-5">
-              <h2 className="text-lg font-semibold mb-4 text-textPrimary border-b-2">Frequent Platforms</h2>
-              {/* Make the chart fill the card space */}
-              <div className="w-full h-64">
-                <Line data={frequentPlatformsData} options={{ maintainAspectRatio: false, ...frequentPlatformsOptions }} />
-              </div>
+              <span className="text-3xl opacity-30">{icon}</span>
             </div>
           </div>
-          {/* Applied Jobs */}
-          <AppliedJobs fetchApplications={fetchApplications} setApplications={setApplications} applications={applications} />
-        </ScrollArea.Viewport>
-      </ScrollArea.Root>
+        ))}
+      </div>
+
+      {/* Main Content Grid */}
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6 pb-6">
+        {/* Application history */}
+        <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow p-5">
+          <h2 className="text-lg font-bold mb-3">Recent Applications</h2>
+          <div className="max-h-80 overflow-y-auto custom-scrollbar">
+            {applications.length > 0 ? (
+              applications.map((app, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center justify-between py-3 border-b border-gray-200 dark:border-gray-700 last:border-none hover:bg-gray-50 dark:hover:bg-gray-700 px-2 rounded transition-colors"
+                >
+                  <div className="flex-1">
+                    <p className="font-semibold text-sm">{app.role}</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{app.employer}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs font-medium">{new Date(app.appliedDate).toLocaleDateString()}</p>
+                    <span className="inline-block mt-1 text-xs px-2 py-1 rounded-full" style={{
+                      backgroundColor: app.status === "approved" ? "#d1fae5" : app.status === "rejected" ? "#fee2e2" : "#fef3c7",
+                      color: app.status === "approved" ? "#065f46" : app.status === "rejected" ? "#7f1d1d" : "#92400e"
+                    }}>
+                      {app.status.charAt(0).toUpperCase() + app.status.slice(1)}
+                    </span>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="text-center text-gray-400 text-sm py-12">No applications yet. Start applying!</div>
+            )}
+          </div>
+        </div>
+
+        {/* Frequent Platforms Chart */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-5">
+          <h2 className="text-lg font-bold mb-3">Platform Usage</h2>
+          <div className="h-64">
+            <Line data={frequentPlatformsData} options={{ maintainAspectRatio: false, ...frequentPlatformsOptions }} />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
-
+    
 export default Dashboard;

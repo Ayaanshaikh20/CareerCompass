@@ -1,4 +1,3 @@
-import { CustomButton } from "../../utilities/CustomButton";
 import { useNavigate } from "../../shared/Imports";
 import { NotFound as NotFoundIcon } from "../../shared/Icons";
 
@@ -27,13 +26,12 @@ const NotFound = () => {
       </p>
 
       {/* Action button */}
-      <CustomButton
-        variant="primary"
-        className="px-6 py-2 text-base font-medium"
-        handleClick={() => navigate("/")}
+      <button
+        onClick={() => navigate("/")}
+        className="px-4 py-2 bg-blue-600 text-white rounded font-medium hover:bg-blue-700 transition-colors"
       >
         Go Home
-      </CustomButton>
+      </button>
 
       {/* Optional footer note */}
       <p className="mt-6 text-sm text-textSecondary">

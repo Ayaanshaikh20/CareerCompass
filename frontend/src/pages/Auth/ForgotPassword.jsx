@@ -1,4 +1,4 @@
-import { Link, CustomTextField, CustomButton, emailService, axiosInstance, toast } from "../../shared/Imports";
+import { Link, CustomTextField, emailService, axiosInstance, toast } from "../../shared/Imports";
 import { useState } from "react";
 import { EmailOutlinedIcon } from "../../shared/Icons";
 
@@ -69,9 +69,17 @@ const ForgotPassword = () => {
               key="email"
             />
           </div>
-          <CustomButton type="submit" variant={cooldown > 0 || loading ? "disabled" : "primary"} disabled={loading}>
+          <button
+            type="submit"
+            disabled={cooldown > 0 || loading}
+            className={`w-full py-2 rounded font-medium transition-colors ${
+              cooldown > 0 || loading
+                ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+                : "bg-blue-600 text-white hover:bg-blue-700"
+            }`}
+          >
             {loading ? "Sending..." : "Send reset link"}
-          </CustomButton>
+          </button>
         </form>
 
         {/* Footer */}
