@@ -458,8 +458,7 @@ const Applications = () => {
           <AgGridReact
             rowData={applications}
             columnDefs={columnDefs}
-            pagination={true}
-            paginationPageSize={10}
+            pagination={false}
             rowHeight={35}
             rowDragManaged={true}
             animateRows={true}

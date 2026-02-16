@@ -17,13 +17,13 @@ router.post("/api/refresh-token", async (req, res) => {
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, decoded) => {
 
       //user not verified so unauthorized and log them out
-      if (err) return res.sendStatus(401);
+      if (err) return res.sendStatus(403);
 
       const { id } = decoded;
 
-      sqlQuery = `SELECT * FROM register_users WHERE user_id='${id}'`;
+      sqlQuery = `SELECT * FROM register_users WHERE user_id=$1`;
 
-      const result = await con.query(sqlQuery);
+      const result = await con.query(sqlQuery, [id]);
 
       const user = result.rows[0];
 

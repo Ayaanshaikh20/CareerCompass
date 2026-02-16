@@ -19,8 +19,8 @@ axiosInstance.interceptors.response.use(
 
     const status = error.response?.status;
 
-    // retry new token on 401 (no token) or 403 (expired token)
-    if ((status === 401 || status === 403) && !originalRequest._retry) {
+    // retry new token on 403 (expired token)
+    if (status === 403 && !originalRequest._retry) {
       try {
         originalRequest._retry = true;
         await axios.post(`${axiosInstance.defaults.baseURL}/refresh-token`, {}, { withCredentials: true });
