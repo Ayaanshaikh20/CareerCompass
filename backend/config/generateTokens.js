@@ -14,13 +14,13 @@ const generateAccessToken = (userId, res) => {
 
 const generateRefreshToken = (userId, res) => {
   const token = jwt.sign({ id: userId }, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: "5m",
+    expiresIn: "1d",
   });
   res.cookie("r_t", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    maxAge: 5 * 60 * 1000, // 5 minutes in milliseconds
+    maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
   });
 };
 
