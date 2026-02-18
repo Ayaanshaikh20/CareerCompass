@@ -14,18 +14,21 @@ const generateAccessToken = (userId, res) => {
 
 const generateRefreshToken = (userId, res) => {
   const token = jwt.sign({ id: userId }, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: "1d",
+    expiresIn: "5m",
   });
   res.cookie("r_t", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day in milliseconds
+    maxAge: 5 * 60 * 1000, // 5 minutes in milliseconds
   });
 };
 
 const verifyAccessToken = (req, res, next) => {
   const { a_t } = req.cookies;
+
+  if(!a_t) return res.status(401).json({ message: "Session expired", code: "ACCESS_TOKEN_MISSING" });
+
   jwt.verify(a_t, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
     if (err) {
       // Check if the error is due to token expiration
