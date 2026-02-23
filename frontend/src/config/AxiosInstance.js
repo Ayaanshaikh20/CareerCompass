@@ -47,7 +47,7 @@ axiosInstance.interceptors.response.use(
     //   return;
     // }
     // retry new token on 403 (expired token)
-    if (status === 403 && !originalRequest._retry) {
+    if ((code === "ACCESS_TOKEN_MISSING" || status === 403) && !originalRequest._retry) {
       try {
         originalRequest._retry = true;
         await axios.post(
