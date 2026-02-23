@@ -42,12 +42,12 @@ axiosInstance.interceptors.response.use(
     const { code } = error.response?.data || {};
 
     //If access token is missing, it means user has no valid session, so log them out and redirect to login page
-    if (code === "ACCESS_TOKEN_MISSING") {
-      clearSessionAndRedirect();
-      return;
-    }
+    // if (code === "ACCESS_TOKEN_MISSING") {
+    //   clearSessionAndRedirect();
+    //   return;
+    // }
     // retry new token on 403 (expired token)
-    else if (status === 403 && !originalRequest._retry) {
+    if (status === 403 && !originalRequest._retry) {
       try {
         originalRequest._retry = true;
         await axios.post(
