@@ -15,7 +15,6 @@ const axiosInstance = axios.create({
 });
 
 const clearSessionAndRedirect = async () => {
-  toast.error("Session expired");
   await axios.post(
     `${axiosInstance.defaults.baseURL}/logout`,
     {},
@@ -26,6 +25,7 @@ const clearSessionAndRedirect = async () => {
     sessionStorage.clear();
     window.location.href = "/";
   }, 1000);
+  toast.error("Session expired");
   return Promise.reject({
     customSessionExpired: true,
     originalError: error,
