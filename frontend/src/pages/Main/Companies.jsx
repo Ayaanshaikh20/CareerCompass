@@ -179,7 +179,7 @@ const Companies = () => {
         </div>
 
         <div className={isDark ? "ag-theme-quartz-dark" : "ag-theme-quartz"} style={{ height: "480px", borderRadius: "4px", overflow: "hidden", fontFamily: "sans-serif", boxShadow: "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)" }}>
-          <AgGridReact rowData={companies} columnDefs={columnDefs} pagination={false} rowHeight={35} animateRows={true} headerHeight={36} defaultColDef={{ sortable: true, filter: false, resizable: true }} suppressCellFocus={true} rowClassRules={{ "ag-row-even": (params) => params.node.rowIndex % 2 === 0, "ag-row-odd": (params) => params.node.rowIndex % 2 === 1 }} quickFilterText={quickFilterText} />
+          <AgGridReact rowData={companies} columnDefs={columnDefs} pagination={false} rowHeight={35} animateRows={true} headerHeight={36} defaultColDef={{ sortable: true, filter: false, resizable: true }} suppressCellFocus={false} enableCellTextSelection={true} ensureDomOrder={true} rowClassRules={{ "ag-row-even": (params) => params.node.rowIndex % 2 === 0, "ag-row-odd": (params) => params.node.rowIndex % 2 === 1 }} quickFilterText={quickFilterText} />
         </div>
 
         <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>

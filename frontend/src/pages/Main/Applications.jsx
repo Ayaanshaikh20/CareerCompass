@@ -468,7 +468,9 @@ const Applications = () => {
               filter: false,
               resizable: true,
             }}
-            suppressCellFocus={true}
+            suppressCellFocus={false}
+            enableCellTextSelection={true}
+            ensureDomOrder={true}
             rowClassRules={{
               "ag-row-even": (params) => params.node.rowIndex % 2 === 0,
               "ag-row-odd": (params) => params.node.rowIndex % 2 === 1,
