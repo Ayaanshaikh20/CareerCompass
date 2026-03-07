@@ -124,19 +124,20 @@ const Companies = () => {
 
   const columnDefs = [
     {
-      width: 30,
+      headerName: "",
+      width: 50,
       cellRenderer: (params) => <ActionMenuCell data={params.data} handleDeleteClick={handleDeleteClick} viewEditCompany={viewEditCompany} />,
       sortable: false,
       filter: false,
-      cellStyle: { paddingTop: "4px", paddingBottom: "4px" },
+      pinned: "left",
+      cellStyle: { paddingTop: "4px", paddingBottom: "4px", display: "flex", alignItems: "center", justifyContent: "center" },
     },
     { headerName: "Company", field: "companyName", flex: 1.5, minWidth: 150, cellStyle: { paddingTop: "4px", paddingBottom: "4px", fontSize: "12px" } },
     { headerName: "Location", field: "location", flex: 1, minWidth: 120, cellStyle: { paddingTop: "4px", paddingBottom: "4px", fontSize: "12px" } },
     {
       headerName: "Contacted",
       field: "isContacted",
-      flex: 0.6,
-      minWidth: 90,
+      width: 100,
       cellRenderer: (params) => (
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
           <input
