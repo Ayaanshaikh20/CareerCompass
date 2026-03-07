@@ -37,3 +37,19 @@ CREATE TABLE public.forget_password
     is_used boolean DEFAULT false,
     created_at timestamp DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE companies (
+    id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL
+        REFERENCES register_users(user_id)
+        ON DELETE CASCADE,
+    company_name VARCHAR(255) NOT NULL,
+    phone_number VARCHAR(20),
+    website_url VARCHAR(255),
+    hr_email VARCHAR(255),
+    location VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_companies_user_id ON companies(user_id);
+CREATE INDEX idx_companies_location ON companies(location);

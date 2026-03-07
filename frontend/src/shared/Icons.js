@@ -20,6 +20,7 @@ import { MdPushPin } from "react-icons/md";
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import SettingsIcon from '@mui/icons-material/Settings';
+import BusinessIcon from '@mui/icons-material/Business';
 
 //images
 import compass from "../assets/images/compass.png";
@@ -36,6 +37,7 @@ export {
   DashboardIcon,
   WorkIcon,
   SettingsIcon,
+  BusinessIcon,
   FaChevronLeft,
   FaChevronRight,
   PasswordOutlinedIcon,

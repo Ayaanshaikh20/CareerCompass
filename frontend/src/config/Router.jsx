@@ -14,6 +14,7 @@ import {
   ForgotPassword,
   ResetPassword,
   Applications,
+  Companies,
 } from "../shared/Imports";
 
 const AuthRoutes = () => {
@@ -45,6 +46,7 @@ const Router = () => {
         <Route element={<AuthLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/applications" element={<Applications />} />
+          <Route path="/companies" element={<Companies />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/profile" element={<Profile />} />
         </Route>

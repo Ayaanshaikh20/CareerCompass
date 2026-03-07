@@ -76,6 +76,7 @@ import ForgotPassword from "../pages/Auth/ForgotPassword";
 import ResetPassword from "../pages/Auth/ResetPassword";
 import NotFound from "../pages/Main/NotFound";
 import Applications from "../pages/Main/Applications";
+import Companies from "../pages/Main/Companies";
 
 //Utilities
 import { CustomTextField } from "../utilities/CustomTextField";
@@ -88,6 +89,7 @@ export {
   AllCommunityModule,
   ModuleRegistry,
   Applications,
+  Companies,
   useSearchParams,
   ResetPassword,
   emailService,

@@ -18,6 +18,7 @@ import {
   LightModeIcon,
   DarkModeIcon,
   SettingsIcon,
+  BusinessIcon,
 } from "../shared/Icons";
 
 const Sidebar = () => {
@@ -49,6 +50,11 @@ const Sidebar = () => {
       name: "Applications",
       path: "/applications",
       icon: <WorkIcon fontSize="small" />,
+    },
+    {
+      name: "Companies",
+      path: "/companies",
+      icon: <BusinessIcon fontSize="small" />,
     },
     {
       name: "Profile",
