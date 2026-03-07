@@ -8,6 +8,11 @@ const queryClient = new QueryClient();
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
+// Initialize dark mode on app load
+if (localStorage.getItem("isDark") === "true") {
+  document.documentElement.classList.add("dark");
+}
+
 createRoot(document.getElementById("root")).render(
   <QueryClientProvider client={queryClient}>
     <Theme>
