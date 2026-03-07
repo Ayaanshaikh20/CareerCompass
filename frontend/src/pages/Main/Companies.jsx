@@ -60,6 +60,7 @@ const Companies = () => {
     websiteUrl: "",
     hrEmail: "",
     location: "",
+    isContacted: false,
   };
   const [formData, setFormData] = useState(defaultFormData);
   const [isEdit, setIsEdit] = useState(false);
@@ -131,6 +132,27 @@ const Companies = () => {
     },
     { headerName: "Company", field: "companyName", flex: 1.5, minWidth: 150, cellStyle: { paddingTop: "4px", paddingBottom: "4px", fontSize: "12px" } },
     { headerName: "Location", field: "location", flex: 1, minWidth: 120, cellStyle: { paddingTop: "4px", paddingBottom: "4px", fontSize: "12px" } },
+    {
+      headerName: "Contacted",
+      field: "isContacted",
+      flex: 0.6,
+      minWidth: 90,
+      cellRenderer: (params) => (
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
+          <input
+            type="checkbox"
+            checked={params.value}
+            onChange={(e) => {
+              e.stopPropagation();
+              const updatedCompany = { ...params.data, isContacted: e.target.checked };
+              axiosInstance.put(`/companies/${params.data.id}`, updatedCompany).then(() => fetchCompanies());
+            }}
+            className="w-4 h-4 cursor-pointer"
+          />
+        </div>
+      ),
+      cellStyle: { paddingTop: "4px", paddingBottom: "4px" },
+    },
     { headerName: "Phone", field: "phoneNumber", flex: 1, minWidth: 120, cellStyle: { paddingTop: "4px", paddingBottom: "4px", fontSize: "12px" } },
     { headerName: "HR Email", field: "hrEmail", flex: 1.2, minWidth: 150, cellStyle: { paddingTop: "4px", paddingBottom: "4px", fontSize: "12px" } },
     {
@@ -220,6 +242,18 @@ const Companies = () => {
               <div>
                 <label className="block text-sm font-medium mb-1.5 text-gray-700 dark:text-gray-300">Website URL</label>
                 <CustomTextField value={formData.websiteUrl} handleChange={(e) => handleChange("websiteUrl", e.target.value)} placeholder="https://company.com" />
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="isContacted"
+                  checked={formData.isContacted}
+                  onChange={(e) => handleChange("isContacted", e.target.checked)}
+                  className="w-4 h-4 cursor-pointer"
+                />
+                <label htmlFor="isContacted" className="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
+                  Contacted
+                </label>
               </div>
             </div>
           </DialogContent>

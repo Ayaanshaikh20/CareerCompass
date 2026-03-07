@@ -22,6 +22,7 @@ router.get("/api/companies", async (req, res) => {
       websiteUrl: item.website_url,
       hrEmail: item.hr_email,
       location: item.location,
+      isContacted: item.is_contacted || false,
     }));
 
     res.status(200).json({
@@ -40,12 +41,12 @@ router.post("/api/companies", async (req, res) => {
   let con;
   try {
     con = await pool.connect();
-    const { userId, companyName, phoneNumber, websiteUrl, hrEmail, location } = req.body;
+    const { userId, companyName, phoneNumber, websiteUrl, hrEmail, location, isContacted } = req.body;
 
     await con.query(
-      `INSERT INTO companies(user_id, company_name, phone_number, website_url, hr_email, location) 
-       VALUES ($1, $2, $3, $4, $5, $6)`,
-      [userId, companyName, phoneNumber, websiteUrl, hrEmail, location]
+      `INSERT INTO companies(user_id, company_name, phone_number, website_url, hr_email, location, is_contacted) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      [userId, companyName, phoneNumber, websiteUrl, hrEmail, location, isContacted || false]
     );
 
     res.status(201).json({
@@ -64,12 +65,12 @@ router.put("/api/companies/:id", async (req, res) => {
   try {
     con = await pool.connect();
     const { id } = req.params;
-    const { companyName, phoneNumber, websiteUrl, hrEmail, location } = req.body;
+    const { companyName, phoneNumber, websiteUrl, hrEmail, location, isContacted } = req.body;
 
     await con.query(
-      `UPDATE companies SET company_name=$1, phone_number=$2, website_url=$3, hr_email=$4, location=$5 
-       WHERE id=$6`,
-      [companyName, phoneNumber, websiteUrl, hrEmail, location, id]
+      `UPDATE companies SET company_name=$1, phone_number=$2, website_url=$3, hr_email=$4, location=$5, is_contacted=$6 
+       WHERE id=$7`,
+      [companyName, phoneNumber, websiteUrl, hrEmail, location, isContacted, id]
     );
 
     res.status(200).json({

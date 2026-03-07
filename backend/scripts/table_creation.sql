@@ -48,6 +48,7 @@ CREATE TABLE companies (
     website_url VARCHAR(255),
     hr_email VARCHAR(255),
     location VARCHAR(255) NOT NULL,
+    is_contacted BOOLEAN DEFAULT false,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
