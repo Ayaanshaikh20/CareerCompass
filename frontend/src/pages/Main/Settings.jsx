@@ -1,7 +1,9 @@
 import { useState, useEffect } from "../../shared/Imports";
 
 const Settings = () => {
-  const [isDark, setIsDark] = useState(localStorage.getItem("isDark") === "true");
+  const [isDark, setIsDark] = useState(
+    localStorage.getItem("isDark") === "true",
+  );
 
   useEffect(() => {
     const handleStorageChange = () => {
@@ -33,10 +35,14 @@ const Settings = () => {
 
           <div className="space-y-6">
             <div>
-              <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">Appearance</h3>
+              <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
+                Appearance
+              </h3>
               <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
                 <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Theme</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                    Theme
+                  </p>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                     Choose between light and dark mode
                   </p>

@@ -50,7 +50,6 @@ const Companies = () => {
   const [errors, setErrors] = useState({});
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState(null);
-  const [isDark, setIsDark] = useState(localStorage.getItem("isDark") === "true");
   const [quickFilterText, setQuickFilterText] = useState("");
 
   const defaultFormData = {
@@ -122,6 +121,8 @@ const Companies = () => {
     }
   };
 
+  const isDark = document.documentElement.classList.contains("dark");
+
   const columnDefs = [
     {
       headerName: "",
@@ -168,9 +169,6 @@ const Companies = () => {
 
   useEffect(() => {
     fetchCompanies();
-    const handleStorageChange = () => setIsDark(localStorage.getItem("isDark") === "true");
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
   const fetchCompanies = async () => {

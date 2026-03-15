@@ -15,6 +15,8 @@ import {
   ResetPassword,
   Applications,
   Companies,
+  useEffect,
+  useLocation,
 } from "../shared/Imports";
 
 const AuthRoutes = () => {
@@ -28,6 +30,16 @@ const PublicRoutes = () => {
 };
 
 const Router = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (localStorage.getItem("isDark") === "true") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [location.pathname]);
+
   return (
     <Routes>
       {/* Default redirect */}

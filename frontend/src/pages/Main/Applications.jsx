@@ -140,7 +140,6 @@ const Applications = () => {
   const [errors, setErrors] = useState({});
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedAppToDelete, setSelectedAppToDelete] = useState(null);
-  const [isDark, setIsDark] = useState(localStorage.getItem("isDark") === "true");
   const [quickFilterText, setQuickFilterText] = useState("");
 
   const defaultFormData = {
@@ -243,6 +242,8 @@ const Applications = () => {
     setIsEditApplication(false);
     setErrors({});
   };
+
+  const isDark = document.documentElement.classList.contains("dark");
 
   const columnDefs = [
     {
@@ -384,13 +385,6 @@ const Applications = () => {
 
   useEffect(() => {
     fetchApplications();
-    
-    const handleStorageChange = () => {
-      setIsDark(localStorage.getItem("isDark") === "true");
-    };
-    
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
   const fetchApplications = async () => {
@@ -520,11 +514,11 @@ const Applications = () => {
           PaperProps={{
             sx: {
               borderRadius: "8px",
-              bgcolor: isDark ? "#1f2937" : "#ffffff",
+              bgcolor: document.documentElement.classList.contains("dark") ? "#1f2937" : "#ffffff",
             },
           }}
         >
-          <DialogTitle sx={{ fontWeight: 600, fontSize: "18px", pb: 2, color: isDark ? "#f3f4f6" : "#111827" }}>
+          <DialogTitle sx={{ fontWeight: 600, fontSize: "18px", pb: 2, color: document.documentElement.classList.contains("dark") ? "#f3f4f6" : "#111827" }}>
             {isEditApplication ? "Edit Application" : "New Application"}
           </DialogTitle>
           <DialogContent sx={{ pt: "16px !important" }}>

@@ -41,7 +41,7 @@ const Login = () => {
   };
 
   return (
-    <main className="flex h-[calc(100vh-50px)] w-full items-center justify-center bg-background font-sans px-4">
+    <main className="flex h-[calc(100vh-50px)] w-full items-center justify-center bg-gray-50 dark:bg-gray-900 font-sans px-4">
       <div className="flex w-full max-w-7xl flex-col lg:flex-row items-center gap-10">
         {/* Left Section */}
         <div className="hidden lg:flex w-1/2 justify-center">
@@ -50,8 +50,8 @@ const Login = () => {
 
         {/* Right Section (Form) */}
         <div className="w-full md:w-1/2 max-w-md rounded-xl p-6 md:p-8">
-          <h1 className="text-xl md:text-3xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-extrabold text-textPrimary mb-3 text-left md:text-left">Welcome back 👋</h1>
-          <p className="text-textSecondary text-sm md:text-md max-w-md lg:text-md 2xl:text-lg text-left md:text-left">
+          <h1 className="text-xl md:text-3xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-extrabold text-gray-900 dark:text-gray-100 mb-3 text-left md:text-left">Welcome back 👋</h1>
+          <p className="text-gray-600 dark:text-gray-400 text-sm md:text-md max-w-md lg:text-md 2xl:text-lg text-left md:text-left">
             Sign in to continue exploring your personalized dashboard, track progress, and manage your projects effortlessly.
           </p>
 
@@ -85,7 +85,7 @@ const Login = () => {
                 value={formData.password}
                 handleChange={handleChange}
               />
-              <span className=" text-xs">Forgot password? <Link className=" text-blue-400" to={'/forgot-password'} >Click here</Link></span>
+              <span className="text-xs text-gray-600 dark:text-gray-400">Forgot password? <Link className="text-blue-500 dark:text-blue-400" to={'/forgot-password'} >Click here</Link></span>
             </div>
 
             {/* Submit Button */}
@@ -98,9 +98,9 @@ const Login = () => {
           </form>
 
           {/* Extra Links */}
-          <div className="mt-6 text-sm text-gray-400 text-center">
+          <div className="mt-6 text-sm text-gray-600 dark:text-gray-400 text-center">
             Don't have an account?{" "}
-            <span onClick={() => navigate("/register")} className="text-indigo-400 hover:underline cursor-pointer">
+            <span onClick={() => navigate("/register")} className="text-blue-500 dark:text-blue-400 hover:underline cursor-pointer">
               Register
             </span>
           </div>
