@@ -12,9 +12,8 @@ app.use(
   cors({
     origin: config.frontendUrl,
     credentials: true,
-  }),
+  })
 );
-app.options('*', cors());
 
 console.log(config.frontendUrl, 'url');
 
