@@ -14,6 +14,9 @@ app.use(
     credentials: true,
   }),
 );
+app.options('*', cors());
+
+console.log(config.frontendUrl, 'url');
 
 app.use(express.json());
 
