@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { axiosInstance, Outlet, Sidebar, toast, useQueryClient, IconButton, Badge } from "../shared/Imports";
 import { NotificationsOutlined, compass } from "../shared/Icons";
-import { io } from "socket.io-client";
 
 const AuthLayout = () => {
   const queryClient = useQueryClient();
@@ -10,19 +9,6 @@ const AuthLayout = () => {
   
   useEffect(() => {
     fetchUser();
-    
-    const API_URL = import.meta.env.MODE === "development"
-      ? import.meta.env.VITE_API_URL_LOCAL
-      : import.meta.env.VITE_API_URL_PROD;
-    
-    const socket = io(API_URL, { query: { userId } });
-    
-    socket.on("notification", (notification) => {
-      toast.success(notification.message);
-      setNotificationCount(prev => prev + 1);
-    });
-    
-    return () => socket.disconnect();
   }, []);
 
   const fetchUser = async () => {
