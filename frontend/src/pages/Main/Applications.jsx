@@ -146,6 +146,7 @@ const Applications = () => {
     userId: user_id,
     role: "",
     appliedDate: "",
+    interviewDate: "",
     package: "",
     employer: "",
     location: "",
@@ -247,9 +248,7 @@ const Applications = () => {
 
   const columnDefs = [
     {
-      // headerName: "Actions",
-      // field: "actions",
-      width: 30,
+      width: 50,
       cellRenderer: (params) => (
         <ActionMenuCell
           data={params.data}
@@ -286,6 +285,21 @@ const Applications = () => {
     {
       headerName: "Applied Date",
       field: "appliedDate",
+      flex: 1,
+      minWidth: 110,
+      valueFormatter: (params) => {
+        return params.value ? dayjs(params.value).format("DD MMM YYYY") : "-";
+      },
+      cellStyle: {
+        paddingTop: "4px",
+        paddingBottom: "4px",
+        color: "#555",
+        fontSize: "12px",
+      },
+    },
+    {
+      headerName: "Interview Date",
+      field: "interviewDate",
       flex: 1,
       minWidth: 110,
       valueFormatter: (params) => {
@@ -462,6 +476,7 @@ const Applications = () => {
               filter: false,
               resizable: true,
             }}
+            suppressColumnMoveAnimation={true}
             suppressCellFocus={false}
             enableCellTextSelection={true}
             ensureDomOrder={true}
@@ -509,7 +524,7 @@ const Applications = () => {
         <Dialog
           open={open}
           onClose={clearDrawer}
-          maxWidth="md"
+          maxWidth="lg"
           fullWidth
           PaperProps={{
             sx: {
@@ -559,8 +574,24 @@ const Applications = () => {
                     </p>
                   )}
                 </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1.5 text-gray-700 dark:text-gray-300">
+                    Interview Date
+                  </label>
+                  <DatePicker
+                    style={{ width: "100%" }}
+                    format="YYYY-MM-DD"
+                    value={
+                      formData.interviewDate ? dayjs(formData.interviewDate) : null
+                    }
+                    onChange={(date, dateString) =>
+                      handleChange("interviewDate", dateString)
+                    }
+                    minDate={dayjs(formData.appliedDate, "YYYY-MM-DD")}
+                    getPopupContainer={(trigger) => trigger.parentElement}
+                  />
+                </div>
               </div>
-
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-sm font-medium mb-1.5 text-gray-700 dark:text-gray-300">

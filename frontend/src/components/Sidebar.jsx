@@ -3,10 +3,8 @@ import {
   Link,
   useLocation,
   useNavigate,
-  useQuery,
   useQueryClient,
   useState,
-  useEffect,
 } from "../shared/Imports";
 import {
   AccountCircleIcon,
@@ -14,8 +12,6 @@ import {
   DashboardIcon,
   LogoutIcon,
   WorkIcon,
-  LightModeIcon,
-  DarkModeIcon,
   SettingsIcon,
   BusinessIcon,
 } from "../shared/Icons";
@@ -26,13 +22,6 @@ const Sidebar = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-
-  const { data: user } = useQuery({
-    queryKey: ["userDetails"],
-    queryFn: () => queryClient.getQueryData(["userDetails"]),
-    enabled: false,
-  });
 
   const menuItems = [
     {
@@ -76,46 +65,32 @@ const Sidebar = () => {
       className={`bg-white dark:bg-gray-900 flex flex-col font-sans border-r border-gray-300 dark:border-gray-700
     h-screen transition-all duration-300 ease-in-out
     ${isCollapsed ? "w-14" : "w-60"}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
       {/* Top Section */}
       <div className="flex-1">
         {/* Logo */}
-        <div className={`flex ${!isCollapsed ? "justify-between" : "justify-center"} border-b items-center px-3 py-2 border-gray-300 dark:border-gray-700`}>
+        <div
+          className={`flex ${!isCollapsed ? "justify-end" : "justify-center"} border-b items-center px-3 py-1 border-gray-300 dark:border-gray-700`}
+        >
           {!isCollapsed ? (
-            <>
-              <h1 className="font-semibold text-xs flex items-center gap-1.5 text-gray-900 dark:text-gray-100">
-                <span className=" py-2">
-                  <img src={compass} className="h-4 w-4" />
-                </span>
-                CareerCompass
-              </h1>
-              <div className="flex items-center">
-                <button
-                  className="p-1 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-800 rounded transition-colors"
-                  onClick={() => setIsCollapsed(true)}
-                  title="Collapse sidebar"
-                >
-                  <MenuIcon sx={{ fontSize: 18 }} />
-                </button>
-              </div>
-            </>
+            <div className="flex items-center">
+              <button
+                className=" px-1 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-800 rounded transition-colors"
+                onClick={() => setIsCollapsed(true)}
+                title="Collapse sidebar"
+              >
+                <MenuIcon sx={{ fontSize: 18 }} />
+              </button>
+            </div>
           ) : (
             <div className="flex items-center justify-center w-full h-full">
-              {isHovered ? (
-                <button
-                  className="p-1 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-800 rounded transition-colors"
-                  onClick={() => setIsCollapsed(false)}
-                  title="Expand sidebar"
-                >
-                  <MenuIcon sx={{ fontSize: 18 }} />
-                </button>
-              ) : (
-                <div className="py-2">
-                  <img src={compass} className="h-4 w-4" />
-                </div>
-              )}
+              <button
+                className="px-1 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-800 rounded transition-colors"
+                onClick={() => setIsCollapsed(false)}
+                title="Expand sidebar"
+              >
+                <MenuIcon sx={{ fontSize: 18 }} />
+              </button>
             </div>
           )}
         </div>

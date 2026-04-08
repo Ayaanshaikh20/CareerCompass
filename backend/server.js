@@ -49,6 +49,11 @@ app.use(require("./controllers/Companies"));
 /* ===========================
    START SERVER
 =========================== */
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+// Only start server if not in Lambda
+if (process.env.AWS_EXECUTION_ENV === undefined) {
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+  });
+}
+
+module.exports = app;

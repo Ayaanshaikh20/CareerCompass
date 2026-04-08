@@ -1,12 +1,28 @@
-import { useEffect } from "react";
-import { axiosInstance, Outlet, Sidebar, toast, useQueryClient } from "../shared/Imports";
+import { useEffect, useState } from "react";
+import { axiosInstance, Outlet, Sidebar, toast, useQueryClient, IconButton, Badge } from "../shared/Imports";
+import { NotificationsOutlined, compass } from "../shared/Icons";
+import { io } from "socket.io-client";
 
 const AuthLayout = () => {
   const queryClient = useQueryClient();
   const userId = localStorage.getItem("uid");
+  const [notificationCount, setNotificationCount] = useState(0);
   
   useEffect(() => {
-    fetchUser()
+    fetchUser();
+    
+    const API_URL = import.meta.env.MODE === "development"
+      ? import.meta.env.VITE_API_URL_LOCAL
+      : import.meta.env.VITE_API_URL_PROD;
+    
+    const socket = io(API_URL, { query: { userId } });
+    
+    socket.on("notification", (notification) => {
+      toast.success(notification.message);
+      setNotificationCount(prev => prev + 1);
+    });
+    
+    return () => socket.disconnect();
   }, []);
 
   const fetchUser = async () => {
@@ -24,6 +40,24 @@ const AuthLayout = () => {
 
   return (
     <div className='flex flex-col h-screen bg-gray-50 dark:bg-gray-950'>
+      {/* Header */}
+      <div className='flex items-center justify-between px-4 py-2 bg-white dark:bg-gray-900 border-b border-gray-300 dark:border-gray-700'>
+        <div className="flex items-center gap-1.5">
+          <img src={compass} className="h-5 w-5" alt="CareerCompass" />
+          <span className=" font-sans font-semibold text-md">CareerCompass</span>
+        </div>
+        
+        <IconButton
+          size="small"
+          className="text-gray-700 dark:text-gray-300"
+          sx={{ color: 'inherit' }}
+          onClick={() => setNotificationCount(0)}
+        >
+          <Badge badgeContent={notificationCount} color="error">
+            <NotificationsOutlined fontSize="small" />
+          </Badge>
+        </IconButton>
+      </div>
       <div className='flex flex-1 overflow-hidden'>
         <Sidebar />
         <div className='w-full overflow-y-auto bg-gray-50 dark:bg-gray-950'>

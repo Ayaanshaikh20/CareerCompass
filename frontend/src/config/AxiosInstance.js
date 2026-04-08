@@ -14,22 +14,27 @@ const axiosInstance = axios.create({
   timeout: 15000, // 10 seconds timeout
 });
 
+let isSessionExpired = false;
+
 const clearSessionAndRedirect = async () => {
+  if (isSessionExpired) return Promise.reject({ customSessionExpired: true });
+  
+  isSessionExpired = true;
+  toast.error("Session expired");
+  
   await axios.post(
     `${axiosInstance.defaults.baseURL}/logout`,
     {},
     { withCredentials: true },
-  );
+  ).catch(() => {});
+  
   setTimeout(() => {
     localStorage.removeItem("uid");
     sessionStorage.clear();
     window.location.href = "/";
   }, 1000);
-  toast.error("Session expired");
-  return Promise.reject({
-    customSessionExpired: true,
-    originalError: error,
-  });
+  
+  return Promise.reject({ customSessionExpired: true });
 };
 
 // Response interceptor to refresh token on 401 or 403
@@ -41,11 +46,6 @@ axiosInstance.interceptors.response.use(
     const status = error.response?.status;
     const { code } = error.response?.data || {};
 
-    //If access token is missing, it means user has no valid session, so log them out and redirect to login page
-    // if (code === "ACCESS_TOKEN_MISSING") {
-    //   clearSessionAndRedirect();
-    //   return;
-    // }
     // retry new token on 403 (expired token)
     if ((code === "ACCESS_TOKEN_MISSING" || status === 403) && !originalRequest._retry) {
       try {

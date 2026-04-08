@@ -21,6 +21,7 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import SettingsIcon from '@mui/icons-material/Settings';
 import BusinessIcon from '@mui/icons-material/Business';
+import { NotificationsOutlined } from "@mui/icons-material";
 
 //images
 import compass from "../assets/images/compass.png";
@@ -29,6 +30,7 @@ import Img2 from "../assets/images/sign-up.png"
 import NotFound from "../assets/images/not-found.png"
 
 export {
+  NotificationsOutlined,
   LightModeIcon,
   DarkModeIcon,
   MdPushPin,

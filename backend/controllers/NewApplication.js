@@ -11,10 +11,13 @@ const createApplication = async (req, res, next) => {
 
     const applicationData = req.body;
 
+    console.log(applicationData, 'application data');
+
     const {
       userId: user_id,
       role,
       appliedDate: applied_date,
+      interviewDate: interview_date,
       package,
       employer,
       location,
@@ -22,20 +25,20 @@ const createApplication = async (req, res, next) => {
       experience,
       platform,
       jobDescription: job_description,
-      status
+      status,
     } = applicationData;
 
     sqlQuery = `INSERT INTO applications(
-      user_id, status, job_link, role, experience, platform, applied_date, job_description, employer, package, location
+      user_id, status, job_link, role, experience, platform, applied_date, interview_date, job_description, employer, package, location
     ) VALUES (
-      '${user_id}','${status}','${job_link}','${role}','${experience}','${platform}','${applied_date}','${job_description}','${employer}','${package}', '${location}'
-    ) `
+      '${user_id}','${status}','${job_link}','${role}','${experience}','${platform}','${applied_date}', '${interview_date}','${job_description}','${employer}','${package}', '${location}'
+    ) `;
 
     const result = await con.query(sqlQuery);
 
     if (result) {
       next();
-    };
+    }
   } catch (error) {
     res.status(500).json({
       status: 500,

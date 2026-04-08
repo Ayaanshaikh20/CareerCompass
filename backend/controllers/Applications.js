@@ -34,6 +34,7 @@ const fetchApplication = async (req, res, next) => {
       experience: item.experience,
       platform: item.platform,
       appliedDate: item.applied_date,
+      interviewDate: item.interview_date,
       jobDescription: item.job_description,
       employer: item.employer,
       package: item.package,

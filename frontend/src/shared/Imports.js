@@ -21,6 +21,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  Badge
 } from "@mui/material";
 
 //Ant design
@@ -85,6 +86,7 @@ import { CustomTextField } from "../utilities/CustomTextField";
 import emailService from "../services/email"; 
 
 export {
+  Badge,
   AgGridReact,
   AllCommunityModule,
   ModuleRegistry,
