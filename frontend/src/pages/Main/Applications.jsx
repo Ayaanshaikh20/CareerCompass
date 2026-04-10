@@ -420,7 +420,7 @@ const Applications = () => {
   };
 
   return (
-    <main className="bg-slate-100 dark:bg-gray-900 pt-6 px-4 font-sans text-gray-900 dark:text-gray-100 min-h-screen">
+    <main className="bg-slate-100 dark:bg-gray-900 pt-6 px-4 font-sans text-gray-900 dark:text-gray-100 min-h-full">
       <section className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="flex justify-between items-center mb-3">

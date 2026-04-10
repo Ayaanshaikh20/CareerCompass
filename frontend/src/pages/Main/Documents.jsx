@@ -49,7 +49,7 @@ const Documents = () => {
   const zoomOut = () => setScale((prev) => Math.max(prev - 0.2, 0.5));
 
   return (
-    <main className="bg-slate-100 dark:bg-gray-900 pt-6 px-4 font-sans text-gray-900 dark:text-gray-100 min-h-screen">
+    <main className="bg-slate-100 dark:bg-gray-900 pt-6 px-4 font-sans text-gray-900 dark:text-gray-100 min-h-full">
       <section className="max-w-7xl mx-auto">
         <div className=" w-full flex justify-between">
           <div className="mb-4">

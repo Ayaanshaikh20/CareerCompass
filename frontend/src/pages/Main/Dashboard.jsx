@@ -76,7 +76,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="bg-slate-100 dark:bg-gray-900 pt-6 px-4 text-gray-900 dark:text-gray-100 min-h-screen font-sans">
+    <div className="bg-slate-100 dark:bg-gray-900 pt-6 px-4 text-gray-900 dark:text-gray-100 font-sans min-h-full">
       {/* Header */}
       <div className="max-w-7xl mx-auto mb-6">
         <h1 className="text-xl font-bold mb-1">Dashboard</h1>

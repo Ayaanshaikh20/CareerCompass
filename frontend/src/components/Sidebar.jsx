@@ -68,12 +68,12 @@ const Sidebar = () => {
 
   return (
     <aside
-      className={`bg-white dark:bg-gray-900 flex flex-col font-sans border-r border-gray-300 dark:border-gray-700
-    h-screen transition-all duration-300 ease-in-out
+      className={`bg-white dark:bg-gray-900 flex flex-col justify-between font-sans border-r border-gray-300 dark:border-gray-700
+    h-full transition-all duration-300 ease-in-out
     ${isCollapsed ? "w-14" : "w-60"}`}
     >
       {/* Top Section */}
-      <div className="flex-1">
+      <div className="">
         {/* Logo */}
         <div
           className={`flex ${!isCollapsed ? "justify-end" : "justify-center"} border-b items-center px-3 py-1 border-gray-300 dark:border-gray-700`}
