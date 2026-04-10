@@ -8,7 +8,7 @@ const editApplication = async (req, res, next) => {
     // connect db
     con = await pool.connect()
 
-    const { id, role, appliedDate, package, employer, location, jobLink, experience, platform, jobDescription, status } = req.body;
+    const { id, role, appliedDate, package, employer, location, jobLink, experience, platform, jobDescription, status, interviewDate } = req.body;
 
     sqlQuery = `UPDATE applications
       SET role='${role}', 
@@ -17,6 +17,7 @@ const editApplication = async (req, res, next) => {
       employer='${employer}', 
       location='${location}', 
       job_link='${jobLink}',
+      interview_date='${interviewDate}',
       experience='${experience}',
       platform='${platform}',
       job_description='${jobDescription}',

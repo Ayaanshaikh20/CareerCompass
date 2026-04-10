@@ -47,6 +47,7 @@ app.use(require("./controllers/DeleteApplication"));
 app.use(require("./controllers/EditProfile"));
 app.use(require("./controllers/FetchUser"));
 app.use(require("./controllers/Companies"));
+app.use(require("./controllers/Notifications"));
 
 /* ===========================
    START SERVER

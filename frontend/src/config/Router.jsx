@@ -1,3 +1,4 @@
+import UnderConstruction from "../pages/Main/UnderConstruction";
 import {
   Outlet,
   Navigate,
@@ -17,6 +18,7 @@ import {
   Companies,
   useEffect,
   useLocation,
+  Documents
 } from "../shared/Imports";
 
 const AuthRoutes = () => {
@@ -43,10 +45,19 @@ const Router = () => {
   return (
     <Routes>
       {/* Default redirect */}
-      <Route path="/" element={localStorage.getItem("uid") ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />} />
+      <Route
+        path="/"
+        element={
+          localStorage.getItem("uid") ? (
+            <Navigate to="/dashboard" replace />
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
       {/* Public routes wrapped with PublicRoutes */}
-      <Route element={<MainLayout />}>
-        <Route element={<PublicRoutes />}>
+      <Route element={<PublicRoutes />}>
+        <Route element={<MainLayout />}>
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -59,6 +70,7 @@ const Router = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/applications" element={<Applications />} />
           <Route path="/companies" element={<Companies />} />
+          <Route path="/documents" element={<UnderConstruction />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/profile" element={<Profile />} />
         </Route>

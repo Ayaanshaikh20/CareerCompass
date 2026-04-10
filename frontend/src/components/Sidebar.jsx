@@ -14,6 +14,7 @@ import {
   WorkIcon,
   SettingsIcon,
   BusinessIcon,
+  FolderIcon,
 } from "../shared/Icons";
 import { Menu as MenuIcon } from "@mui/icons-material";
 
@@ -38,6 +39,11 @@ const Sidebar = () => {
       name: "Companies",
       path: "/companies",
       icon: <BusinessIcon fontSize="small" />,
+    },
+    {
+      name: "Documents",
+      path: "/documents",
+      icon: <FolderIcon fontSize="small" />,
     },
     {
       name: "Profile",

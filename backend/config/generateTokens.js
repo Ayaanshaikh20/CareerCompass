@@ -15,7 +15,7 @@ const generateAccessToken = (userId, res) => {
 // Generate refresh token on login.
 const generateRefreshToken = (userId, res) => {
   const token = jwt.sign({ id: userId }, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: "1d",
+    expiresIn: "7d",
   });
   res.cookie("r_t", token, {
     httpOnly: true,

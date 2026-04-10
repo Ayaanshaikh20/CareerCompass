@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { axiosInstance, Outlet, Sidebar, toast, useQueryClient, IconButton, Badge } from "../shared/Imports";
-import { NotificationsOutlined, compass } from "../shared/Icons";
+import { axiosInstance, Outlet, Sidebar, toast, useQueryClient, NotificationBell } from "../shared/Imports";
+import { compass } from "../shared/Icons";
 
 const AuthLayout = () => {
   const queryClient = useQueryClient();
   const userId = localStorage.getItem("uid");
-  const [notificationCount, setNotificationCount] = useState(0);
   
   useEffect(() => {
     fetchUser();
@@ -33,16 +32,7 @@ const AuthLayout = () => {
           <span className=" font-sans font-semibold text-md">CareerCompass</span>
         </div>
         
-        <IconButton
-          size="small"
-          className="text-gray-700 dark:text-gray-300"
-          sx={{ color: 'inherit' }}
-          onClick={() => setNotificationCount(0)}
-        >
-          <Badge badgeContent={notificationCount} color="error">
-            <NotificationsOutlined fontSize="small" />
-          </Badge>
-        </IconButton>
+        {userId && <NotificationBell userId={userId} />}
       </div>
       <div className='flex flex-1 overflow-hidden'>
         <Sidebar />

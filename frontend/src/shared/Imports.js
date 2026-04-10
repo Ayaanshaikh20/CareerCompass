@@ -73,11 +73,13 @@ import Profile from "../pages/Main/Profile";
 import Router from "../config/Router";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
+import NotificationBell from "../components/NotificationBell";
 import ForgotPassword from "../pages/Auth/ForgotPassword";
 import ResetPassword from "../pages/Auth/ResetPassword";
 import NotFound from "../pages/Main/NotFound";
 import Applications from "../pages/Main/Applications";
 import Companies from "../pages/Main/Companies";
+import Documents from "../pages/Main/Documents";
 
 //Utilities
 import { CustomTextField } from "../utilities/CustomTextField";
@@ -86,6 +88,7 @@ import { CustomTextField } from "../utilities/CustomTextField";
 import emailService from "../services/email"; 
 
 export {
+  Documents,
   Badge,
   AgGridReact,
   AllCommunityModule,
@@ -119,6 +122,7 @@ export {
   AppBar,
   Navbar,
   Sidebar,
+  NotificationBell,
   Router,
   createRoot,
   BrowserRouter,

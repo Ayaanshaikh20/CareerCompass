@@ -22,6 +22,7 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 import SettingsIcon from '@mui/icons-material/Settings';
 import BusinessIcon from '@mui/icons-material/Business';
 import { NotificationsOutlined } from "@mui/icons-material";
+import FolderIcon from '@mui/icons-material/Folder';
 
 //images
 import compass from "../assets/images/compass.png";
@@ -40,6 +41,7 @@ export {
   WorkIcon,
   SettingsIcon,
   BusinessIcon,
+  FolderIcon,
   FaChevronLeft,
   FaChevronRight,
   PasswordOutlinedIcon,
