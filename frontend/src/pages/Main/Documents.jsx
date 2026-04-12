@@ -1,14 +1,22 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
-import resumePdf from "../../assets/images/Resume-2026.pdf";
 import DescriptionIcon from "@mui/icons-material/Description";
+import DownloadIcon from "@mui/icons-material/Download";
+import DeleteIcon from "@mui/icons-material/Delete";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import ZoomOutIcon from "@mui/icons-material/ZoomOut";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { FaPlus } from "../../shared/Icons";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
+import { axiosInstance, toast } from "../../shared/Imports";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
@@ -18,20 +26,94 @@ const Documents = () => {
   const [pageNumber, setPageNumber] = useState(1);
   const [scale, setScale] = useState(1.0);
   const fileSelectRef = useRef(null);
+  const [openFileDialog, setOpenFileDialog] = useState(false);
+  const [fileName, setFileName] = useState("");
+  const user_id = localStorage.getItem("uid");
+  const [allDocuments, setAllDocuments] = useState([]);
 
-  const documents = [
-    { uri: resumePdf, name: "Resume-2026.pdf", type: "PDF", size: "245 KB" },
-    { uri: resumePdf, name: "Resume-2020.pdf", type: "PDF", size: "245 KB" },
-  ];
+  useEffect(() => {
+    Promise.all([getAllDocuments()]);
+  }, []);
 
-  const handleFileUpload = () => {
-    fileSelectRef.current.click();
+  const openFileUploadForm = () => {
+    setOpenFileDialog(true);
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    console.log(file);
-    //build api which will upload the file to s3
+  const closeFileUploadForm = () => {
+    setOpenFileDialog(false);
+    setFileName("");
+  };
+
+  const handleFileNameChange = (e) => {
+    setFileName(e.target.value);
+  };
+
+  const getAllDocuments = async () => {
+    try {
+      let result = await axiosInstance.get(`/get-documents?user_id=${user_id}`);
+      const { data, status } = result.data;
+      if(status === 200) {
+        setAllDocuments(data);
+      }
+    } catch (error) {
+      const { message } = error?.response?.data || {};
+      toast.error(message || "Something went wrong");
+    }
+  };
+
+  const handleFileUpload = async () => {
+    try {
+      if (fileSelectRef.current?.files[0]) {
+        const file = fileSelectRef.current.files[0];
+        // build api which will upload the file to s3
+        let formdata = new FormData();
+        formdata.append("file", file);
+        formdata.append("name", fileName);
+        formdata.append("userId", user_id);
+        let result = await axiosInstance.post("/upload-document", formdata);
+        const { status, message } = result.data;
+        if (status === 200) {
+          toast.success(message);
+          closeFileUploadForm();
+          await getAllDocuments();
+          fileSelectRef.current.value = "";
+        }
+      }
+    } catch (error) {
+      const { message } = error?.response?.data || {};
+      toast.error(message || "Something went wrong");
+    }
+  };
+
+  const handleDeleteDocument = async (documentId, fileName) => {
+    if (!window.confirm(`Are you sure you want to delete "${fileName}"?`)) {
+      return;
+    }
+
+    try {
+      const result = await axiosInstance.delete(`/delete-document`, {
+        data: { documentId, userId: user_id }
+      });
+
+      if (result.data.status === 200) {
+        toast.success(result.data.message || "Document deleted successfully");
+        await getAllDocuments();
+
+        // Adjust selected document index if needed
+        if (selectedDoc >= allDocuments.length - 1) {
+          setSelectedDoc(Math.max(0, allDocuments.length - 2));
+        }
+      }
+    } catch (error) {
+      const { message } = error?.response?.data || {};
+      toast.error(message || "Failed to delete document");
+    }
+  };
+
+  const getFileType = (mimeType) => {
+    if (mimeType?.startsWith('image/')) return 'image';
+    if (mimeType === 'application/pdf') return 'pdf';
+    return 'document';
   };
 
   const onDocumentLoadSuccess = ({ numPages }) => {
@@ -45,8 +127,8 @@ const Documents = () => {
 
   const previousPage = () => changePage(-1);
   const nextPage = () => changePage(1);
-  const zoomIn = () => setScale((prev) => Math.min(prev + 0.2, 3.0));
-  const zoomOut = () => setScale((prev) => Math.max(prev - 0.2, 0.5));
+  const zoomIn = () => setScale((prev) => Math.min(prev + 0.1, 2.5));
+  const zoomOut = () => setScale((prev) => Math.max(prev - 0.1, 0.6));
 
   return (
     <main className="bg-slate-100 dark:bg-gray-900 pt-6 px-4 font-sans text-gray-900 dark:text-gray-100 min-h-full">
@@ -61,15 +143,8 @@ const Documents = () => {
             </p>
           </div>
           <div className="mb-4">
-            {/* Hidden File Input */}
-            <input
-              type="file"
-              ref={fileSelectRef}
-              onChange={handleFileChange}
-              className="hidden"
-            />
             <button
-              onClick={handleFileUpload}
+              onClick={openFileUploadForm}
               className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 hover:from-blue-700 hover:to-blue-800 hover:shadow-lg active:scale-95 transition-all duration-200 shadow-md"
             >
               <FaPlus />
@@ -86,11 +161,10 @@ const Documents = () => {
               </h2>
             </div>
             <div className="p-2">
-              {documents.map((doc, index) => (
+              {allDocuments.map((doc, index) => (
                 <div
                   key={index}
-                  onClick={() => setSelectedDoc(index)}
-                  className={`p-2.5 rounded-lg cursor-pointer transition-colors mb-2 ${
+                  className={`p-2.5 rounded-lg cursor-pointer transition-colors mb-2 group ${
                     selectedDoc === index
                       ? "bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-700"
                       : "hover:bg-gray-50 dark:hover:bg-gray-700 border border-transparent"
@@ -106,7 +180,7 @@ const Documents = () => {
                     >
                       <DescriptionIcon sx={{ fontSize: 18 }} />
                     </div>
-                    <div className="flex-1 min-w-0">
+                    <div className="flex-1 min-w-0" onClick={() => setSelectedDoc(index)}>
                       <p
                         className={`text-xs font-medium truncate ${
                           selectedDoc === index
@@ -114,12 +188,22 @@ const Documents = () => {
                             : "text-gray-700 dark:text-gray-300"
                         }`}
                       >
-                        {doc.name}
+                        {doc.file_name}
                       </p>
                       <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">
-                        {doc.type} • {doc.size}
+                        {doc.mime_type}
                       </p>
                     </div>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteDocument(doc.id, doc.file_name);
+                      }}
+                      className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-red-100 dark:hover:bg-red-900 text-red-500 dark:text-red-400 transition-opacity"
+                      title="Delete document"
+                    >
+                      <DeleteIcon sx={{ fontSize: 16 }} />
+                    </button>
                   </div>
                 </div>
               ))}
@@ -131,69 +215,227 @@ const Documents = () => {
             {/* Toolbar */}
             <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
               <div className="flex items-center gap-2">
-                <button
-                  onClick={previousPage}
-                  disabled={pageNumber <= 1}
-                  className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <NavigateBeforeIcon fontSize="small" />
-                </button>
-                <span className="text-xs text-gray-700 dark:text-gray-300">
-                  Page {pageNumber} of {numPages || "--"}
-                </span>
-                <button
-                  onClick={nextPage}
-                  disabled={pageNumber >= numPages}
-                  className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <NavigateNextIcon fontSize="small" />
-                </button>
+                {allDocuments[selectedDoc] && getFileType(allDocuments[selectedDoc].mime_type) === 'pdf' && (
+                  <>
+                    <button
+                      onClick={previousPage}
+                      disabled={pageNumber <= 1}
+                      className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <NavigateBeforeIcon fontSize="small" />
+                    </button>
+                    <span className="text-xs text-gray-700 dark:text-gray-300">
+                      Page {pageNumber} of {numPages || "--"}
+                    </span>
+                    <button
+                      onClick={nextPage}
+                      disabled={pageNumber >= numPages}
+                      className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <NavigateNextIcon fontSize="small" />
+                    </button>
+                  </>
+                )}
+                {!allDocuments[selectedDoc] && (
+                  <span className="text-xs text-gray-700 dark:text-gray-300">
+                    No document selected
+                  </span>
+                )}
+                {allDocuments[selectedDoc] && getFileType(allDocuments[selectedDoc].mime_type) !== 'pdf' && (
+                  <span className="text-xs text-gray-700 dark:text-gray-300">
+                    {allDocuments[selectedDoc].file_name}
+                  </span>
+                )}
               </div>
               <div className="flex items-center gap-2">
-                <button
-                  onClick={zoomOut}
-                  className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
-                >
-                  <ZoomOutIcon fontSize="small" />
-                </button>
-                <span className="text-xs text-gray-700 dark:text-gray-300 min-w-[50px] text-center">
-                  {Math.round(scale * 100)}%
-                </span>
-                <button
-                  onClick={zoomIn}
-                  className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
-                >
-                  <ZoomInIcon fontSize="small" />
-                </button>
+                {allDocuments[selectedDoc] && (
+                  <>
+                    <a
+                      href={allDocuments[selectedDoc].url}
+                      download={allDocuments[selectedDoc].file_name}
+                      className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400"
+                      title="Download"
+                      target="_blank"
+                    >
+                      <DownloadIcon fontSize="small" />
+                    </a>
+                    {getFileType(allDocuments[selectedDoc].mime_type) === 'image' && (
+                      <>
+                        <button
+                          onClick={zoomOut}
+                          className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
+                        >
+                          <ZoomOutIcon fontSize="small" />
+                        </button>
+                        <span className="text-xs text-gray-700 dark:text-gray-300 min-w-[50px] text-center">
+                          {Math.round(scale * 100)}%
+                        </span>
+                        <button
+                          onClick={zoomIn}
+                          className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
+                        >
+                          <ZoomInIcon fontSize="small" />
+                        </button>
+                      </>
+                    )}
+                    {getFileType(allDocuments[selectedDoc].mime_type) === 'pdf' && (
+                      <>
+                        <button
+                          onClick={zoomOut}
+                          className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
+                        >
+                          <ZoomOutIcon fontSize="small" />
+                        </button>
+                        <span className="text-xs text-gray-700 dark:text-gray-300 min-w-[50px] text-center">
+                          {Math.round(scale * 100)}%
+                        </span>
+                        <button
+                          onClick={zoomIn}
+                          className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
+                        >
+                          <ZoomInIcon fontSize="small" />
+                        </button>
+                      </>
+                    )}
+                  </>
+                )}
               </div>
             </div>
 
-            {/* PDF Viewer */}
+            {/* Document Viewer */}
             <div className="flex-1 overflow-auto bg-gray-100 dark:bg-gray-950 flex items-start justify-center p-4">
-              <Document
-                file={documents[selectedDoc].uri}
-                onLoadSuccess={onDocumentLoadSuccess}
-                loading={
-                  <div className="text-gray-500 dark:text-gray-400 text-sm">
-                    Loading PDF...
-                  </div>
-                }
-                error={
-                  <div className="text-red-500 text-sm">Failed to load PDF</div>
-                }
-              >
-                <Page
-                  pageNumber={pageNumber}
-                  scale={scale}
-                  renderTextLayer={true}
-                  renderAnnotationLayer={true}
-                  className="shadow-lg"
-                />
-              </Document>
+              {allDocuments[selectedDoc] ? (
+                (() => {
+                  const fileType = getFileType(allDocuments[selectedDoc].mime_type);
+                  const fileUrl = allDocuments[selectedDoc].url;
+
+                  switch (fileType) {
+                    case 'image':
+                      return (
+                        <img
+                          src={fileUrl}
+                          alt={allDocuments[selectedDoc].file_name}
+                          className="max-w-full max-h-full object-contain shadow-lg"
+                          style={{ transform: `scale(${scale})` }}
+                        />
+                      );
+                    case 'pdf':
+                      return (
+                        <Document
+                          file={fileUrl}
+                          onLoadSuccess={onDocumentLoadSuccess}
+                          loading={
+                            <div className="text-gray-500 dark:text-gray-400 text-sm">
+                              Loading PDF...
+                            </div>
+                          }
+                          error={
+                            <div className="text-red-500 text-sm">Failed to load PDF</div>
+                          }
+                        >
+                          <Page
+                            pageNumber={pageNumber}
+                            scale={scale}
+                            renderTextLayer={true}
+                            renderAnnotationLayer={true}
+                            className="shadow-lg"
+                          />
+                        </Document>
+                      );
+                    default:
+                      return (
+                        <div className="text-center text-gray-500 dark:text-gray-400">
+                          <DescriptionIcon sx={{ fontSize: 48, marginBottom: 2 }} />
+                          <p className="text-sm">{allDocuments[selectedDoc].file_name}</p>
+                          <p className="text-xs mt-2">Click download to open this document</p>
+                        </div>
+                      );
+                  }
+                })()
+              ) : (
+                <div className="text-center text-gray-500 dark:text-gray-400">
+                  <DescriptionIcon sx={{ fontSize: 48, marginBottom: 2 }} />
+                  <p className="text-sm">No document selected</p>
+                  <p className="text-xs mt-2">Select a document from the sidebar to view</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </section>
+
+      {/* File Upload Dialog */}
+      <Dialog
+        open={openFileDialog}
+        onClose={closeFileUploadForm}
+        maxWidth="xs"
+        fullWidth
+      >
+        <DialogTitle className="text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+          Upload Document
+        </DialogTitle>
+        <DialogContent className="bg-white dark:bg-gray-800 p-6">
+          <div className="space-y-4 mt-4">
+            {/* File Name Input */}
+            <div>
+              <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Document Name
+              </label>
+              <input
+                type="text"
+                value={fileName}
+                disabled={!fileSelectRef.current?.files[0]}
+                onChange={handleFileNameChange}
+                placeholder="e.g., Resume-2026"
+                className="w-full px-3 py-2 text-xs border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            {/* File Upload Button */}
+            <div>
+              <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Select File
+              </label>
+              <div className="flex items-center gap-3">
+                <input
+                  type="file"
+                  ref={fileSelectRef}
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file && !fileName) {
+                      setFileName(file.name.split(".")[0]);
+                    }
+                  }}
+                  className="hidden"
+                />
+                <button
+                  onClick={() => fileSelectRef.current?.click()}
+                  className="flex-1 px-3 py-2 text-xs border-2 border-dashed border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+                >
+                  {fileSelectRef.current?.files[0]
+                    ? fileSelectRef.current.files[0].name
+                    : "Choose File"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+        <DialogActions className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-4">
+          <button
+            onClick={closeFileUploadForm}
+            className="px-4 py-2 text-xs font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleFileUpload}
+            disabled={!fileName || !fileSelectRef.current?.files[0]}
+            className="px-4 py-2 text-xs font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            Upload
+          </button>
+        </DialogActions>
+      </Dialog>
     </main>
   );
 };

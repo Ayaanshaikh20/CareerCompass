@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const pool = require("../config/dbConnect");
+const pool = require("../../config/dbConnect");
 
 const router = Router();
 

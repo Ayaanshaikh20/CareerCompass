@@ -1,7 +1,7 @@
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const { Router } = require("express");
-const pool = require("../config/dbConnect");
+const pool = require("../../config/dbConnect");
 
 const router = Router();
 

@@ -1,8 +1,8 @@
 const crypto = require("crypto");
 const { Router } = require("express");
-const pool = require("../config/dbConnect");
+const pool = require("../../config/dbConnect");
 const expressRateLimit = require("express-rate-limit");
-const config = require("../config/env");
+const config = require("../../config/env");
 
 const router = Router();
 

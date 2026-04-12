@@ -1,8 +1,8 @@
 const { Router } = require("express");
 const router = Router();
-const { generateAccessToken } = require("../config/generateTokens");
+const { generateAccessToken } = require("../../config/generateTokens");
 const jwt = require("jsonwebtoken");
-const pool = require("../config/dbConnect");
+const pool = require("../../config/dbConnect");
 
 router.post("/api/refresh-token", async (req, res) => {
   let sqlQuery, con;

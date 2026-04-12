@@ -54,3 +54,18 @@ CREATE TABLE companies (
 
 CREATE INDEX idx_companies_user_id ON companies(user_id);
 CREATE INDEX idx_companies_location ON companies(location);
+
+
+CREATE TABLE documents (
+  id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL
+    REFERENCES register_users(user_id)
+    ON DELETE CASCADE,
+  file_name TEXT NOT NULL,
+  file_key TEXT NOT NULL,
+  mime_type TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_documents_user_id ON documents(user_id);
+

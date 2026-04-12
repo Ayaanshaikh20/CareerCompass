@@ -5,29 +5,28 @@ const cookieParser = require("cookie-parser");
 const { verifyAccessToken } = require("./config/generateTokens");
 require("dotenv").config();
 const config = require("./config/env");
+const fileUpload = require("express-fileupload");
 const port = process.env.PORT || 8000;
-
+app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
     origin: config.frontendUrl,
     credentials: true,
-  })
+  }),
 );
+app.use(fileUpload());
 
-console.log(config.frontendUrl, 'url');
-
-app.use(express.json());
 
 /* ===========================
    API ROUTES (FIRST)
 =========================== */
-app.use(require("./controllers/ForgetPassword"));
-app.use(require("./controllers/ResetPassword"));
-app.use(require("./controllers/Register"));
-app.use(require("./controllers/Login"));
-app.use(require("./controllers/RefreshToken"));
-app.use(require("./controllers/Logout"));
+app.use(require("./controllers/auth/ForgetPassword"));
+app.use(require("./controllers/auth/ResetPassword"));
+app.use(require("./controllers/auth/Register"));
+app.use(require("./controllers/auth/Login"));
+app.use(require("./controllers/auth/RefreshToken"));
+app.use(require("./controllers/auth/Logout"));
 
 //Health check
 app.get("/health", async (req, res) => {
@@ -40,14 +39,11 @@ app.get("/", (req, res) => {
 });
 
 app.use(verifyAccessToken);
-app.use(require("./controllers/Applications"));
-app.use(require("./controllers/NewApplication"));
-app.use(require("./controllers/EditApplication"));
-app.use(require("./controllers/DeleteApplication"));
-app.use(require("./controllers/EditProfile"));
-app.use(require("./controllers/FetchUser"));
-app.use(require("./controllers/Companies"));
-app.use(require("./controllers/Notifications"));
+app.use(require("./controllers/main/Applications"));
+app.use(require("./controllers/main/User"));
+app.use(require("./controllers/main/Companies"));
+app.use(require("./controllers/main/Notifications"));
+app.use(require("./controllers/main/Documents"));
 
 /* ===========================
    START SERVER

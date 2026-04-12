@@ -1,6 +1,6 @@
 const { Router } = require("express");
-const pool = require("../config/dbConnect");
-const { generateAccessToken, generateRefreshToken } = require("../config/generateTokens");
+const pool = require("../../config/dbConnect");
+const { generateAccessToken, generateRefreshToken } = require("../../config/generateTokens");
 const bcrypt = require("bcrypt");
 
 const router = Router();

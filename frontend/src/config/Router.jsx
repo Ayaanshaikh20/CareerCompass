@@ -70,7 +70,7 @@ const Router = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/applications" element={<Applications />} />
           <Route path="/companies" element={<Companies />} />
-          <Route path="/documents" element={<UnderConstruction />} />
+          <Route path="/documents" element={<Documents />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/profile" element={<Profile />} />
         </Route>
