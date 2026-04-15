@@ -2,26 +2,26 @@ const jwt = require("jsonwebtoken");
 
 const generateAccessToken = (userId, res) => {
   const token = jwt.sign({ id: userId }, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "2m",
+    expiresIn: "1h", // 1 hour
   });
   res.cookie("a_t", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    maxAge: 2 * 60 * 1000, // 2 minutes in milliseconds
+    maxAge: 60 * 60 * 1000, // 1 hour in milliseconds
   });
 };
 
 // Generate refresh token on login.
 const generateRefreshToken = (userId, res) => {
   const token = jwt.sign({ id: userId }, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: "7d",
+    expiresIn: "7d", // 7 days
   });
   res.cookie("r_t", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    maxAge: 24 * 60 * 60 * 1000, // 30 minutes in milliseconds
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
   });
 };
 

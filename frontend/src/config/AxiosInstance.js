@@ -43,7 +43,7 @@ axiosInstance.interceptors.response.use(
     const status = error.response?.status;
     const { code } = error.response?.data || {};
 
-    // retry new token on 403 (expired token)
+    // Retry with new token on 403 (expired token) or ACCESS_TOKEN_MISSING
     if ((code === "ACCESS_TOKEN_MISSING" || status === 403) && !originalRequest._retry) {
       try {
         originalRequest._retry = true;
@@ -52,11 +52,31 @@ axiosInstance.interceptors.response.use(
           {},
           { withCredentials: true },
         );
+        // Retry the original request with new token
         return axiosInstance(originalRequest);
-      } catch (error) {
+      } catch (refreshError) {
+        // If refresh fails, show session expired and redirect to login
         clearSessionAndRedirect();
+        return Promise.reject(refreshError);
       }
     }
+
+    // If status is 401 (unauthorized) and not a retry, also try refresh
+    if (status === 401 && !originalRequest._retry && code === "ACCESS_TOKEN_MISSING") {
+      try {
+        originalRequest._retry = true;
+        await axios.post(
+          `${axiosInstance.defaults.baseURL}/refresh-token`,
+          {},
+          { withCredentials: true },
+        );
+        return axiosInstance(originalRequest);
+      } catch (refreshError) {
+        clearSessionAndRedirect();
+        return Promise.reject(refreshError);
+      }
+    }
+
     return Promise.reject(error);
   },
 );
