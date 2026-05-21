@@ -80,6 +80,7 @@ const Documents = () => {
         }
       }
     } catch (error) {
+      console.log(error, 'error');
       const { message } = error?.response?.data || {};
       toast.error(message || "Something went wrong");
     }
