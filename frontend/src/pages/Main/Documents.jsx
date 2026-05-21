@@ -65,6 +65,10 @@ const Documents = () => {
     try {
       if (fileSelectRef.current?.files[0]) {
         const file = fileSelectRef.current.files[0];
+        // Clear the file input value before closing dialog
+        if (fileSelectRef.current) {
+          fileSelectRef.current.value = "";
+        }
         // build api which will upload the file to s3
         let formdata = new FormData();
         formdata.append("file", file);
@@ -76,7 +80,6 @@ const Documents = () => {
           toast.success(message);
           closeFileUploadForm();
           await getAllDocuments();
-          fileSelectRef.current.value = "";
         }
       }
     } catch (error) {

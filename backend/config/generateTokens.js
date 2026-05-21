@@ -2,26 +2,26 @@ const jwt = require("jsonwebtoken");
 
 const generateAccessToken = (userId, res) => {
   const token = jwt.sign({ id: userId }, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "1h", // 1 hour
+    expiresIn: "5m", // 5 minute
   });
   res.cookie("a_t", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    maxAge: 60 * 60 * 1000, // 1 hour in milliseconds
+    maxAge: 5 * 60 * 1000, // 5 minutes in milliseconds
   });
 };
 
 // Generate refresh token on login.
 const generateRefreshToken = (userId, res) => {
   const token = jwt.sign({ id: userId }, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: "7d", // 7 days
+    expiresIn: "1d", // 1 day
   });
   res.cookie("r_t", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+    maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day in milliseconds
   });
 };
 
@@ -34,11 +34,13 @@ const verifyAccessToken = (req, res, next) => {
     if (err) {
       // Check if the error is due to token expiration
       if (err.name === "TokenExpiredError") {
-        return res.sendStatus(403);
+        return res.status(403).json({ message: "Token expired", code: "TOKEN_EXPIRED" });
       }
       // For other errors
-      return res.sendStatus(401);
+      return res.status(401).json({ message: "Invalid token", code: "INVALID_TOKEN" });
     }
+    // Attach user ID to request for use in subsequent handlers
+    req.userId = decoded.id;
     next();
   });
 };

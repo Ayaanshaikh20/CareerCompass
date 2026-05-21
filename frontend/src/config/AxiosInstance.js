@@ -8,77 +8,87 @@ const API_URL =
 const axiosInstance = axios.create({
   baseURL: API_URL,
   withCredentials: true,
-  timeout: 15000, // 10 seconds timeout
+  timeout: 15000,
 });
 
-let isSessionExpired = false;
+let isRefreshing = false;
+let failedQueue = [];
 
-const clearSessionAndRedirect = async () => {
-  if (isSessionExpired) return Promise.reject({ customSessionExpired: true });
-  
-  isSessionExpired = true;
-  toast.error("Session expired");
-  
-  await axios.post(
-    `${axiosInstance.defaults.baseURL}/logout`,
-    {},
-    { withCredentials: true },
-  ).catch(() => {});
+const processQueue = (error, token = null) => {
+  failedQueue.forEach(prom => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+  failedQueue = [];
+};
+
+const clearSessionAndRedirect = () => {
+  toast.error("Session expired. Please login again.");
   
   setTimeout(() => {
-    localStorage.removeItem("uid");
+    localStorage.clear();
     sessionStorage.clear();
     window.location.href = "/";
   }, 1000);
-  
-  return Promise.reject({ customSessionExpired: true });
 };
 
-// Response interceptor to refresh token on 401 or 403
+// Response interceptor to handle token refresh
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-
     const status = error.response?.status;
-    const { code } = error.response?.data || {};
+    const code = error.response?.data?.code;
 
-    // Retry with new token on 403 (expired token) or ACCESS_TOKEN_MISSING
-    if ((code === "ACCESS_TOKEN_MISSING" || status === 403) && !originalRequest._retry) {
+    // Handle token expiration (403) or missing token (401 with ACCESS_TOKEN_MISSING)
+    if ((status === 403 && code === "TOKEN_EXPIRED") || 
+        (status === 401 && code === "ACCESS_TOKEN_MISSING")) {
+      
+      if (originalRequest._retry) {
+        // Already retried, session is invalid
+        clearSessionAndRedirect();
+        return Promise.reject(error);
+      }
+
+      if (isRefreshing) {
+        // Token refresh in progress, queue this request
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        })
+          .then(() => axiosInstance(originalRequest))
+          .catch(err => Promise.reject(err));
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
       try {
-        originalRequest._retry = true;
+        // Attempt to refresh the token
         await axios.post(
-          `${axiosInstance.defaults.baseURL}/refresh-token`,
+          `${API_URL}/api/refresh-token`,
           {},
-          { withCredentials: true },
+          { withCredentials: true }
         );
-        // Retry the original request with new token
+        
+        isRefreshing = false;
+        processQueue(null);
+        
+        // Retry the original request
         return axiosInstance(originalRequest);
       } catch (refreshError) {
-        // If refresh fails, show session expired and redirect to login
+        isRefreshing = false;
+        processQueue(refreshError, null);
         clearSessionAndRedirect();
         return Promise.reject(refreshError);
       }
     }
 
-    // If status is 401 (unauthorized) and not a retry, also try refresh
-    if (status === 401 && !originalRequest._retry && code === "ACCESS_TOKEN_MISSING") {
-      try {
-        originalRequest._retry = true;
-        await axios.post(
-          `${axiosInstance.defaults.baseURL}/refresh-token`,
-          {},
-          { withCredentials: true },
-        );
-        return axiosInstance(originalRequest);
-      } catch (refreshError) {
-        clearSessionAndRedirect();
-        return Promise.reject(refreshError);
-      }
-    }
-
+    // For other errors, just reject
     return Promise.reject(error);
-  },
+  }
 );
 
 export default axiosInstance;
