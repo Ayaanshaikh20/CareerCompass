@@ -512,26 +512,6 @@ See `backend/LAMBDA_DEPLOY.md` for serverless deployment.
 
 ---
 
-## 🎨 Screenshots
-
-### Dashboard
-![Dashboard](./screenshots/dashboard.png)
-*Track your application metrics at a glance*
-
-### Applications
-![Applications](./screenshots/applications.png)
-*Manage all your job applications in one place*
-
-### Companies
-![Companies](./screenshots/companies.png)
-*Maintain your target company database*
-
-### Documents
-![Documents](./screenshots/documents.png)
-*Upload and preview your documents*
-
----
-
 ## 🔮 Future Enhancements
 
 - [ ] Resume Analyzer - AI-powered resume analysis against job descriptions
@@ -543,30 +523,12 @@ See `backend/LAMBDA_DEPLOY.md` for serverless deployment.
 
 ---
 
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
 ## 👨‍💻 Author
 
 **Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- LinkedIn: [Your LinkedIn](https://linkedin.com/in/yourprofile)
-- Email: your.email@example.com
+- GitHub: [@Ayaanshaikh20](https://github.com/Ayaanshaikh20)
+- LinkedIn: [Muhammad Ayaan Shaikh](https://www.linkedin.com/in/ayaanshaikh20/)
+- Email: work.ayaanshaikh@gmail.com
 
 ---
 
@@ -576,12 +538,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Charts by [Chart.js](https://www.chartjs.org/)
 - UI Components by [Tailwind CSS](https://tailwindcss.com/)
 - Email Service by [EmailJS](https://www.emailjs.com/)
-
----
-
-## 📞 Support
-
-For support, email your.email@example.com or open an issue in the repository.
 
 ---
 

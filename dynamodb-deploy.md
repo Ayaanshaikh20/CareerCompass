@@ -12,9 +12,9 @@ All controllers have been updated to use `getTableName()` function with `careerc
 
 Go to **AWS Console → DynamoDB → Tables → Create table**
 
-#### Table 1: careercompass_register_users
+#### Table 1: careercompass-register_users
 ```
-Table name: careercompass_register_users
+Table name: careercompass-register_users
 Partition key: user_id (String)
 Billing mode: On-demand
 
