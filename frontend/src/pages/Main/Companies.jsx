@@ -110,7 +110,9 @@ const Companies = () => {
 
   const confirmDelete = async () => {
     try {
-      await axiosInstance.delete(`/companies/${selectedCompany.id}`);
+      await axiosInstance.delete(`/companies/${selectedCompany.id}`, {
+        data: selectedCompany
+      });
       await fetchCompanies();
       toast.success("Company deleted successfully");
       setDeleteDialogOpen(false);
@@ -184,22 +186,22 @@ const Companies = () => {
   };
 
   return (
-    <main className="bg-slate-100 dark:bg-gray-900 pt-6 px-4 font-sans text-gray-900 dark:text-gray-100 min-h-full">
+    <main className="bg-slate-100 dark:bg-gray-900 pt-4 sm:pt-6 px-2 sm:px-4 font-sans text-gray-900 dark:text-gray-100 min-h-full">
       <section className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-3">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3 gap-3">
           <div>
-            <h1 className="text-xl font-bold text-gray-800 dark:text-gray-100">Companies</h1>
-            <p className="text-gray-600 dark:text-gray-400 text-xs mt-1">Manage your shortlisted companies</p>
+            <h1 className="text-base sm:text-lg md:text-xl font-bold text-gray-800 dark:text-gray-100">Companies</h1>
+            <p className="text-gray-600 dark:text-gray-400 text-[10px] sm:text-xs mt-1">Manage your shortlisted companies</p>
           </div>
-          <div className="flex items-center gap-3">
-            <input type="text" placeholder="Search..." value={quickFilterText} onChange={(e) => setQuickFilterText(e.target.value)} className="px-3 py-2 text-xs border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-            <button onClick={() => { setFormData(defaultFormData); setIsEdit(false); setOpen(true); }} className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 hover:from-blue-700 hover:to-blue-800 hover:shadow-lg active:scale-95 transition-all duration-200 shadow-md">
-              <FaPlus />Add Company
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <input type="text" placeholder="Search..." value={quickFilterText} onChange={(e) => setQuickFilterText(e.target.value)} className="flex-1 sm:flex-none px-2 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <button onClick={() => { setFormData(defaultFormData); setIsEdit(false); setOpen(true); }} className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-lg text-[11px] sm:text-xs font-semibold flex items-center gap-1.5 sm:gap-2 hover:from-blue-700 hover:to-blue-800 hover:shadow-lg active:scale-95 transition-all duration-200 shadow-md whitespace-nowrap">
+              <FaPlus className="text-xs sm:text-sm" /><span className="hidden sm:inline">Add Company</span><span className="sm:hidden">Add</span>
             </button>
           </div>
         </div>
 
-        <div className={isDark ? "ag-theme-quartz-dark" : "ag-theme-quartz"} style={{ height: "480px", borderRadius: "4px", overflow: "hidden", fontFamily: "sans-serif", boxShadow: "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)" }}>
+        <div className={isDark ? "ag-theme-quartz-dark" : "ag-theme-quartz"} style={{ height: "calc(100vh - 250px)", minHeight: "400px", borderRadius: "4px", overflow: "hidden", fontFamily: "sans-serif", boxShadow: "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)" }}>
           <AgGridReact rowData={companies} columnDefs={columnDefs} pagination={false} rowHeight={35} animateRows={true} headerHeight={36} defaultColDef={{ sortable: true, filter: false, resizable: true }} suppressCellFocus={false} enableCellTextSelection={true} ensureDomOrder={true} rowClassRules={{ "ag-row-even": (params) => params.node.rowIndex % 2 === 0, "ag-row-odd": (params) => params.node.rowIndex % 2 === 1 }} quickFilterText={quickFilterText} />
         </div>
 

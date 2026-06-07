@@ -1,57 +1,59 @@
 const { Router } = require("express");
 const router = Router();
-const pool = require("../../config/dbConnect");
+const { dbClient, getTableName } = require("../../config/dbConnect");
+const { UpdateCommand, GetCommand } = require("@aws-sdk/lib-dynamodb");
 
 const updateProfile = async (req, res, next) => {
-    let sqlQuery, con;
     try {
-        //db connect
-        con = await pool.connect();
-
-        //fetch data
         const { firstName, location, phone, email, userId } = req.body;
 
-        sqlQuery = `UPDATE register_users SET first_name='${firstName}', location='${location}', phone_number='${phone}', email='${email}' 
-        WHERE user_id='${userId}'`
+        await dbClient.send(
+            new UpdateCommand({
+                TableName: getTableName("register_users"),
+                Key: { user_id: userId },
+                UpdateExpression: "SET first_name = :firstName, #location = :location, phone_number = :phone, email = :email",
+                ExpressionAttributeNames: {
+                    "#location": "location",
+                },
+                ExpressionAttributeValues: {
+                    ":firstName": firstName,
+                    ":location": location,
+                    ":phone": phone,
+                    ":email": email,
+                },
+            })
+        );
 
-        await con.query(sqlQuery);
-
-        next()
+        next();
     } catch (error) {
         res.status(500).json({ status: 500, message: "Error updating profile" });
-    } finally {
-        if (con) con.release();
     }
 };
 
 const fetchUser = async (req, res, next) => {
-    let con, sqlQuery
     try {
-        //connect db
-        con = await pool.connect();
+        const { userId } = req.query;
 
-        //request data
-        const { userId } = req.query
+        const result = await dbClient.send(
+            new GetCommand({
+                TableName: getTableName("register_users"),
+                Key: { user_id: userId },
+            })
+        );
 
-        sqlQuery = `SELECT first_name, location, email, phone_number, user_id FROM register_users WHERE user_id='${userId}'`
-
-        const result = await con.query(sqlQuery);
-
-        if (result && result.rows.length > 0) {
-            const { first_name: firstName, location, phone_number: phone, email, user_id: userId } = result.rows[0]
+        if (result.Item) {
             res.locals.userDetails = {
-                firstName,
-                location,
-                phone,
-                email,
-                userId
-            }
+                firstName: result.Item.first_name,
+                location: result.Item.location,
+                phone: result.Item.phone_number,
+                email: result.Item.email,
+                userId: result.Item.user_id,
+            };
         }
+
         next();
     } catch (error) {
         res.status(500).json({ status: 500, message: "Error fetching user" });
-    } finally {
-        if (con) con.release();
     }
 };
 
@@ -61,7 +63,7 @@ router.get("/api/fetch-user", fetchUser, async (req, res) => {
         status: 200,
         message: "User details fetched successfully",
         userDetails
-    })
+    });
 });
 
 router.post("/api/edit-profile", updateProfile, async (req, res) => {

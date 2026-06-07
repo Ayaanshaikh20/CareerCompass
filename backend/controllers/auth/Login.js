@@ -1,33 +1,38 @@
 const { Router } = require("express");
 const router = Router();
 const bcrypt = require("bcrypt");
-const { generateAccessToken, generateRefreshToken } = require("../../config/generateTokens");
-const pool = require("../../config/dbConnect");
+const {
+  generateAccessToken,
+  generateRefreshToken,
+} = require("../../config/generateTokens");
+const { dbClient, getTableName } = require("../../config/dbConnect");
+const { QueryCommand } = require("@aws-sdk/lib-dynamodb");
 
 const validateUser = async (req, res, next) => {
-  let sqlQuery, con;
   try {
-    // connect db
-    con = await pool.connect();
-
     const { email: userEmail, password: reqPass } = req.body;
 
-    sqlQuery = `SELECT * FROM register_users WHERE email=$1`;
+    const result = await dbClient.send(
+      new QueryCommand({
+        TableName: getTableName("register_users"),
+        IndexName: "email-index",
+        KeyConditionExpression: "email = :email",
+        ExpressionAttributeValues: {
+          ":email": userEmail,
+        },
+      }),
+    );
 
-    const result = await con.query(sqlQuery, [userEmail]);
-
-    const user = result.rows[0];
-
-    if (!user) {
+    if (result.Items && result.Items.length === 0) {
       return res.status(401).json({
         message: "Email does not exist",
         status: 401,
       });
     }
 
-    const { user_id, first_name, location, phone_number, email } = user;
+    const { user_id, first_name, location, phone_number, email, password } = result.Items[0];
 
-    const isMatch = await bcrypt.compare(reqPass, user.password);
+    const isMatch = await bcrypt.compare(reqPass, password);
 
     if (!isMatch) {
       return res.status(401).json({
@@ -44,9 +49,9 @@ const validateUser = async (req, res, next) => {
       email,
     };
 
-    generateAccessToken(user_id, res);
+    await generateAccessToken(user_id, res);
 
-    generateRefreshToken(user_id, res);
+    await generateRefreshToken(user_id, res);
 
     res.locals.userData = userObject;
 
@@ -57,8 +62,6 @@ const validateUser = async (req, res, next) => {
       mainError: error.message,
       status: 500,
     });
-  } finally {
-    if (con) con.release();
   }
 };
 

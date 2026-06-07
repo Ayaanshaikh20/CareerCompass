@@ -1,4 +1,5 @@
 import UnderConstruction from "../pages/Main/UnderConstruction";
+import ResumeAnalyzer from "../pages/ResumeAnalyzer";
 import {
   Outlet,
   Navigate,
@@ -71,6 +72,7 @@ const Router = () => {
           <Route path="/applications" element={<Applications />} />
           <Route path="/companies" element={<Companies />} />
           <Route path="/documents" element={<Documents />} />
+          <Route path="/resume-analyzer" element={<ResumeAnalyzer />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/profile" element={<Profile />} />
         </Route>

@@ -1,21 +1,30 @@
 const { Router } = require("express");
-const pool = require("../../config/dbConnect");
+const { dbClient, getTableName } = require("../../config/dbConnect");
+const {
+  ScanCommand,
+  PutCommand,
+  UpdateCommand,
+  DeleteCommand,
+} = require("@aws-sdk/lib-dynamodb");
 
 const router = Router();
 
-router.get("/api/companies", async (req, res) => {
-  let con;
+const fetchCompanies = async (req, res, next) => {
   try {
-    con = await pool.connect();
     const { user_id } = req.query;
 
-    const result = await con.query(
-      `SELECT * FROM companies WHERE user_id=$1 ORDER BY created_at DESC`,
-      [user_id]
+    const result = await dbClient.send(
+      new ScanCommand({
+        TableName: getTableName("companies"),
+        FilterExpression: "user_id = :user_id",
+        ExpressionAttributeValues: {
+          ":user_id": user_id,
+        },
+      }),
     );
 
-    const companies = result.rows.map((item) => ({
-      id: item.id,
+    const companies = result.Items.map((item) => ({
+      id: item.company_id,
       userId: item.user_id,
       companyName: item.company_name,
       phoneNumber: item.phone_number,
@@ -25,6 +34,117 @@ router.get("/api/companies", async (req, res) => {
       isContacted: item.is_contacted || false,
     }));
 
+    res.locals.companies = companies;
+    next();
+  } catch (error) {
+    res.status(500).json({ status: 500, message: "Error fetching companies" });
+  }
+};
+
+const createCompany = async (req, res, next) => {
+  try {
+    const {
+      userId,
+      companyName,
+      phoneNumber,
+      websiteUrl,
+      hrEmail,
+      location,
+      isContacted,
+    } = req.body;
+
+    const result = await dbClient.send(
+      new PutCommand({
+        TableName: getTableName("companies"),
+        Item: {
+          company_id: String(Math.floor(Math.random() * 1000000)),
+          user_id: userId,
+          company_name: companyName,
+          phone_number: phoneNumber,
+          website_url: websiteUrl,
+          hr_email: hrEmail,
+          location: location,
+          is_contacted: isContacted,
+        },
+      }),
+    );
+
+    next();
+  } catch (error) {
+    res.status(500).json({ status: 500, message: "Error adding company" });
+  }
+};
+
+const updateCompany = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const {
+      companyName,
+      phoneNumber,
+      websiteUrl,
+      hrEmail,
+      location,
+      isContacted,
+      userId,
+    } = req.body;
+
+    const result = await dbClient.send(
+      new UpdateCommand({
+        TableName: getTableName("companies"),
+        Key: {
+          user_id: userId,
+          company_id: id,
+        },
+        UpdateExpression: `set company_name = :companyName, 
+          phone_number = :phoneNumber, 
+          website_url = :websiteUrl, 
+          hr_email = :hrEmail, 
+          #location = :location, 
+          is_contacted = :isContacted`,
+        ExpressionAttributeNames: {
+          "#location": "location",
+        },
+        ExpressionAttributeValues: {
+          ":companyName": companyName,
+          ":phoneNumber": phoneNumber,
+          ":websiteUrl": websiteUrl,
+          ":hrEmail": hrEmail,
+          ":location": location,
+          ":isContacted": isContacted,
+        },
+        ReturnValues: "UPDATED_NEW",
+      }),
+    );
+    next();
+  } catch (error) {
+    res.status(500).json({ status: 500, message: "Error updating company" });
+  }
+};
+
+const deleteCompany = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { userId } = req.body;
+
+    await dbClient.send(
+      new DeleteCommand({
+        TableName: getTableName("companies"),
+        Key: {
+          user_id: userId,
+          company_id: id,
+        },
+      }),
+    );
+
+    next();
+  } catch (error) {
+    res.status(500).json({ status: 500, message: "Error deleting company" });
+  }
+};
+
+router.get("/api/companies", fetchCompanies, async (req, res) => {
+  try {
+    const companies = res.locals.companies;
     res.status(200).json({
       status: 200,
       message: "Companies fetched successfully",
@@ -32,74 +152,39 @@ router.get("/api/companies", async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ status: 500, message: "Error fetching companies" });
-  } finally {
-    if (con) con.release();
   }
 });
 
-router.post("/api/companies", async (req, res) => {
-  let con;
+router.post("/api/companies", createCompany, async (req, res) => {
   try {
-    con = await pool.connect();
-    const { userId, companyName, phoneNumber, websiteUrl, hrEmail, location, isContacted } = req.body;
-
-    await con.query(
-      `INSERT INTO companies(user_id, company_name, phone_number, website_url, hr_email, location, is_contacted) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-      [userId, companyName, phoneNumber, websiteUrl, hrEmail, location, isContacted || false]
-    );
-
     res.status(201).json({
       status: 201,
       message: "Company added successfully",
     });
   } catch (error) {
     res.status(500).json({ status: 500, message: "Error adding company" });
-  } finally {
-    if (con) con.release();
   }
 });
 
-router.put("/api/companies/:id", async (req, res) => {
-  let con;
+router.put("/api/companies/:id", updateCompany, async (req, res) => {
   try {
-    con = await pool.connect();
-    const { id } = req.params;
-    const { companyName, phoneNumber, websiteUrl, hrEmail, location, isContacted } = req.body;
-
-    await con.query(
-      `UPDATE companies SET company_name=$1, phone_number=$2, website_url=$3, hr_email=$4, location=$5, is_contacted=$6 
-       WHERE id=$7`,
-      [companyName, phoneNumber, websiteUrl, hrEmail, location, isContacted, id]
-    );
-
     res.status(200).json({
       status: 200,
       message: "Company updated successfully",
     });
   } catch (error) {
     res.status(500).json({ status: 500, message: "Error updating company" });
-  } finally {
-    if (con) con.release();
   }
 });
 
-router.delete("/api/companies/:id", async (req, res) => {
-  let con;
+router.delete("/api/companies/:id", deleteCompany, async (req, res) => {
   try {
-    con = await pool.connect();
-    const { id } = req.params;
-
-    await con.query(`DELETE FROM companies WHERE id=$1`, [id]);
-
     res.status(200).json({
       status: 200,
       message: "Company deleted successfully",
     });
   } catch (error) {
     res.status(500).json({ status: 500, message: "Error deleting company" });
-  } finally {
-    if (con) con.release();
   }
 });
 

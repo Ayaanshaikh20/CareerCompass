@@ -27,7 +27,7 @@ if (localStorage.getItem("isDark") === "true") {
 createRoot(document.getElementById("root")).render(
   <QueryClientProvider client={queryClient}>
     <Theme>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       <BrowserRouter>
         <Toaster position="top-right" />
         <Router />

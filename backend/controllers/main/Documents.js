@@ -1,46 +1,59 @@
 const { Router } = require("express");
 const router = Router();
-const pool = require("../../config/dbConnect");
-const { PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
+const { dbClient, getTableName } = require("../../config/dbConnect");
+const {
+  PutObjectCommand,
+  GetObjectCommand,
+  DeleteObjectCommand,
+} = require("@aws-sdk/client-s3");
 const { bucketName, s3 } = require("../../config/s3client");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const { DeleteCommand, PutCommand, ScanCommand, GetCommand } = require("@aws-sdk/lib-dynamodb");
+const crypto = require("crypto");
 
-const randomImageName = (bytes = 32) =>
-  crypto.randomUUID(bytes).toString("hex");
+const randomImageName = () => crypto.randomUUID();
 
 const getDocument = async (req, res, next) => {
-  let sqlQuery, con;
   try {
     const { user_id } = req.query;
 
-    con = await pool.connect();
+    const documents = await dbClient.send(
+      new ScanCommand({
+        TableName: getTableName("documents"),
+        FilterExpression: "user_id = :userId",
+        ExpressionAttributeValues: {
+          ":userId": user_id,
+        },
+      }),
+    );
 
-    //fetch all the documents from DB
-    sqlQuery = `SELECT * FROM documents WHERE user_id=$1`;
+    const documentsWithUrls = await Promise.all(
+      documents.Items.map(async (doc) => {
+        const getObjectParams = {
+          Bucket: bucketName,
+          Key: doc.file_key,
+        };
+        const command = new GetObjectCommand(getObjectParams);
+        const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+        
+        return {
+          id: doc.document_id,
+          userId: doc.user_id,
+          fileName: doc.file_name,
+          fileKey: doc.file_key,
+          mimeType: doc.mime_type,
+          url: url,
+        };
+      })
+    );
 
-    let documents = await con.query(sqlQuery, [user_id]);
-
-    for (document in documents.rows) {
-      const eachDoc = documents.rows[document];
-      const getObjectParams = {
-        Bucket: bucketName,
-        Key: eachDoc.file_key,
-      };
-      const command = new GetObjectCommand(getObjectParams);
-      documents.rows[document].url = await getSignedUrl(s3, command, {
-        expiresIn: 3600,
-      });
-    }
-
-    req.documents = documents.rows;
+    req.documents = documentsWithUrls;
     next();
   } catch (error) {
     res.status(500).json({
       status: 500,
       message: "Error fetching documents",
     });
-  } finally {
-    if (con) con.release();
   }
 };
 
@@ -84,28 +97,35 @@ const documentRead = async (req, res, next) => {
 };
 
 const documentUpload = async (req, res, next) => {
-  let sqlQuery, con;
   try {
     const params = req.params;
     const { fileKey, fileName, mimeType, user_id } = res.locals.fileDetails;
 
-    con = await pool.connect();
-
     const command = new PutObjectCommand(params);
     await s3.send(command);
 
-    //save image details in db
-    sqlQuery = `INSERT INTO documents(user_id, file_name, file_key, mime_type) VALUES($1, $2, $3, $4) RETURNING *`;
+    const documentId = String(Math.floor(Math.random() * 1000000));
 
-    const result = await con.query(sqlQuery, [
-      user_id,
-      fileName,
-      fileKey,
-      mimeType,
-    ]);
+    await dbClient.send(
+      new PutCommand({
+        TableName: getTableName("documents"),
+        Item: {
+          document_id: documentId,
+          user_id: user_id,
+          file_name: fileName,
+          file_key: fileKey,
+          mime_type: mimeType,
+        },
+      })
+    );
 
-    const document = result.rows[0];
-    res.locals.document = document;
+    res.locals.document = {
+      id: documentId,
+      userId: user_id,
+      fileName: fileName,
+      fileKey: fileKey,
+      mimeType: mimeType,
+    };
 
     next();
   } catch (error) {
@@ -113,30 +133,35 @@ const documentUpload = async (req, res, next) => {
       status: 500,
       message: error.message,
     });
-  } finally {
-    if (con) con.release();
   }
 };
 
 const deleteDocument = async (req, res, next) => {
-  let sqlQuery, con;
   try {
     const { documentId, userId } = req.body;
 
-    con = await pool.connect();
+    const getResult = await dbClient.send(
+      new GetCommand({
+        TableName: getTableName("documents"),
+        Key: { document_id: documentId, user_id: userId },
+      }),
+    );
 
-    sqlQuery = `SELECT file_key FROM documents WHERE id=$1 AND user_id=$2`;
+    const fileKey = getResult.Item?.file_key;
 
-    const result = await con.query(sqlQuery, [documentId, userId]);
-
-    if (result.rows.length === 0) {
+    if (!fileKey) {
       return res.status(404).json({
         status: 404,
-        message: "Document not found or access denied",
+        message: "Document not found",
       });
     }
 
-    const { file_key: fileKey } = result.rows[0];
+    await dbClient.send(
+      new DeleteCommand({
+        TableName: getTableName("documents"),
+        Key: { document_id: documentId, user_id: userId },
+      }),
+    );
 
     const deleteParams = {
       Bucket: bucketName,
@@ -146,21 +171,14 @@ const deleteDocument = async (req, res, next) => {
     const deletedS3Object = new DeleteObjectCommand(deleteParams);
     await s3.send(deletedS3Object);
 
-    sqlQuery = `DELETE FROM documents WHERE id=$1 AND user_id=$2`;
-
-    await con.query(sqlQuery, [documentId, userId]);
-
     req.deletedDocument = { documentId, fileKey };
 
     next();
   } catch (error) {
-    console.error("Delete document error:", error);
     res.status(500).json({
       status: 500,
       message: error.message || "Failed to delete document",
     });
-  } finally {
-    if (con) con.release();
   }
 };
 
@@ -193,7 +211,7 @@ router.delete("/api/delete-document", deleteDocument, async (req, res) => {
   res.status(200).json({
     status: 200,
     message: "Document deleted successfully",
-    data: deletedDocument
+    data: deletedDocument,
   });
 });
 

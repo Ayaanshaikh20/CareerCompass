@@ -1,32 +1,33 @@
 const { Router } = require("express");
-const pool = require("../../config/dbConnect");
+const { dbClient, getTableName } = require("../../config/dbConnect");
+const { ScanCommand, PutCommand, DeleteCommand, UpdateCommand } = require("@aws-sdk/lib-dynamodb");
 
 const router = Router();
 
 const fetchApplication = async (req, res, next) => {
-  let sqlQuery, con;
   try {
-
-    // connect db
-    con = await pool.connect();
-
-    //request data
     const { user_id } = req.query;
 
-    sqlQuery = `SELECT * FROM applications WHERE user_id=$1`;
+    const result = await dbClient.send(
+      new ScanCommand({
+        TableName: getTableName("applications"),
+        FilterExpression: "user_id = :user_id",
+        ExpressionAttributeValues: {
+          ":user_id": user_id,
+        },
+      }),
+    );
 
-    const result = await con.query(sqlQuery, [user_id]);
-
-    if (!result || result.rows.length === 0) {
+    if (!result.Items || result.Items.length === 0) {
       return res.status(200).json({
         status: 200,
         message: "No applications",
-        applications: []
+        applications: [],
       });
     }
 
-    let newArr = result.rows.map((item) => ({
-      id: item.id,
+    let newArr = result.Items.map((item) => ({
+      id: item.application_id,
       user_id: item.user_id,
       status: item.status,
       jobLink: item.job_link,
@@ -38,90 +39,113 @@ const fetchApplication = async (req, res, next) => {
       jobDescription: item.job_description,
       employer: item.employer,
       package: item.package,
-      location: item.location
+      location: item.location,
     }));
 
     res.locals.applications = newArr;
 
     next();
-
   } catch (error) {
-    res.status(500).json({ status: 500, message: "Error fetching applications" });
-  } finally {
-    if (con) con.release();
+    res
+      .status(500)
+      .json({ status: 500, message: "Error fetching applications" });
   }
 };
 
 const deleteApplication = async (req, res, next) => {
-  let sqlQuery, con;
   try {
-    // connect db
-    con = await pool.connect();
-
     const { user_id, application_id } = req.query;
 
-    sqlQuery = `DELETE FROM applications WHERE user_id='${user_id}' AND id='${application_id}'`
-
-    const result = await con.query(sqlQuery);
-
-    if (!result) {
-      return res.status(404).json({ status: 404, message: "Application not found" });
-    }
+    await dbClient.send(
+      new DeleteCommand({
+        TableName: getTableName("applications"),
+        Key: {
+          user_id: user_id,
+          application_id: application_id,
+        },
+      }),
+    );
     next();
   } catch (error) {
-    res.status(500).json({ status: 500, message: "Error deleting application" });
-  } finally {
-    if(con) con.release()
+    res
+      .status(500)
+      .json({ status: 500, message: "Error deleting application" });
   }
 };
 
+
 const editApplication = async (req, res, next) => {
-  let sqlQuery, con;
   try {
-    // connect db
-    con = await pool.connect()
+    const {
+      user_id,
+      id,
+      role,
+      appliedDate,
+      package,
+      employer,
+      location,
+      jobLink,
+      experience,
+      platform,
+      jobDescription,
+      status,
+      interviewDate,
+    } = req.body;
 
-    const { id, role, appliedDate, package, employer, location, jobLink, experience, platform, jobDescription, status, interviewDate } = req.body;
+    await dbClient.send(
+      new UpdateCommand({
+        TableName: getTableName("applications"),
+        Key: {
+          user_id: user_id,
+          application_id: id,
+        },
+        UpdateExpression: `
+          SET
+          #role = :role,
+          applied_date = :appliedDate,
+          #pkg = :package,
+          employer = :employer,
+          #location = :location,
+          job_link = :jobLink,
+          interview_date = :interviewDate,
+          experience = :experience,
+          platform = :platform,
+          job_description = :jobDescription,
+          #status = :status
+        `,
+        ExpressionAttributeNames: {
+          "#role": "role",
+          "#status": "status",
+          "#pkg": "package",
+          "#location": "location",
+        },
+        ExpressionAttributeValues: {
+          ":role": role,
+          ":appliedDate": appliedDate,
+          ":package": package,
+          ":employer": employer,
+          ":location": location,
+          ":jobLink": jobLink,
+          ":interviewDate": interviewDate,
+          ":experience": experience,
+          ":platform": platform,
+          ":jobDescription": jobDescription,
+          ":status": status,
+        },
+      })
+    );
 
-    sqlQuery = `UPDATE applications
-      SET role='${role}', 
-      applied_date='${appliedDate}', 
-      package='${package}', 
-      employer='${employer}', 
-      location='${location}', 
-      job_link='${jobLink}',
-      interview_date='${interviewDate}',
-      experience='${experience}',
-      platform='${platform}',
-      job_description='${jobDescription}',
-      status='${status}'
-      WHERE id='${id}';`
-
-    const result = await con.query(sqlQuery);
-
-    if (!result) {
-      return res.status(404).json({
-        status: 404,
-        message: "Application not found",
-      });
-    }
     next();
   } catch (error) {
     res.status(500).json({
       status: 500,
       message: "Error updating application",
     });
-  } finally {
-    if(con) con.release();
   }
 };
 
 const createApplication = async (req, res, next) => {
-  let sqlQuery, con;
   try {
-    // connect db
-    con = await pool.connect();
-
     const applicationData = req.body;
 
     const {
@@ -139,13 +163,26 @@ const createApplication = async (req, res, next) => {
       status,
     } = applicationData;
 
-    sqlQuery = `INSERT INTO applications(
-      user_id, status, job_link, role, experience, platform, applied_date, interview_date, job_description, employer, package, location
-    ) VALUES (
-      '${user_id}','${status}','${job_link}','${role}','${experience}','${platform}','${applied_date}', '${interview_date}','${job_description}','${employer}','${package}', '${location}'
-    ) `;
-
-    const result = await con.query(sqlQuery);
+    const result = await dbClient.send(
+      new PutCommand({
+        TableName: getTableName("applications"),
+        Item: {
+          application_id: String(Math.floor(Math.random() * 1000000)),
+          user_id,
+          status,
+          job_link,
+          role,
+          experience,
+          platform,
+          applied_date,
+          interview_date,
+          job_description,
+          employer,
+          package,
+          location,
+        },
+      }),
+    );
 
     if (result) {
       next();
@@ -155,8 +192,6 @@ const createApplication = async (req, res, next) => {
       status: 500,
       message: "Error creating new application",
     });
-  } finally {
-    if (con) con.release();
   }
 };
 
@@ -176,12 +211,16 @@ router.post("/api/edit-application", editApplication, async (req, res) => {
   });
 });
 
-router.delete("/api/delete-application", deleteApplication, async (req, res) => {
-  res.status(200).json({
-    status: 200,
-    message: "Application deleted successfully",
-  });
-});
+router.delete(
+  "/api/delete-application",
+  deleteApplication,
+  async (req, res) => {
+    res.status(200).json({
+      status: 200,
+      message: "Application deleted successfully",
+    });
+  },
+);
 
 router.get("/api/applications", fetchApplication, async (req, res) => {
   const { applications } = res.locals;

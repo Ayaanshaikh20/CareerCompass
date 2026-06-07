@@ -1,30 +1,36 @@
 const { Router } = require("express");
-const pool = require("../../config/dbConnect");
+const { dbClient, getTableName } = require("../../config/dbConnect");
+const { ScanCommand } = require("@aws-sdk/lib-dynamodb");
 
 const router = Router();
 
 router.get("/api/notifications", async (req, res) => {
-  let con;
   try {
-    con = await pool.connect();
     const { user_id } = req.query;
 
-    const result = await con.query(
-      `SELECT id, role, employer, interview_date, status 
-       FROM applications 
-       WHERE user_id=$1 AND interview_date IS NOT NULL AND status != 'Rejected'`,
-      [user_id]
+    const result = await dbClient.send(
+      new ScanCommand({
+        TableName: getTableName("applications"),
+        FilterExpression: "user_id = :userId AND attribute_exists(interview_date) AND #status <> :rejected",
+        ExpressionAttributeNames: {
+          "#status": "status",
+        },
+        ExpressionAttributeValues: {
+          ":userId": user_id,
+          ":rejected": "rejected",
+        },
+      })
     );
 
     const now = new Date();
-    const notifications = result.rows
+    const notifications = result.Items
       .map(app => {
         const interviewDate = new Date(app.interview_date);
         const daysLeft = Math.ceil((interviewDate - now) / (1000 * 60 * 60 * 24));
         
         if (daysLeft >= 0 && daysLeft <= 5) {
           return {
-            id: app.id,
+            id: app.application_id,
             role: app.role,
             employer: app.employer,
             interviewDate: app.interview_date,
@@ -44,8 +50,6 @@ router.get("/api/notifications", async (req, res) => {
     res.status(200).json({ status: 200, notifications });
   } catch (error) {
     res.status(500).json({ status: 500, message: "Error fetching notifications" });
-  } finally {
-    if (con) con.release();
   }
 });
 

@@ -5,6 +5,7 @@ import {
   useNavigate,
   useQueryClient,
   useState,
+  useEffect,
 } from "../shared/Imports";
 import {
   AccountCircleIcon,
@@ -15,6 +16,7 @@ import {
   SettingsIcon,
   BusinessIcon,
   FolderIcon,
+  AssessmentIcon,
 } from "../shared/Icons";
 import { Menu as MenuIcon } from "@mui/icons-material";
 
@@ -23,6 +25,7 @@ const Sidebar = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   const menuItems = [
     {
@@ -46,6 +49,11 @@ const Sidebar = () => {
       icon: <FolderIcon fontSize="small" />,
     },
     {
+      name: "Resume Analyzer",
+      path: "/resume-analyzer",
+      icon: <AssessmentIcon fontSize="small" />,
+    },
+    {
       name: "Profile",
       path: "/profile",
       icon: <AccountCircleIcon fontSize="small" />,
@@ -66,10 +74,26 @@ const Sidebar = () => {
     navigate("/");
   };
 
+  useEffect(() => {
+    const handleToggle = () => setIsMobileOpen(!isMobileOpen);
+    window.addEventListener('toggleMobileSidebar', handleToggle);
+    return () => window.removeEventListener('toggleMobileSidebar', handleToggle);
+  }, [isMobileOpen]);
+
   return (
-    <aside
-      className={`bg-white dark:bg-gray-900 flex flex-col justify-between font-sans border-r border-gray-300 dark:border-gray-700
+    <>
+      {isMobileOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          onClick={() => setIsMobileOpen(false)}
+        />
+      )}
+
+      <aside
+        className={`bg-white dark:bg-gray-900 flex flex-col justify-between font-sans border-r border-gray-300 dark:border-gray-700
     h-full transition-all duration-300 ease-in-out
+    fixed md:static z-50 md:z-auto
+    ${isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
     ${isCollapsed ? "w-14" : "w-60"}`}
     >
       {/* Top Section */}
@@ -81,7 +105,7 @@ const Sidebar = () => {
           {!isCollapsed ? (
             <div className="flex items-center">
               <button
-                className=" px-1 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-800 rounded transition-colors"
+                className="px-1 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-800 rounded transition-colors hidden md:block"
                 onClick={() => setIsCollapsed(true)}
                 title="Collapse sidebar"
               >
@@ -91,7 +115,7 @@ const Sidebar = () => {
           ) : (
             <div className="flex items-center justify-center w-full h-full">
               <button
-                className="px-1 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-800 rounded transition-colors"
+                className="px-1 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-800 rounded transition-colors hidden md:block"
                 onClick={() => setIsCollapsed(false)}
                 title="Expand sidebar"
               >
@@ -108,6 +132,7 @@ const Sidebar = () => {
               <li key={index}>
                 <Link
                   to={item.path}
+                  onClick={() => setIsMobileOpen(false)}
                   title={isCollapsed ? item.name : ""}
                   className={`flex items-center text-xs gap-3 px-2 py-1 rounded-sm transition-all duration-400 ${
                     isActive
@@ -138,6 +163,7 @@ const Sidebar = () => {
         </button>
       </div>
     </aside>
+    </>
   );
 };
 

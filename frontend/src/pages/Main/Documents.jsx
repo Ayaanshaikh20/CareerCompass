@@ -83,7 +83,6 @@ const Documents = () => {
         }
       }
     } catch (error) {
-      console.log(error, 'error');
       const { message } = error?.response?.data || {};
       toast.error(message || "Something went wrong");
     }
@@ -135,30 +134,29 @@ const Documents = () => {
   const zoomOut = () => setScale((prev) => Math.max(prev - 0.1, 0.6));
 
   return (
-    <main className="bg-slate-100 dark:bg-gray-900 pt-6 px-4 font-sans text-gray-900 dark:text-gray-100 min-h-full">
+    <main className="bg-slate-100 dark:bg-gray-900 pt-4 sm:pt-6 px-2 sm:px-4 font-sans text-gray-900 dark:text-gray-100 min-h-full">
       <section className="max-w-7xl mx-auto">
-        <div className=" w-full flex justify-between">
-          <div className="mb-4">
-            <h1 className="text-xl font-bold text-gray-800 dark:text-gray-100">
+        <div className="w-full flex flex-col sm:flex-row justify-between gap-3">
+          <div className="mb-2 sm:mb-4">
+            <h1 className="text-base sm:text-lg md:text-xl font-bold text-gray-800 dark:text-gray-100">
               Document Manager
             </h1>
-            <p className="text-gray-600 dark:text-gray-400 text-xs mt-1">
+            <p className="text-gray-600 dark:text-gray-400 text-[10px] sm:text-xs mt-1">
               View and manage your documents
             </p>
           </div>
-          <div className="mb-4">
+          <div className="mb-2 sm:mb-4">
             <button
               onClick={openFileUploadForm}
-              className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 hover:from-blue-700 hover:to-blue-800 hover:shadow-lg active:scale-95 transition-all duration-200 shadow-md"
+              className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-lg text-[11px] sm:text-xs font-semibold flex items-center gap-1.5 sm:gap-2 hover:from-blue-700 hover:to-blue-800 hover:shadow-lg active:scale-95 transition-all duration-200 shadow-md w-full sm:w-auto justify-center"
             >
-              <FaPlus />
+              <FaPlus className="text-xs sm:text-sm" />
               Upload Document
             </button>
           </div>
         </div>
-        <div className="flex gap-4 h-[calc(100vh-180px)]">
-          {/* Sidebar */}
-          <div className="w-64 bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-y-auto flex-shrink-0">
+        <div className="flex flex-col md:flex-row gap-4 h-[calc(100vh-200px)] min-h-[400px]">
+          <div className="w-full md:w-64 bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-y-auto flex-shrink-0 max-h-60 md:max-h-full">
             <div className="p-3 border-b border-gray-200 dark:border-gray-700">
               <h2 className="text-xs font-semibold text-gray-700 dark:text-gray-300">
                 Documents
@@ -192,16 +190,16 @@ const Documents = () => {
                             : "text-gray-700 dark:text-gray-300"
                         }`}
                       >
-                        {doc.file_name}
+                        {doc.fileName}
                       </p>
                       <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">
-                        {doc.mime_type}
+                        {doc.mimeType}
                       </p>
                     </div>
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDeleteDocument(doc.id, doc.file_name);
+                        handleDeleteDocument(doc.id, doc.fileName);
                       }}
                       className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-red-100 dark:hover:bg-red-900 text-red-500 dark:text-red-400 transition-opacity"
                       title="Delete document"
@@ -219,7 +217,7 @@ const Documents = () => {
             {/* Toolbar */}
             <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
               <div className="flex items-center gap-2">
-                {allDocuments[selectedDoc] && getFileType(allDocuments[selectedDoc].mime_type) === 'pdf' && (
+                {allDocuments[selectedDoc] && getFileType(allDocuments[selectedDoc].mimeType) === 'pdf' && (
                   <>
                     <button
                       onClick={previousPage}
@@ -245,9 +243,9 @@ const Documents = () => {
                     No document selected
                   </span>
                 )}
-                {allDocuments[selectedDoc] && getFileType(allDocuments[selectedDoc].mime_type) !== 'pdf' && (
+                {allDocuments[selectedDoc] && getFileType(allDocuments[selectedDoc].mimeType) !== 'pdf' && (
                   <span className="text-xs text-gray-700 dark:text-gray-300">
-                    {allDocuments[selectedDoc].file_name}
+                    {allDocuments[selectedDoc].fileName}
                   </span>
                 )}
               </div>
@@ -256,14 +254,14 @@ const Documents = () => {
                   <>
                     <a
                       href={allDocuments[selectedDoc].url}
-                      download={allDocuments[selectedDoc].file_name}
+                      download={allDocuments[selectedDoc].fileName}
                       className="p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400"
                       title="Download"
                       target="_blank"
                     >
                       <DownloadIcon fontSize="small" />
                     </a>
-                    {getFileType(allDocuments[selectedDoc].mime_type) === 'image' && (
+                    {getFileType(allDocuments[selectedDoc].mimeType) === 'image' && (
                       <>
                         <button
                           onClick={zoomOut}
@@ -282,7 +280,7 @@ const Documents = () => {
                         </button>
                       </>
                     )}
-                    {getFileType(allDocuments[selectedDoc].mime_type) === 'pdf' && (
+                    {getFileType(allDocuments[selectedDoc].mimeType) === 'pdf' && (
                       <>
                         <button
                           onClick={zoomOut}
@@ -310,7 +308,7 @@ const Documents = () => {
             <div className="flex-1 overflow-auto bg-gray-100 dark:bg-gray-950 flex items-start justify-center p-4">
               {allDocuments[selectedDoc] ? (
                 (() => {
-                  const fileType = getFileType(allDocuments[selectedDoc].mime_type);
+                  const fileType = getFileType(allDocuments[selectedDoc].mimeType);
                   const fileUrl = allDocuments[selectedDoc].url;
 
                   switch (fileType) {
@@ -318,7 +316,7 @@ const Documents = () => {
                       return (
                         <img
                           src={fileUrl}
-                          alt={allDocuments[selectedDoc].file_name}
+                          alt={allDocuments[selectedDoc].fileName}
                           className="max-w-full max-h-full object-contain shadow-lg"
                           style={{ transform: `scale(${scale})` }}
                         />
@@ -350,7 +348,7 @@ const Documents = () => {
                       return (
                         <div className="text-center text-gray-500 dark:text-gray-400">
                           <DescriptionIcon sx={{ fontSize: 48, marginBottom: 2 }} />
-                          <p className="text-sm">{allDocuments[selectedDoc].file_name}</p>
+                          <p className="text-sm">{allDocuments[selectedDoc].fileName}</p>
                           <p className="text-xs mt-2">Click download to open this document</p>
                         </div>
                       );

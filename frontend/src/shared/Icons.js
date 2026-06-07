@@ -23,6 +23,8 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import BusinessIcon from '@mui/icons-material/Business';
 import { NotificationsOutlined } from "@mui/icons-material";
 import FolderIcon from '@mui/icons-material/Folder';
+import PeopleIcon from '@mui/icons-material/People';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 
 //images
 import compass from "../assets/images/compass.png";
@@ -42,6 +44,8 @@ export {
   SettingsIcon,
   BusinessIcon,
   FolderIcon,
+  PeopleIcon,
+  AssessmentIcon,
   FaChevronLeft,
   FaChevronRight,
   PasswordOutlinedIcon,

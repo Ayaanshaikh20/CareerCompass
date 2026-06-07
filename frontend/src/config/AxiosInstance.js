@@ -12,22 +12,11 @@ const axiosInstance = axios.create({
 });
 
 let isRefreshing = false;
-let failedQueue = [];
-
-const processQueue = (error, token = null) => {
-  failedQueue.forEach(prom => {
-    if (error) {
-      prom.reject(error);
-    } else {
-      prom.resolve(token);
-    }
-  });
-  failedQueue = [];
-};
+let refreshPromise = null;
 
 const clearSessionAndRedirect = () => {
   toast.error("Session expired. Please login again.");
-  
+
   setTimeout(() => {
     localStorage.clear();
     sessionStorage.clear();
@@ -35,60 +24,73 @@ const clearSessionAndRedirect = () => {
   }, 1000);
 };
 
-// Response interceptor to handle token refresh
+const refreshAccessToken = async () => {
+  try {
+    await axios.post(
+      `${API_URL}/refresh-token`,
+      {},
+      { withCredentials: true },
+    );
+  } catch (error) {
+    const refreshCode = error.response?.data?.code;
+
+    if (
+      refreshCode === "REFRESH_TOKEN_EXPIRED" ||
+      refreshCode === "REFRESH_TOKEN_MISSING" ||
+      refreshCode === "INVALID_REFRESH_TOKEN"
+    ) {
+      clearSessionAndRedirect();
+    }
+
+    throw error;
+  }
+};
+
 axiosInstance.interceptors.response.use(
   (response) => response,
+
   async (error) => {
     const originalRequest = error.config;
     const status = error.response?.status;
     const code = error.response?.data?.code;
 
-    // Handle token expiration (403) or missing token (401 with ACCESS_TOKEN_MISSING)
-    if ((status === 403 && code === "TOKEN_EXPIRED") || 
-        (status === 401 && code === "ACCESS_TOKEN_MISSING")) {
-      
-      if (originalRequest._retry) {
-        // Already retried, session is invalid
-        clearSessionAndRedirect();
-        return Promise.reject(error);
-      }
+    const needsRefresh =
+      (status === 403 && code === "TOKEN_EXPIRED") ||
+      (status === 401 && code === "ACCESS_TOKEN_MISSING");
 
-      if (isRefreshing) {
-        // Token refresh in progress, queue this request
-        return new Promise((resolve, reject) => {
-          failedQueue.push({ resolve, reject });
-        })
-          .then(() => axiosInstance(originalRequest))
-          .catch(err => Promise.reject(err));
-      }
-
-      originalRequest._retry = true;
-      isRefreshing = true;
-
-      try {
-        // Attempt to refresh the token
-        await axios.post(
-          `${API_URL}/api/refresh-token`,
-          {},
-          { withCredentials: true }
-        );
-        
-        isRefreshing = false;
-        processQueue(null);
-        
-        // Retry the original request
-        return axiosInstance(originalRequest);
-      } catch (refreshError) {
-        isRefreshing = false;
-        processQueue(refreshError, null);
-        clearSessionAndRedirect();
-        return Promise.reject(refreshError);
-      }
+    if (!needsRefresh) {
+      return Promise.reject(error);
     }
 
-    // For other errors, just reject
-    return Promise.reject(error);
-  }
+    if (originalRequest._retry) {
+      clearSessionAndRedirect();
+      return Promise.reject(error);
+    }
+
+    originalRequest._retry = true;
+
+    try {
+      if (!isRefreshing) {
+        isRefreshing = true;
+
+        refreshPromise = refreshAccessToken();
+
+        await refreshPromise;
+
+        refreshPromise = null;
+        isRefreshing = false;
+      } else {
+        await refreshPromise;
+      }
+
+      return axiosInstance(originalRequest);
+    } catch (refreshError) {
+      refreshPromise = null;
+      isRefreshing = false;
+
+      return Promise.reject(refreshError);
+    }
+  },
 );
 
 export default axiosInstance;

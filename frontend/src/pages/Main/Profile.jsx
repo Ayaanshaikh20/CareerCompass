@@ -71,9 +71,9 @@ const Profile = () => {
   };
 
   return (
-    <main className="w-full bg-gray-50 dark:bg-gray-950 p-4 min-h-full">
+    <main className="w-full bg-gray-50 dark:bg-gray-950 p-2 sm:p-4 min-h-full">
       <div className="max-w-4xl mx-auto">
-        <section className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm rounded-lg p-6">
+        <section className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm rounded-lg p-4 sm:p-6">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 pb-3 mb-6 border-b border-gray-200 dark:border-gray-700">
             Profile Settings
           </h2>

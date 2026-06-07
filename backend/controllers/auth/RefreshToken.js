@@ -1,11 +1,11 @@
 const { Router } = require("express");
 const router = Router();
+const { dbClient, getTableName } = require("../../config/dbConnect");
 const { generateAccessToken } = require("../../config/generateTokens");
 const jwt = require("jsonwebtoken");
-const pool = require("../../config/dbConnect");
+const { QueryCommand, ScanCommand } = require('@aws-sdk/lib-dynamodb');
 
 router.post("/api/refresh-token", async (req, res) => {
-  let con;
   try {
     const { r_t: refreshToken } = req.cookies;
 
@@ -23,11 +23,17 @@ router.post("/api/refresh-token", async (req, res) => {
 
     const { id } = decoded;
 
-    // Connect to database and verify user exists
-    con = await pool.connect();
-    const result = await con.query('SELECT user_id FROM register_users WHERE user_id=$1', [id]);
+    const result = await dbClient.send(
+      new ScanCommand({
+        TableName: getTableName("register_users"),
+        FilterExpression: "user_id = :user_id",
+        ExpressionAttributeValues: {
+          ":user_id": id,
+        },
+      })
+    );
 
-    if (result.rows.length === 0) {
+    if (result.Items.length === 0) {
       return res.status(404).json({ message: "User not found", code: "USER_NOT_FOUND" });
     }
 
@@ -49,8 +55,6 @@ router.post("/api/refresh-token", async (req, res) => {
       return res.status(403).json({ message: "Invalid refresh token", code: "INVALID_REFRESH_TOKEN" });
     }
     res.status(500).json({ status: 500, message: "Internal server error" });
-  } finally {
-    if (con) con.release();
   }
 });
 
