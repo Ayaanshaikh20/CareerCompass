@@ -44,19 +44,24 @@ const resetPassword = async (req, res, next) => {
         },
       }),
     );
-
-    const { email, resetPasswordExpires } = tokenResult.Items[0];
-
+    
+    console.log(tokenResult);
     //Validate and show result if invalid or expired reset token
-    if (
-      !tokenResult.Items.length ||
-      Date.now() > resetPasswordExpires
-    ) {
+    if (!tokenResult.Items || tokenResult.Items.length === 0) {
       return res.status(400).json({
         status: 400,
         message: "Reset token is invalid or expired",
       });
-    };
+    }
+
+    const { email, resetPasswordExpires } = tokenResult.Items[0];
+
+    if (Date.now() > resetPasswordExpires) {
+      return res.status(400).json({
+        status: 400,
+        message: "Reset token is invalid or expired",
+      });
+    }
 
     //hash/encrypt the password
     const hashedPassword = await bcrypt.hash(password, 10);
