@@ -80,6 +80,7 @@ import NotFound from "../pages/Main/NotFound";
 import Applications from "../pages/Main/Applications";
 import Companies from "../pages/Main/Companies";
 import Documents from "../pages/Main/Documents";
+import ResumeAnalyzer from "../pages/Main/ResumeAnalyzer";
 
 //Utilities
 import { CustomTextField } from "../utilities/CustomTextField";
@@ -88,6 +89,7 @@ import { CustomTextField } from "../utilities/CustomTextField";
 import emailService from "../services/email"; 
 
 export {
+  ResumeAnalyzer,
   Documents,
   Badge,
   AgGridReact,

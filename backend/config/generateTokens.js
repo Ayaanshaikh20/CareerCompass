@@ -15,13 +15,13 @@ const generateAccessToken = (userId, res) => {
 // Generate refresh token on login.
 const generateRefreshToken = (userId, res) => {
   const token = jwt.sign({ id: userId }, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: "1d", // 1 day
+    expiresIn: "7d", // 7 day
   });
   res.cookie("r_t", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day in milliseconds
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 1 day in milliseconds
   });
 };
 
