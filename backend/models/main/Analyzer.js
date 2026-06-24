@@ -5,7 +5,7 @@ const {
   GetCommand,
   PutCommand,
 } = require("@aws-sdk/lib-dynamodb");
-const { PDFParse } = require("pdf-parse");
+const pdf = require("pdf-parse");
 const { GoogleGenAI } = require("@google/genai");
 const { randomUUID } = require("crypto");
 
@@ -104,12 +104,9 @@ const extractContent = async (req, res, next) => {
   const { mimetype } = resume;
   //parse pdf
   if (mimetype === "application/pdf") {
-    const parser = new PDFParse({
-      data: resume.data,
-    });
-    const result = await parser.getText();
-    if (result) {
-      res.locals.resumeText = result.text;
+    const parser = await pdf(resume.data);
+    if (parser) {
+      res.locals.resumeText = parser.text;
       res.locals.jobTitle = jobTitle;
       res.locals.jobDescription = jobDescription;
     } else {
