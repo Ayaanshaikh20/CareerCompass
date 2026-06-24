@@ -81,6 +81,7 @@ import Applications from "../pages/Main/Applications";
 import Companies from "../pages/Main/Companies";
 import Documents from "../pages/Main/Documents";
 import ResumeAnalyzer from "../pages/Main/ResumeAnalyzer";
+import AnalyzedResults from "../pages/Main/AnalyzedResults";
 
 //Utilities
 import { CustomTextField } from "../utilities/CustomTextField";
@@ -89,6 +90,7 @@ import { CustomTextField } from "../utilities/CustomTextField";
 import emailService from "../services/email"; 
 
 export {
+  AnalyzedResults,
   ResumeAnalyzer,
   Documents,
   Badge,

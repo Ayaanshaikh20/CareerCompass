@@ -7,7 +7,9 @@ const Profile = () => {
     location: "",
     firstName: "",
     email: "",
-    phone: ""
+    phone: "",
+    plan: null,
+    analysesUsed: 0
   });
   const [formChanged, setFormChanged] = useState(false);
   const [isDark, setIsDark] = useState(localStorage.getItem("isDark") === "true");
@@ -21,7 +23,7 @@ const Profile = () => {
   }, []);
 
   //Destructure userData
-  const { firstName, location, phone, email } = user || {};
+  const { firstName, location, phone, email, plan, analysesUsed } = user || {};
 
   useEffect(() => {
     fetchUser()
@@ -72,7 +74,105 @@ const Profile = () => {
 
   return (
     <main className="w-full bg-gray-50 dark:bg-gray-950 p-2 sm:p-4 min-h-full">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto space-y-6">
+        {/* Plan Section */}
+        {plan && (
+          <section className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-800 border-2 border-blue-200 dark:border-blue-800 shadow-sm rounded-lg p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                    Current Plan
+                  </h2>
+                  <span className="px-3 py-1 text-xs font-bold rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white uppercase">
+                    {plan}
+                  </span>
+                </div>
+                <p className="text-sm text-gray-600 dark:text-gray-300">
+                  {plan === 'FREE' && 'Free Trial - Get started with basic features'}
+                  {plan === 'PRO' && 'Pro Plan - Advanced features for professionals'}
+                  {plan === 'PREMIUM' && 'Premium Plan - All features unlocked'}
+                </p>
+              </div>
+              <div className="bg-white dark:bg-gray-700 px-4 py-3 rounded-lg border border-blue-200 dark:border-gray-600 min-w-[140px]">
+                <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Resume Analyses</div>
+                <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                  {analysesUsed || 0}
+                  <span className="text-sm text-gray-500 dark:text-gray-400 font-normal"> / {plan === 'FREE' ? 5 : plan === 'PRO' ? 50 : 200}</span>
+                </div>
+              </div>
+            </div>
+            
+            {/* Plan Features */}
+            <div className="mt-6 pt-6 border-t border-blue-200 dark:border-gray-700">
+              <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3">Plan Features</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {plan === 'FREE' && (
+                  <>
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-600 dark:text-green-400 mt-0.5">✓</span>
+                      <span className="text-xs text-gray-700 dark:text-gray-300">5 resume analyses per month</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-600 dark:text-green-400 mt-0.5">✓</span>
+                      <span className="text-xs text-gray-700 dark:text-gray-300">Job description matching</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-600 dark:text-green-400 mt-0.5">✓</span>
+                      <span className="text-xs text-gray-700 dark:text-gray-300">Basic skill recommendations</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-600 dark:text-green-400 mt-0.5">✓</span>
+                      <span className="text-xs text-gray-700 dark:text-gray-300">Application tracking</span>
+                    </div>
+                  </>
+                )}
+                {plan === 'PRO' && (
+                  <>
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-600 dark:text-green-400 mt-0.5">✓</span>
+                      <span className="text-xs text-gray-700 dark:text-gray-300">50 resume analyses per month</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-600 dark:text-green-400 mt-0.5">✓</span>
+                      <span className="text-xs text-gray-700 dark:text-gray-300">Advanced AI insights</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-600 dark:text-green-400 mt-0.5">✓</span>
+                      <span className="text-xs text-gray-700 dark:text-gray-300">Priority support</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-600 dark:text-green-400 mt-0.5">✓</span>
+                      <span className="text-xs text-gray-700 dark:text-gray-300">Custom templates</span>
+                    </div>
+                  </>
+                )}
+                {plan === 'PREMIUM' && (
+                  <>
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-600 dark:text-green-400 mt-0.5">✓</span>
+                      <span className="text-xs text-gray-700 dark:text-gray-300">200 resume analyses per month</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-600 dark:text-green-400 mt-0.5">✓</span>
+                      <span className="text-xs text-gray-700 dark:text-gray-300">Unlimited job tracking</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-600 dark:text-green-400 mt-0.5">✓</span>
+                      <span className="text-xs text-gray-700 dark:text-gray-300">Dedicated account manager</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-600 dark:text-green-400 mt-0.5">✓</span>
+                      <span className="text-xs text-gray-700 dark:text-gray-300">API access</span>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Profile Settings Section */}
         <section className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm rounded-lg p-4 sm:p-6">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 pb-3 mb-6 border-b border-gray-200 dark:border-gray-700">
             Profile Settings

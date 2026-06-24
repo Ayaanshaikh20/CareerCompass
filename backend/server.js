@@ -44,6 +44,7 @@ app.use(require("./controllers/main/User"));
 app.use(require("./controllers/main/Companies"));
 app.use(require("./controllers/main/Notifications"));
 app.use(require("./controllers/main/Documents"));
+app.use(require("./controllers/main/Analyzer"));
 
 /* ===========================
    START SERVER

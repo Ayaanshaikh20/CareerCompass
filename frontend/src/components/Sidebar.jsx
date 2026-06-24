@@ -17,8 +17,9 @@ import {
   BusinessIcon,
   FolderIcon,
   AssessmentIcon,
+  DocumentScannerIcon
 } from "../shared/Icons";
-import { Menu as MenuIcon } from "@mui/icons-material";
+import { Menu as MenuIcon, ExpandMore, ExpandLess } from "@mui/icons-material";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -26,6 +27,23 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [userPlan, setUserPlan] = useState(null);
+  const [settingsExpanded, setSettingsExpanded] = useState(false);
+  const user_id = localStorage.getItem("uid");
+
+  useEffect(() => {
+    fetchUserPlan();
+  }, []);
+
+  const fetchUserPlan = async () => {
+    try {
+      const response = await axiosInstance.get(`/fetch-user?userId=${user_id}`);
+      const { userDetails } = response.data;
+      setUserPlan(userDetails.plan || null);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const menuItems = [
     {
@@ -51,15 +69,24 @@ const Sidebar = () => {
     {
       name: "Resume Analyzer",
       path: "/resume-analyzer",
+      icon: <DocumentScannerIcon fontSize="small" />,
+    },
+    {
+      name: "Manage Plan",
+      path: "/manage-plan",
       icon: <AssessmentIcon fontSize="small" />,
     },
+  ];
+
+  const settingsItems = [
     {
       name: "Profile",
       path: "/profile",
       icon: <AccountCircleIcon fontSize="small" />,
+      badge: userPlan,
     },
     {
-      name: "Settings",
+      name: "Preferences",
       path: "/settings",
       icon: <SettingsIcon fontSize="small" />,
     },
@@ -142,12 +169,77 @@ const Sidebar = () => {
                 >
                   {item.icon}
                   {!isCollapsed && (
-                    <span className="text-nowrap">{item.name}</span>
+                    <span className="text-nowrap flex items-center gap-2">
+                      {item.name}
+                      {item.badge && (
+                        <span className="px-1.5 py-0.5 text-[9px] font-semibold rounded bg-gradient-to-r from-blue-500 to-indigo-500 text-white uppercase">
+                          {item.badge}
+                        </span>
+                      )}
+                    </span>
                   )}
                 </Link>
               </li>
             );
           })}
+
+          {/* Settings with Submenu */}
+          <li>
+            <button
+              onClick={() => {
+                if (isCollapsed) {
+                  setIsCollapsed(false);
+                }
+                setSettingsExpanded(!settingsExpanded);
+              }}
+              title={isCollapsed ? "Settings" : ""}
+              className={`flex items-center justify-between text-xs gap-3 px-2 py-1 rounded-sm transition-all duration-400 w-full ${
+                settingsItems.some(item => location.pathname === item.path)
+                  ? "bg-slate-200 dark:bg-gray-700 text-gray-900 dark:text-gray-300 font-normal"
+                  : "hover:bg-gray-300 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300"
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <SettingsIcon fontSize="small" />
+                {!isCollapsed && <span className="text-nowrap">Settings</span>}
+              </div>
+              {!isCollapsed && (
+                settingsExpanded ? <ExpandLess fontSize="small" /> : <ExpandMore fontSize="small" />
+              )}
+            </button>
+            
+            {/* Submenu Items */}
+            {settingsExpanded && !isCollapsed && (
+              <ul className="ml-6 mt-1 space-y-1">
+                {settingsItems.map((item, index) => {
+                  const isActive = location.pathname === item.path;
+                  return (
+                    <li key={index}>
+                      <Link
+                        to={item.path}
+                        onClick={() => setIsMobileOpen(false)}
+                        className={`flex items-center text-xs gap-3 px-2 py-1 rounded-sm transition-all duration-400 ${
+                          isActive
+                            ? "bg-slate-200 dark:bg-gray-700 text-gray-900 dark:text-gray-300 font-normal"
+                            : "hover:bg-gray-300 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300"
+                        }`}
+                      >
+                        {item.icon}
+                        <span className="text-nowrap flex items-center gap-2">
+                          {item.name}
+                          {item.badge && (
+                            <span className="px-1.5 py-0.5 text-[9px] font-semibold rounded bg-gradient-to-r from-blue-500 to-indigo-500 text-white uppercase">
+                              {item.badge}
+                            </span>
+                          )}
+                        </span>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </li>
         </ul>
       </div>
       {/* Logout button */}

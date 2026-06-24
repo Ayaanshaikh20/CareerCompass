@@ -25,6 +25,8 @@ import { NotificationsOutlined } from "@mui/icons-material";
 import FolderIcon from '@mui/icons-material/Folder';
 import PeopleIcon from '@mui/icons-material/People';
 import AssessmentIcon from '@mui/icons-material/Assessment';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
 
 //images
 import compass from "../assets/images/compass.png";
@@ -33,6 +35,7 @@ import Img2 from "../assets/images/sign-up.png"
 import NotFound from "../assets/images/not-found.png"
 
 export {
+  DocumentScannerIcon,
   NotificationsOutlined,
   LightModeIcon,
   DarkModeIcon,
@@ -46,6 +49,7 @@ export {
   FolderIcon,
   PeopleIcon,
   AssessmentIcon,
+  AutoAwesomeIcon,
   FaChevronLeft,
   FaChevronRight,
   PasswordOutlinedIcon,

@@ -47,6 +47,8 @@ const fetchUser = async (req, res, next) => {
         phone: result.Item.phone_number,
         email: result.Item.email,
         userId: result.Item.user_id,
+        plan: result.Item.plan,
+        analysesUsed: result.Item.analyses_used
       };
     }
 

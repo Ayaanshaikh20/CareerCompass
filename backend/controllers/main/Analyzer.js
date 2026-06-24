@@ -1,9 +1,38 @@
 const { Router } = require("express");
-const { extractContent, analyzeResume } = require("../../models/main/Analyzer");
+const {
+  extractContent,
+  analyzeResume,
+  validateSubscription,
+  validateLimit,
+  activateFreeTrial,
+  saveAnalysis,
+  incrementAnalysisCount,
+} = require("../../models/main/Analyzer");
 const router = Router();
 
+router.post("/api/activate-free-trial", activateFreeTrial, async (req, res) => {
+  res.status(200).json({
+    status: 200,
+    message: "Free trial activated successfully",
+  });
+});
 
+router.post(
+  "/api/analyze-resume",
+  validateSubscription,
+  validateLimit,
+  extractContent,
+  analyzeResume,
+  saveAnalysis,
+  incrementAnalysisCount,
+  async (req, res) => {
+    const { analysisResult } = res.locals;
+    res.status(200).json({
+      status: 200,
+      message: "Resume analyzed successfully",
+      data: analysisResult,
+    });
+  },
+);
 
-router.post("/api/analyze", extractContent, analyzeResume, async (req, res) => {
-    
-})
+module.exports = router;
