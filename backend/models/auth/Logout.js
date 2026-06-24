@@ -1,5 +1,4 @@
-
-export const logoutUser = async (req, res, next) => {
+const logoutUser = async (req, res, next) => {
   try {
     res.clearCookie("a_t", {
       httpOnly: true,
@@ -19,3 +18,5 @@ export const logoutUser = async (req, res, next) => {
     });
   }
 };
+
+module.exports = { logoutUser };
