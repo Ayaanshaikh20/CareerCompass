@@ -13,7 +13,6 @@ import {
 import "./assets/styles/styles.css";
 import "@radix-ui/themes/styles.css";
 import "@fontsource/roboto";
-import "../email.config.js";
 
 const queryClient = new QueryClient();
 
