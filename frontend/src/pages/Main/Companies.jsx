@@ -45,7 +45,6 @@ const ActionMenuCell = ({ data, handleDeleteClick, viewEditCompany }) => {
 
 const Companies = () => {
   const [companies, setCompanies] = useState([]);
-  const user_id = localStorage.getItem("uid");
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState({});
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -53,7 +52,6 @@ const Companies = () => {
   const [quickFilterText, setQuickFilterText] = useState("");
 
   const defaultFormData = {
-    userId: user_id,
     companyName: "",
     phoneNumber: "",
     websiteUrl: "",
@@ -176,7 +174,7 @@ const Companies = () => {
   const fetchCompanies = async () => {
     try {
       customToggleLoading({ loading: true });
-      const response = await axiosInstance.get(`/companies?user_id=${user_id}`);
+      const response = await axiosInstance.get(`/companies`);
       setCompanies(response.data.companies || []);
     } catch (error) {
       toast.error(error?.response?.data?.message || "Something went wrong");

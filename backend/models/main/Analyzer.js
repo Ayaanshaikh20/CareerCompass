@@ -74,6 +74,13 @@ const validateSubscription = async (req, res, next) => {
 
 //(2)
 const validateLimit = async (req, res, next) => {
+  if (!res.locals.userInfo) {
+    return res.status(404).json({
+      status: 404,
+      message: "User account not found",
+    });
+  }
+
   //validate userAnalysesLimit
   const {
     userInfo: { plan, analyses_used },
@@ -98,7 +105,6 @@ const validateLimit = async (req, res, next) => {
 
 //(3)
 const extractContent = async (req, res, next) => {
-  const { userInfo } = res.locals;
   const { jobDescription, jobTitle } = req.body;
   const { resume } = req.files;
   const { mimetype } = resume;
@@ -220,8 +226,8 @@ const incrementAnalysisCount = async (req, res, next) => {
         Key: {
           user_id: userId
         },
-        UpdateExpression: 
-        `
+        UpdateExpression:
+          `
           SET
           analyses_used = if_not_exists(analyses_used, :start) + :inc
         `,

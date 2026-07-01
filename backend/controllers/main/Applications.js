@@ -8,11 +8,9 @@ const {
 const router = Router();
 
 router.post("/api/new-application", createApplication, async (req, res) => {
-  const { newApplication } = res.locals;
   res.status(201).json({
     status: 201,
     message: "New application created",
-    newApplication,
   });
 });
 

@@ -86,9 +86,6 @@ import AnalyzedResults from "../pages/Main/AnalyzedResults";
 //Utilities
 import { CustomTextField } from "../utilities/CustomTextField";
 
-//Services
-import emailService from "../services/email"; 
-
 export {
   AnalyzedResults,
   ResumeAnalyzer,
@@ -101,7 +98,6 @@ export {
   Companies,
   useSearchParams,
   ResetPassword,
-  emailService,
   ForgotPassword,
   FormHelperText,
   NotFound,

@@ -1,15 +1,17 @@
 const { dbClient, getTableName } = require("../../config/dbConnect");
-const { ScanCommand } = require("@aws-sdk/lib-dynamodb");
+const { QueryCommand } = require("@aws-sdk/lib-dynamodb");
 
 const getNotification = async (req, res, next) => {
   try {
-    const { user_id } = req.query;
+
+    const { userId: user_id } = req;
 
     const result = await dbClient.send(
-      new ScanCommand({
+      new QueryCommand({
         TableName: getTableName("applications"),
+        KeyConditionExpression: "user_id = :userId",
         FilterExpression:
-          "user_id = :userId AND attribute_exists(interview_date) AND #status <> :rejected",
+          "attribute_exists(interview_date) AND #status <> :rejected",
         ExpressionAttributeNames: {
           "#status": "status",
         },

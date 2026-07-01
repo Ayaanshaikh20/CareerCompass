@@ -1,4 +1,4 @@
-import { Link, CustomTextField, emailService, axiosInstance, toast } from "../../shared/Imports";
+import { Link, CustomTextField, axiosInstance, toast } from "../../shared/Imports";
 import { useState } from "react";
 import { EmailOutlinedIcon } from "../../shared/Icons";
 
@@ -8,7 +8,6 @@ const ForgotPassword = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [cooldown, setCooldown] = useState(0); // seconds
-  const emailSer = new emailService();
 
   const handleSubmit = async (e) => {
     try {
@@ -26,9 +25,6 @@ const ForgotPassword = () => {
       const result = await axiosInstance.post("/forget-password", { email });
 
       if (result?.data?.status === 200) {
-        const { resetLink, username } = result.data.tokenDetails;
-
-        emailSer.sendEmail({ email, link: resetLink, username });
         setSuccess(result.data.message);
       }
     } catch (error) {

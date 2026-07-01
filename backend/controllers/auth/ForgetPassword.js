@@ -7,11 +7,9 @@ router.post(
   limiterMiddleware,
   forgotPassword,
   async (req, res) => {
-    const { tokenDetails } = res.locals;
     res.status(200).json({
       status: 200,
       message: "Reset link has been sent to the registered email",
-      tokenDetails,
     });
   },
 );

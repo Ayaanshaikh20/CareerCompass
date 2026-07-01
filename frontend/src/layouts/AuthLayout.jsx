@@ -6,14 +6,14 @@ import { Menu as MenuIcon } from "@mui/icons-material";
 const AuthLayout = () => {
   const queryClient = useQueryClient();
   const userId = localStorage.getItem("uid");
-  
+
   useEffect(() => {
     fetchUser();
   }, []);
 
   const fetchUser = async () => {
     try {
-      const result = await axiosInstance.get(`/fetch-user?userId=${userId}`);
+      const result = await axiosInstance.get(`/fetch-user`);
       const { status, userDetails } = result.data;
       if (status == 200) {
         queryClient.setQueryData(["userDetails"], userDetails)
@@ -38,7 +38,7 @@ const AuthLayout = () => {
           <img src={compass} className="h-5 w-5" alt="CareerCompass" />
           <span className="font-sans font-semibold text-sm sm:text-md">CareerCompass</span>
         </div>
-        
+
         {userId && <NotificationBell userId={userId} />}
       </div>
       <div className='flex flex-1 overflow-hidden'>

@@ -1,7 +1,7 @@
 const { dbClient, getTableName } = require("../../config/dbConnect");
 const { generateAccessToken } = require("../../config/generateTokens");
 const jwt = require("jsonwebtoken");
-const { QueryCommand, ScanCommand } = require("@aws-sdk/lib-dynamodb");
+const { GetCommand } = require("@aws-sdk/lib-dynamodb");
 
 const generateRefreshToken = async (req, res, next) => {
   try {
@@ -31,16 +31,15 @@ const generateRefreshToken = async (req, res, next) => {
     const { id } = decoded;
 
     const result = await dbClient.send(
-      new ScanCommand({
+      new GetCommand({
         TableName: getTableName("register_users"),
-        FilterExpression: "user_id = :user_id",
-        ExpressionAttributeValues: {
-          ":user_id": id,
+        Key: {
+          user_id: id,
         },
       }),
     );
 
-    if (result.Items.length === 0) {
+    if (!result.Item) {
       return res
         .status(404)
         .json({ message: "User not found", code: "USER_NOT_FOUND" });

@@ -29,7 +29,7 @@ const Dashboard = () => {
   const fetchApplications = async () => {
     try {
       customToggleLoading({ loading: true });
-      const response = await axiosInstance.get(`/applications?user_id=${user_id}`);
+      const response = await axiosInstance.get(`/applications`);
       const { status, applications } = response.data;
       if (status === 200) {
         setApplications(applications);
@@ -142,5 +142,5 @@ const Dashboard = () => {
     </div>
   );
 };
-    
+
 export default Dashboard;

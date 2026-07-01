@@ -6,21 +6,21 @@ const {
 } = require("@aws-sdk/client-s3");
 const { bucketName, s3 } = require("../../config/s3client");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
-const { DeleteCommand, PutCommand, ScanCommand, GetCommand } = require("@aws-sdk/lib-dynamodb");
+const { DeleteCommand, PutCommand, QueryCommand, GetCommand } = require("@aws-sdk/lib-dynamodb");
 const crypto = require("crypto");
 
 const randomImageName = () => crypto.randomUUID();
 
 const getDocument = async (req, res, next) => {
   try {
-    const { user_id } = req.query;
+    const { userId } = req;
 
     const documents = await dbClient.send(
-      new ScanCommand({
+      new QueryCommand({
         TableName: getTableName("documents"),
-        FilterExpression: "user_id = :userId",
+        KeyConditionExpression: "user_id = :userId",
         ExpressionAttributeValues: {
-          ":userId": user_id,
+          ":userId": userId,
         },
       }),
     );
@@ -33,7 +33,7 @@ const getDocument = async (req, res, next) => {
         };
         const command = new GetObjectCommand(getObjectParams);
         const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
-        
+
         return {
           id: doc.document_id,
           userId: doc.user_id,
@@ -57,8 +57,9 @@ const getDocument = async (req, res, next) => {
 
 const documentRead = async (req, res, next) => {
   try {
-    const { name, userId } = req.body;
+    const { name } = req.body;
     const { file } = req.files;
+    const { userId } = req;
 
     if (!file || !name) {
       return res.status(400).json({
@@ -102,7 +103,7 @@ const documentUpload = async (req, res, next) => {
     const command = new PutObjectCommand(params);
     await s3.send(command);
 
-    const documentId = String(Math.floor(Math.random() * 1000000));
+    const documentId = crypto.randomUUID();
 
     await dbClient.send(
       new PutCommand({
@@ -136,7 +137,8 @@ const documentUpload = async (req, res, next) => {
 
 const deleteDocument = async (req, res, next) => {
   try {
-    const { documentId, userId } = req.body;
+    const { documentId } = req.query;
+    const { userId } = req;
 
     const getResult = await dbClient.send(
       new GetCommand({

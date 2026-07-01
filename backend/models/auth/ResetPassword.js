@@ -1,6 +1,6 @@
 const { dbClient, getTableName } = require("../../config/dbConnect");
 const {
-  ScanCommand,
+  GetCommand,
   QueryCommand,
   UpdateCommand,
   DeleteCommand,
@@ -10,10 +10,10 @@ const bcrypt = require("bcrypt");
 
 const resetPassword = async (req, res, next) => {
   try {
-    const { password, confirmPassword, token } = req.body;
+    const { password, confirmPassword, token, email } = req.body;
 
     //Validation
-    if (!token || !password || !confirmPassword) {
+    if (!token || !password || !confirmPassword || !email) {
       return res.status(400).json({
         status: 400,
         message: "Invalid request",
@@ -31,27 +31,25 @@ const resetPassword = async (req, res, next) => {
     //Hash token with sha256
     const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
 
-    //Check and compare the hashed token and stored db token
+    //Check and compare the hashed token and stored db token using fast GetCommand key lookup
     const tokenResult = await dbClient.send(
-      new ScanCommand({
+      new GetCommand({
         TableName: getTableName("forget_password"),
-        FilterExpression: "resetPasswordToken = :token",
-        ExpressionAttributeValues: {
-          ":token": hashedToken,
+        Key: {
+          email: email,
         },
       }),
     );
 
-    console.log(tokenResult);
     //Validate and show result if invalid or expired reset token
-    if (!tokenResult.Items || tokenResult.Items.length === 0) {
+    if (!tokenResult.Item || tokenResult.Item.resetPasswordToken !== hashedToken) {
       return res.status(400).json({
         status: 400,
         message: "Reset token is invalid or expired",
       });
     }
 
-    const { email, resetPasswordExpires } = tokenResult.Items[0];
+    const { resetPasswordExpires } = tokenResult.Item;
 
     if (Date.now() > resetPasswordExpires) {
       return res.status(400).json({

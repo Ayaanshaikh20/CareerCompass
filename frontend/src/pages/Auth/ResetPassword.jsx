@@ -4,6 +4,7 @@ import { PasswordOutlinedIcon } from "../../shared/Icons";
 const ResetPassword = () => {
   const [searchParams] = useSearchParams();
   const token = searchParams.get("t");
+  const email = searchParams.get("email");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordreset, setPasswordReset] = useState(false);
@@ -17,8 +18,8 @@ const ResetPassword = () => {
       setError("");
       setSuccess("");
 
-      if (!token) {
-        setError("Invalid or missing reset token.");
+      if (!token || !email) {
+        setError("Invalid or missing reset token/email.");
         return;
       }
 
@@ -31,6 +32,7 @@ const ResetPassword = () => {
         token,
         password: password,
         confirmPassword: confirmPassword,
+        email,
       });
 
       if (result) {

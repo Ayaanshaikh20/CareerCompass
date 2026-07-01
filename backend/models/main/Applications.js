@@ -1,14 +1,15 @@
 const { dbClient, getTableName } = require("../../config/dbConnect");
-const { ScanCommand, PutCommand, DeleteCommand, UpdateCommand } = require("@aws-sdk/lib-dynamodb");
+const { QueryCommand, PutCommand, DeleteCommand, UpdateCommand } = require("@aws-sdk/lib-dynamodb");
+const crypto = require("crypto");
 
 const fetchApplication = async (req, res, next) => {
   try {
-    const { user_id } = req.query;
+    const { userId: user_id } = req;
 
     const result = await dbClient.send(
-      new ScanCommand({
+      new QueryCommand({
         TableName: getTableName("applications"),
-        FilterExpression: "user_id = :user_id",
+        KeyConditionExpression: "user_id = :user_id",
         ExpressionAttributeValues: {
           ":user_id": user_id,
         },
@@ -51,7 +52,9 @@ const fetchApplication = async (req, res, next) => {
 
 const deleteApplication = async (req, res, next) => {
   try {
-    const { user_id, application_id } = req.query;
+    const { application_id } = req.query;
+
+    const { userId: user_id } = req;
 
     await dbClient.send(
       new DeleteCommand({
@@ -73,7 +76,6 @@ const deleteApplication = async (req, res, next) => {
 const editApplication = async (req, res, next) => {
   try {
     const {
-      user_id,
       id,
       role,
       appliedDate,
@@ -87,6 +89,8 @@ const editApplication = async (req, res, next) => {
       status,
       interviewDate,
     } = req.body;
+
+    const { userId: user_id } = req;
 
     await dbClient.send(
       new UpdateCommand({
@@ -145,7 +149,6 @@ const createApplication = async (req, res, next) => {
     const applicationData = req.body;
 
     const {
-      userId: user_id,
       role,
       appliedDate: applied_date,
       interviewDate: interview_date,
@@ -159,11 +162,13 @@ const createApplication = async (req, res, next) => {
       status,
     } = applicationData;
 
+    const { userId: user_id } = req;
+
     const result = await dbClient.send(
       new PutCommand({
         TableName: getTableName("applications"),
         Item: {
-          application_id: String(Math.floor(Math.random() * 1000000)),
+          application_id: crypto.randomUUID(),
           user_id,
           status,
           job_link,

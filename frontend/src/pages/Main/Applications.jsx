@@ -135,7 +135,6 @@ const StatusBadge = ({ status }) => {
 
 const Applications = () => {
   const [applications, setApplications] = useState([]);
-  const user_id = localStorage.getItem("uid");
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState({});
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -143,7 +142,6 @@ const Applications = () => {
   const [quickFilterText, setQuickFilterText] = useState("");
 
   const defaultFormData = {
-    userId: user_id,
     role: "",
     appliedDate: "",
     interviewDate: "",
@@ -219,9 +217,9 @@ const Applications = () => {
     if (!selectedAppToDelete) return;
 
     try {
-      const { user_id, id } = selectedAppToDelete;
+      const { id } = selectedAppToDelete;
       const response = await axiosInstance.delete(
-        `/delete-application?user_id=${user_id}&application_id=${id}`,
+        `/delete-application?application_id=${id}`,
       );
       const { status } = response.data;
       if (status === 200) {
@@ -405,7 +403,7 @@ const Applications = () => {
     try {
       customToggleLoading({ loading: true });
       const response = await axiosInstance.get(
-        `/applications?user_id=${user_id}`,
+        `/applications`,
       );
       const { status, applications } = response.data;
       if (status === 200) {

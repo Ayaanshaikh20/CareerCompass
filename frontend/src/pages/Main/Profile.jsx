@@ -32,7 +32,7 @@ const Profile = () => {
   const fetchUser = async () => {
     try {
       customToggleLoading({ loading: true })
-      const result = await axiosInstance.get(`/fetch-user?userId=${user_id}`);
+      const result = await axiosInstance.get(`/fetch-user`);
       const { status, userDetails } = result.data;
       if (status == 200) {
         setUser(userDetails);
@@ -102,7 +102,7 @@ const Profile = () => {
                 </div>
               </div>
             </div>
-            
+
             {/* Plan Features */}
             <div className="mt-6 pt-6 border-t border-blue-200 dark:border-gray-700">
               <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3">Plan Features</h3>
@@ -177,7 +177,7 @@ const Profile = () => {
           <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 pb-3 mb-6 border-b border-gray-200 dark:border-gray-700">
             Profile Settings
           </h2>
-          
+
           <div className="space-y-6">
             <div>
               <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">Personal Information</h3>
@@ -207,7 +207,7 @@ const Profile = () => {
                     />
                   </div>
                 </div>
-                
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1.5">
@@ -244,22 +244,20 @@ const Profile = () => {
                 setFormChanged(false);
               }}
               disabled={!formChanged}
-              className={`px-4 py-1.5 text-sm font-medium rounded transition-colors ${
-                formChanged
+              className={`px-4 py-1.5 text-sm font-medium rounded transition-colors ${formChanged
                   ? "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600"
                   : "bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed border border-gray-200 dark:border-gray-700"
-              }`}
+                }`}
             >
               Cancel
             </button>
             <button
               onClick={submitChanges}
               disabled={!formChanged}
-              className={`px-4 py-1.5 text-sm font-medium rounded transition-colors ${
-                formChanged
+              className={`px-4 py-1.5 text-sm font-medium rounded transition-colors ${formChanged
                   ? "bg-blue-600 text-white hover:bg-blue-700 shadow-sm"
                   : "bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-600 cursor-not-allowed"
-              }`}
+                }`}
             >
               Save Changes
             </button>

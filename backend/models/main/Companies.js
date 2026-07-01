@@ -1,19 +1,20 @@
 const { dbClient, getTableName } = require("../../config/dbConnect");
 const {
-  ScanCommand,
+  QueryCommand,
   PutCommand,
   UpdateCommand,
   DeleteCommand,
 } = require("@aws-sdk/lib-dynamodb");
+const crypto = require("crypto");
 
 const fetchCompanies = async (req, res, next) => {
   try {
-    const { user_id } = req.query;
+    const { userId: user_id } = req;
 
     const result = await dbClient.send(
-      new ScanCommand({
+      new QueryCommand({
         TableName: getTableName("companies"),
-        FilterExpression: "user_id = :user_id",
+        KeyConditionExpression: "user_id = :user_id",
         ExpressionAttributeValues: {
           ":user_id": user_id,
         },
@@ -41,7 +42,6 @@ const fetchCompanies = async (req, res, next) => {
 const createCompany = async (req, res, next) => {
   try {
     const {
-      userId,
       companyName,
       phoneNumber,
       websiteUrl,
@@ -50,11 +50,13 @@ const createCompany = async (req, res, next) => {
       isContacted,
     } = req.body;
 
-    const result = await dbClient.send(
+    const { userId } = req;
+
+    await dbClient.send(
       new PutCommand({
         TableName: getTableName("companies"),
         Item: {
-          company_id: String(Math.floor(Math.random() * 1000000)),
+          company_id: crypto.randomUUID(),
           user_id: userId,
           company_name: companyName,
           phone_number: phoneNumber,
@@ -82,8 +84,9 @@ const updateCompany = async (req, res, next) => {
       hrEmail,
       location,
       isContacted,
-      userId,
     } = req.body;
+
+    const { userId } = req;
 
     const result = await dbClient.send(
       new UpdateCommand({
@@ -121,7 +124,7 @@ const updateCompany = async (req, res, next) => {
 const deleteCompany = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { userId } = req.body;
+    const { userId } = req;
 
     await dbClient.send(
       new DeleteCommand({

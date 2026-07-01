@@ -28,7 +28,6 @@ const Documents = () => {
   const fileSelectRef = useRef(null);
   const [openFileDialog, setOpenFileDialog] = useState(false);
   const [fileName, setFileName] = useState("");
-  const user_id = localStorage.getItem("uid");
   const [allDocuments, setAllDocuments] = useState([]);
 
   useEffect(() => {
@@ -50,9 +49,9 @@ const Documents = () => {
 
   const getAllDocuments = async () => {
     try {
-      let result = await axiosInstance.get(`/get-documents?user_id=${user_id}`);
+      let result = await axiosInstance.get(`/get-documents`);
       const { data, status } = result.data;
-      if(status === 200) {
+      if (status === 200) {
         setAllDocuments(data);
       }
     } catch (error) {
@@ -73,7 +72,6 @@ const Documents = () => {
         let formdata = new FormData();
         formdata.append("file", file);
         formdata.append("name", fileName);
-        formdata.append("userId", user_id);
         let result = await axiosInstance.post("/upload-document", formdata);
         const { status, message } = result.data;
         if (status === 200) {
@@ -94,9 +92,7 @@ const Documents = () => {
     }
 
     try {
-      const result = await axiosInstance.delete(`/delete-document`, {
-        data: { documentId, userId: user_id }
-      });
+      const result = await axiosInstance.delete(`/delete-document?documentId=${documentId}`);
 
       if (result.data.status === 200) {
         toast.success(result.data.message || "Document deleted successfully");
@@ -166,29 +162,26 @@ const Documents = () => {
               {allDocuments.map((doc, index) => (
                 <div
                   key={index}
-                  className={`p-2.5 rounded-lg cursor-pointer transition-colors mb-2 group ${
-                    selectedDoc === index
-                      ? "bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-700"
-                      : "hover:bg-gray-50 dark:hover:bg-gray-700 border border-transparent"
-                  }`}
+                  className={`p-2.5 rounded-lg cursor-pointer transition-colors mb-2 group ${selectedDoc === index
+                    ? "bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-700"
+                    : "hover:bg-gray-50 dark:hover:bg-gray-700 border border-transparent"
+                    }`}
                 >
                   <div className="flex items-start gap-2.5">
                     <div
-                      className={`mt-0.5 ${
-                        selectedDoc === index
-                          ? "text-blue-600 dark:text-blue-400"
-                          : "text-gray-400"
-                      }`}
+                      className={`mt-0.5 ${selectedDoc === index
+                        ? "text-blue-600 dark:text-blue-400"
+                        : "text-gray-400"
+                        }`}
                     >
                       <DescriptionIcon sx={{ fontSize: 18 }} />
                     </div>
                     <div className="flex-1 min-w-0" onClick={() => setSelectedDoc(index)}>
                       <p
-                        className={`text-xs font-medium truncate ${
-                          selectedDoc === index
-                            ? "text-blue-700 dark:text-blue-300"
-                            : "text-gray-700 dark:text-gray-300"
-                        }`}
+                        className={`text-xs font-medium truncate ${selectedDoc === index
+                          ? "text-blue-700 dark:text-blue-300"
+                          : "text-gray-700 dark:text-gray-300"
+                          }`}
                       >
                         {doc.fileName}
                       </p>

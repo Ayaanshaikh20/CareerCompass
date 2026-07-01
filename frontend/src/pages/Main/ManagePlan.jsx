@@ -13,7 +13,7 @@ const ManagePlan = () => {
 
   const fetchUserPlan = async () => {
     try {
-      const response = await axiosInstance.get(`/fetch-user?userId=${user_id}`);
+      const response = await axiosInstance.get(`/fetch-user`);
       const { userDetails } = response.data;
       setCurrentPlan(userDetails.plan || null);
       setAnalysesUsed(userDetails.analysesUsed || 0);
@@ -42,50 +42,50 @@ const ManagePlan = () => {
       bgGradient: "from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-800",
       borderColor: "border-gray-300 dark:border-gray-600",
     },
-    // {
-    //   name: "PRO",
-    //   price: "$9.99",
-    //   period: "per month",
-    //   description: "For serious job seekers",
-    //   analyses: 50,
-    //   popular: true,
-    //   features: [
-    //     "50 resume analyses per month",
-    //     "Advanced AI insights",
-    //     "Priority email support",
-    //     "Custom resume templates",
-    //     "Interview preparation tips",
-    //     "Application analytics",
-    //     "Document storage (50 files)",
-    //     "Export reports (PDF)",
-    //   ],
-    //   buttonText: "Upgrade to Pro",
-    //   gradient: "from-blue-500 to-indigo-600",
-    //   bgGradient: "from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-800",
-    //   borderColor: "border-blue-300 dark:border-blue-700",
-    // },
-    // {
-    //   name: "PREMIUM",
-    //   price: "$19.99",
-    //   period: "per month",
-    //   description: "For professionals and agencies",
-    //   analyses: 200,
-    //   features: [
-    //     "200 resume analyses per month",
-    //     "Unlimited job tracking",
-    //     "Dedicated account manager",
-    //     "API access",
-    //     "White-label reports",
-    //     "Team collaboration (5 users)",
-    //     "Unlimited document storage",
-    //     "Priority phone support",
-    //     "Custom integrations",
-    //   ],
-    //   buttonText: "Upgrade to Premium",
-    //   gradient: "from-purple-500 to-pink-600",
-    //   bgGradient: "from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-800",
-    //   borderColor: "border-purple-300 dark:border-purple-700",
-    // },
+    {
+      name: "PRO",
+      price: "$9.99",
+      period: "per month",
+      description: "For serious job seekers",
+      analyses: 50,
+      popular: true,
+      features: [
+        "50 resume analyses per month",
+        "Advanced AI insights",
+        "Priority email support",
+        "Custom resume templates",
+        "Interview preparation tips",
+        "Application analytics",
+        "Document storage (50 files)",
+        "Export reports (PDF)",
+      ],
+      buttonText: "Upgrade to Pro",
+      gradient: "from-blue-500 to-indigo-600",
+      bgGradient: "from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-800",
+      borderColor: "border-blue-300 dark:border-blue-700",
+    },
+    {
+      name: "PREMIUM",
+      price: "$19.99",
+      period: "per month",
+      description: "For professionals and agencies",
+      analyses: 200,
+      features: [
+        "200 resume analyses per month",
+        "Unlimited job tracking",
+        "Dedicated account manager",
+        "API access",
+        "White-label reports",
+        "Team collaboration (5 users)",
+        "Unlimited document storage",
+        "Priority phone support",
+        "Custom integrations",
+      ],
+      buttonText: "Upgrade to Premium",
+      gradient: "from-purple-500 to-pink-600",
+      bgGradient: "from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-800",
+      borderColor: "border-purple-300 dark:border-purple-700",
+    },
   ];
 
   const handleUpgrade = (planName) => {
@@ -138,13 +138,12 @@ const ManagePlan = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {plans.map((plan) => {
             const isCurrentPlan = currentPlan === plan.name;
-            
+
             return (
               <div
                 key={plan.name}
-                className={`relative bg-gradient-to-br ${plan.bgGradient} border-2 ${
-                  isCurrentPlan ? "border-green-500 dark:border-green-600" : plan.borderColor
-                } rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:scale-105`}
+                className={`relative bg-gradient-to-br ${plan.bgGradient} border-2 ${isCurrentPlan ? "border-green-500 dark:border-green-600" : plan.borderColor
+                  } rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:scale-105`}
               >
                 {/* Popular Badge */}
                 {plan.popular && (
@@ -202,11 +201,10 @@ const ManagePlan = () => {
                   <button
                     onClick={() => handleUpgrade(plan.name)}
                     disabled={isCurrentPlan}
-                    className={`w-full py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${
-                      isCurrentPlan
+                    className={`w-full py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${isCurrentPlan
                         ? "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-500 cursor-not-allowed"
                         : `bg-gradient-to-r ${plan.gradient} text-white hover:shadow-xl hover:scale-105`
-                    }`}
+                      }`}
                   >
                     {isCurrentPlan ? plan.buttonText : plan.buttonText}
                   </button>

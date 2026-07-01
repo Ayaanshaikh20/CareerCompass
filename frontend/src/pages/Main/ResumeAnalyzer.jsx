@@ -29,7 +29,7 @@ const ResumeAnalyzer = () => {
 
   const checkFreeTrial = async () => {
     try {
-      const response = await axiosInstance.get(`/fetch-user?userId=${user_id}`);
+      const response = await axiosInstance.get(`/fetch-user`);
       const { userDetails } = response.data;
       setHasFreeTrial(userDetails.plan ? true : false);
     } catch (error) {
@@ -217,11 +217,10 @@ const ResumeAnalyzer = () => {
             <button
               type="submit"
               disabled={!hasFreeTrial}
-              className={`px-4 py-2 rounded-lg text-xs font-semibold shadow-md transition-all duration-200 ${
-                hasFreeTrial
+              className={`px-4 py-2 rounded-lg text-xs font-semibold shadow-md transition-all duration-200 ${hasFreeTrial
                   ? "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white cursor-pointer"
                   : "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-500 cursor-not-allowed"
-              }`}
+                }`}
             >
               Analyze Resume
             </button>
@@ -230,7 +229,7 @@ const ResumeAnalyzer = () => {
                 Activate free trial to analyze resumes
               </span>
             )}
-            
+
           </div>
         </form>
       </div>

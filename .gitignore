@@ -12,6 +12,7 @@
 /frontend/README.md
 /frontend/LICENSE
 /frontend/CHANGELOG.md
+/frontend/dist
 
 /backend/node_modules
 /backend/build

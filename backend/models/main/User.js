@@ -31,7 +31,7 @@ const updateProfile = async (req, res, next) => {
 
 const fetchUser = async (req, res, next) => {
   try {
-    const { userId } = req.query;
+    const { userId } = req;
 
     const result = await dbClient.send(
       new GetCommand({

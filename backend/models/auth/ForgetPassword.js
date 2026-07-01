@@ -8,6 +8,7 @@ const {
   PutCommand,
 } = require("@aws-sdk/lib-dynamodb");
 const crypto = require("crypto");
+const { sendResetEmail } = require("../../config/email");
 
 const limiterMiddleware = expressRateLimit({
   windowMs: 5 * 60 * 1000, // 5 minutes
@@ -84,13 +85,10 @@ const forgotPassword = async (req, res, next) => {
       }),
     );
 
-    const resetLink = `${config.frontendUrl}/reset-password?t=${token}`;
+    const resetLink = `${config.frontendUrl}/reset-password?t=${token}&email=${email}`;
 
-    res.locals.tokenDetails = {
-      resetLink,
-      username: first_name,
-      userId: user_id,
-    };
+    // Send reset email securely from the backend
+    await sendResetEmail({ email, link: resetLink, username: first_name });
 
     next();
   } catch (error) {
