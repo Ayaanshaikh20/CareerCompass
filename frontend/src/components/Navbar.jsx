@@ -7,14 +7,14 @@ const Navbar = () => {
 
   return (
     <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-800 transition-colors duration-200 font-sans">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 h-11 flex items-center justify-between">
         {/* Brand Logo and Title */}
         <div 
           onClick={() => navigate("/")} 
           className="flex items-center gap-2 cursor-pointer group select-none"
         >
-          <div className="p-1.5 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-indigo-950 rounded-lg border border-blue-100 dark:border-indigo-900/50 shadow-sm group-hover:shadow transition-all duration-300">
-            <img src={compass} className="h-5 w-5 group-hover:rotate-[15deg] transition-transform duration-300 ease-out" alt="CareerCompassLogo" />
+          <div className="p-0.5 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-indigo-950 rounded-md border border-blue-100 dark:border-indigo-900/50 shadow-sm group-hover:shadow transition-all duration-300">
+            <img src={compass} className="h-4 w-4 group-hover:rotate-[15deg] transition-transform duration-300 ease-out" alt="CareerCompassLogo" />
           </div>
           <span className="font-extrabold text-sm sm:text-base tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
             CareerCompass

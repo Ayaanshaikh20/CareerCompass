@@ -152,7 +152,7 @@ const Sidebar = () => {
             )}
           </div>
           {/* Menu */}
-          <ul className="p-2 space-y-1">
+          <ul className={`${isCollapsed ? "py-3 px-1.5 space-y-2" : "p-2 space-y-1"}`}>
             {menuItems.map((item, index) => {
               const isActive = location.pathname === item.path;
               return (
@@ -161,12 +161,18 @@ const Sidebar = () => {
                     to={item.path}
                     onClick={() => setIsMobileOpen(false)}
                     title={isCollapsed ? item.name : ""}
-                    className={`flex items-center text-xs gap-3 px-2 py-1 rounded-sm transition-all duration-400 ${isActive
-                        ? "bg-slate-200 dark:bg-gray-700 text-gray-900 dark:text-gray-300 font-normal"
-                        : "hover:bg-gray-300 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300"
+                    className={`group flex items-center transition-all duration-200 ${
+                      isCollapsed 
+                        ? "justify-center h-9 w-9 mx-auto rounded-lg" 
+                        : "text-[13px] font-medium gap-2.5 px-2.5 py-1.5 rounded-lg w-full"
+                    } ${isActive
+                        ? "bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 font-semibold"
+                        : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/60 hover:text-gray-900 dark:hover:text-white"
                       }`}
                   >
-                    {item.icon}
+                    <div className={`transition-colors duration-200 flex items-center justify-center ${isActive ? "text-blue-600 dark:text-blue-400" : "text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300"}`}>
+                      {item.icon}
+                    </div>
                     {!isCollapsed && (
                       <span className="text-nowrap flex items-center gap-2">
                         {item.name}
@@ -192,23 +198,31 @@ const Sidebar = () => {
                   setSettingsExpanded(!settingsExpanded);
                 }}
                 title={isCollapsed ? "Settings" : ""}
-                className={`flex items-center justify-between text-xs gap-3 px-2 py-1 rounded-sm transition-all duration-400 w-full ${settingsItems.some(item => location.pathname === item.path)
-                    ? "bg-slate-200 dark:bg-gray-700 text-gray-900 dark:text-gray-300 font-normal"
-                    : "hover:bg-gray-300 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300"
+                className={`group flex items-center transition-all duration-200 ${
+                  isCollapsed 
+                    ? "justify-center h-9 w-9 mx-auto rounded-lg" 
+                    : "justify-between text-[13px] font-medium gap-2.5 px-2.5 py-1.5 rounded-lg w-full"
+                } ${settingsItems.some(item => location.pathname === item.path)
+                    ? "bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 font-semibold"
+                    : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/60 hover:text-gray-900 dark:hover:text-white"
                   }`}
               >
-                <div className="flex items-center gap-3">
-                  <SettingsIcon fontSize="small" />
+                <div className="flex items-center gap-2.5">
+                  <div className={`transition-colors duration-205 flex items-center justify-center ${settingsItems.some(item => location.pathname === item.path) ? "text-blue-600 dark:text-blue-400" : "text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300"}`}>
+                    <SettingsIcon fontSize="small" />
+                  </div>
                   {!isCollapsed && <span className="text-nowrap">Settings</span>}
                 </div>
                 {!isCollapsed && (
-                  settingsExpanded ? <ExpandLess fontSize="small" /> : <ExpandMore fontSize="small" />
+                  <div className="text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors">
+                    {settingsExpanded ? <ExpandLess fontSize="small" /> : <ExpandMore fontSize="small" />}
+                  </div>
                 )}
               </button>
 
               {/* Submenu Items */}
               {settingsExpanded && !isCollapsed && (
-                <ul className="ml-6 mt-1 space-y-1">
+                <ul className="ml-3 mt-1 pl-2.5 border-l border-gray-200 dark:border-gray-800 space-y-1">
                   {settingsItems.map((item, index) => {
                     const isActive = location.pathname === item.path;
                     return (
@@ -216,12 +230,14 @@ const Sidebar = () => {
                         <Link
                           to={item.path}
                           onClick={() => setIsMobileOpen(false)}
-                          className={`flex items-center text-xs gap-3 px-2 py-1 rounded-sm transition-all duration-400 ${isActive
-                              ? "bg-slate-200 dark:bg-gray-700 text-gray-900 dark:text-gray-300 font-normal"
-                              : "hover:bg-gray-300 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300"
+                          className={`group flex items-center text-[12px] font-medium gap-2 px-2 py-1 rounded-lg transition-all duration-205 ${isActive
+                              ? "bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 font-semibold"
+                              : "text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/60 hover:text-gray-955 dark:hover:text-white"
                             }`}
                         >
-                          {item.icon}
+                          <div className={`transition-colors duration-205 ${isActive ? "text-blue-600 dark:text-blue-400" : "text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300"}`}>
+                            {item.icon}
+                          </div>
                           <span className="text-nowrap flex items-center gap-2">
                             {item.name}
                             {item.badge && (
@@ -240,14 +256,19 @@ const Sidebar = () => {
           </ul>
         </div>
         {/* Logout button */}
-        <div className="border-t border-gray-300 dark:border-gray-700 p-2 w-full flex justify-center">
+        <div className={`border-t border-gray-200 dark:border-gray-800 w-full flex justify-center ${isCollapsed ? "py-2.5" : "p-2.5"}`}>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 w-full justify-center px-2 py-1 text-xs rounded-sm
-      text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-800 transition-colors"
+            className={`group flex items-center justify-center transition-all duration-200 ${
+              isCollapsed 
+                ? "h-9 w-9 rounded-lg" 
+                : "gap-2.5 w-full px-2.5 py-1.5 text-[13px] font-medium rounded-lg"
+            } text-gray-500 dark:text-gray-450 hover:bg-red-50 dark:hover:bg-red-950/20 hover:text-red-600 dark:hover:text-red-400`}
             title={isCollapsed ? "Logout" : ""}
           >
-            <LogoutIcon fontSize="small" />
+            <div className="text-gray-400 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
+              <LogoutIcon fontSize="small" />
+            </div>
             {!isCollapsed && <span>Logout</span>}
           </button>
         </div>

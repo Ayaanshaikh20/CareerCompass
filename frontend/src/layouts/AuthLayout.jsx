@@ -28,7 +28,7 @@ const AuthLayout = () => {
   return (
     <div className='flex flex-col h-screen bg-gray-50 dark:bg-gray-950'>
       {/* Header */}
-      <div className='sticky top-0 z-40 flex items-center justify-between px-3 sm:px-5 py-2.5 backdrop-blur-md bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-800 transition-colors duration-200'>
+      <div className='sticky top-0 z-40 flex items-center justify-between px-3 sm:px-4 py-1.5 backdrop-blur-md bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-800 transition-colors duration-200'>
         <div className="flex items-center gap-2">
           <button
             onClick={() => window.dispatchEvent(new CustomEvent('toggleMobileSidebar'))}
@@ -41,8 +41,8 @@ const AuthLayout = () => {
             onClick={() => navigate("/dashboard")} 
             className="flex items-center gap-2 cursor-pointer group select-none"
           >
-            <div className="p-1 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-indigo-950 rounded-lg border border-blue-100 dark:border-indigo-900/50 shadow-sm group-hover:shadow transition-all duration-300">
-              <img src={compass} className="h-5 w-5 group-hover:rotate-[15deg] transition-transform duration-300 ease-out" alt="CareerCompassLogo" />
+            <div className="p-0.5 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-indigo-950 rounded-md border border-blue-100 dark:border-indigo-900/50 shadow-sm group-hover:shadow transition-all duration-300">
+              <img src={compass} className="h-4 w-4 group-hover:rotate-[15deg] transition-transform duration-300 ease-out" alt="CareerCompassLogo" />
             </div>
             <span className="font-sans font-extrabold text-sm sm:text-base tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
               CareerCompass
@@ -54,7 +54,7 @@ const AuthLayout = () => {
       </div>
       <div className='flex flex-1 overflow-hidden'>
         <Sidebar />
-        <div className='w-full overflow-y-auto bg-gray-50 dark:bg-gray-950'>
+        <div className='flex-1 min-w-0 overflow-y-auto bg-gray-50 dark:bg-gray-950'>
           <Outlet />
         </div>
       </div>
