@@ -28,9 +28,9 @@ const ManagePlan = () => {
       price: "$0",
       period: "forever",
       description: "Perfect for getting started",
-      analyses: 5,
+      analyses: 10,
       features: [
-        "5 resume analyses per month",
+        "10 resume analyses per month",
         "Job description matching",
         "Basic skill recommendations",
         "Application tracking",

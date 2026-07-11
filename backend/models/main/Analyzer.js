@@ -4,6 +4,8 @@ const {
   UpdateCommand,
   GetCommand,
   PutCommand,
+  QueryCommand,
+  DeleteCommand,
 } = require("@aws-sdk/lib-dynamodb");
 const pdf = require("pdf-parse");
 const { GoogleGenAI } = require("@google/genai");
@@ -11,7 +13,7 @@ const { randomUUID } = require("crypto");
 
 //There are three plans (FREE, PRO, PREMIUM)
 const PLAN_LIMITS = {
-  FREE: 5,
+  FREE: 10,
   PRO: 50,
   PREMIUM: 200,
 };
@@ -143,6 +145,7 @@ const analyzeResume = async (req, res, next) => {
     Analyze the resume against the job description.
     Return ONLY valid JSON.
     {
+      "jobTitle": string,
       "overallScore": number,
       "matchedSkills": [],
       "missingSkills": [],
@@ -180,7 +183,7 @@ const analyzeResume = async (req, res, next) => {
 const saveAnalysis = async (req, res, next) => {
   try {
     const userId = req.userId;
-    const { analysisResult } = res.locals;
+    const { analysisResult, jobTitle } = res.locals;
     const analysisId = randomUUID();
     const {
       overallScore,
@@ -197,6 +200,7 @@ const saveAnalysis = async (req, res, next) => {
         Item: {
           analysis_id: analysisId,
           user_id: userId,
+          job_title: jobTitle || "N/A",
           date: new Date().toISOString(),
           overall_score: overallScore,
           matched_skills: matchedSkills,
@@ -247,6 +251,58 @@ const incrementAnalysisCount = async (req, res, next) => {
   }
 };
 
+const fetchAnalyses = async (req, res, next) => {
+  try {
+    const userId = req.userId;
+    const result = await dbClient.send(
+      new QueryCommand({
+        TableName: getTableName("resume_analyses"),
+        KeyConditionExpression: "user_id = :user_id",
+        ExpressionAttributeValues: {
+          ":user_id": userId,
+        },
+      })
+    );
+
+    // Sort analyses by date descending (most recent first)
+    const analyses = (result.Items || []).sort(
+      (a, b) => new Date(b.date) - new Date(a.date)
+    );
+
+    res.locals.analyses = analyses;
+    next();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      status: 500,
+      message: "Failed to fetch resume analyses",
+    });
+  }
+};
+
+const deleteAnalysis = async (req, res, next) => {
+  try {
+    const userId = req.userId;
+    const { analysis_id } = req.query;
+    await dbClient.send(
+      new DeleteCommand({
+        TableName: getTableName("resume_analyses"),
+        Key: {
+          user_id: userId,
+          analysis_id: analysis_id,
+        },
+      })
+    );
+    next();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      status: 500,
+      message: "Failed to delete resume analysis",
+    });
+  }
+};
+
 module.exports = {
   validateLimit,
   validateSubscription,
@@ -254,5 +310,7 @@ module.exports = {
   analyzeResume,
   activateFreeTrial,
   saveAnalysis,
-  incrementAnalysisCount
+  incrementAnalysisCount,
+  fetchAnalyses,
+  deleteAnalysis,
 };

@@ -55,6 +55,14 @@ Partition key: email (String)
 Billing mode: On-demand
 ```
 
+#### Table 6: careercompass-resume_analyses
+```
+Table name: careercompass-resume_analyses
+Partition key: user_id (String)
+Sort key: analysis_id (String)
+Billing mode: On-demand
+```
+
 ---
 
 ### Step 2: Create IAM User for DynamoDB Access
@@ -80,7 +88,7 @@ Billing mode: On-demand
         "dynamodb:DescribeTable"
       ],
       "Resource": [
-        "arn:aws:dynamodb:ap-south-1:*:table/careercompass_*"
+        "arn:aws:dynamodb:ap-south-1:*:table/careercompass-*"
       ]
     },
     {
@@ -89,7 +97,7 @@ Billing mode: On-demand
         "dynamodb:Query"
       ],
       "Resource": [
-        "arn:aws:dynamodb:ap-south-1:*:table/careercompass_*/index/*"
+        "arn:aws:dynamodb:ap-south-1:*:table/careercompass-*/index/*"
       ]
     }
   ]
@@ -202,12 +210,13 @@ pm2 startup
 ## 📝 Deployment Checklist
 
 - [x] ✅ All controllers updated with `getTableName()`
-- [ ] Create 5 tables in AWS DynamoDB:
+- [ ] Create 6 tables in AWS DynamoDB:
   - [ ] careercompass_register_users (with email-index GSI)
   - [ ] careercompass_applications
   - [ ] careercompass_companies
   - [ ] careercompass_documents
   - [ ] careercompass_forget_password
+  - [ ] careercompass_resume_analyses
 - [ ] Create IAM user with DynamoDB permissions
 - [ ] Get AWS Access Key ID and Secret Access Key
 - [ ] Update backend .env with AWS credentials
@@ -317,3 +326,4 @@ All tables use `careercompass_` prefix for easy identification:
 | careercompass_companies | user_id | company_id | - |
 | careercompass_documents | user_id | document_id | - |
 | careercompass_forget_password | email | - | - |
+| careercompass_resume_analyses | user_id | analysis_id | - |

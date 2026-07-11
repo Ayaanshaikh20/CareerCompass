@@ -7,6 +7,8 @@ const {
   activateFreeTrial,
   saveAnalysis,
   incrementAnalysisCount,
+  fetchAnalyses,
+  deleteAnalysis,
 } = require("../../models/main/Analyzer");
 const router = Router();
 
@@ -35,4 +37,21 @@ router.post(
   },
 );
 
+router.get("/api/resume-analyses", fetchAnalyses, async (req, res) => {
+  const { analyses } = res.locals;
+  res.status(200).json({
+    status: 200,
+    message: "Fetched resume analyses successfully",
+    data: analyses,
+  });
+});
+
+router.delete("/api/delete-analysis", deleteAnalysis, async (req, res) => {
+  res.status(200).json({
+    status: 200,
+    message: "Deleted resume analysis successfully",
+  });
+});
+
 module.exports = router;
+

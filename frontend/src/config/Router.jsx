@@ -75,7 +75,7 @@ const Router = () => {
           <Route path="/companies" element={<Companies />} />
           <Route path="/documents" element={<Documents />} />
           <Route path="/resume-analyzer" element={<ResumeAnalyzer />} />
-          <Route path="/analyzed-results" element={<UnderConstruction />} />
+          <Route path="/analyzed-results" element={<AnalyzedResults />} />
           <Route path="/manage-plan" element={<ManagePlan />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/profile" element={<Profile />} />

@@ -111,7 +111,7 @@ const Profile = () => {
                   <>
                     <div className="flex items-start gap-2">
                       <span className="text-green-600 dark:text-green-400 mt-0.5">✓</span>
-                      <span className="text-xs text-gray-700 dark:text-gray-300">5 resume analyses per month</span>
+                      <span className="text-xs text-gray-700 dark:text-gray-300">10 resume analyses per month</span>
                     </div>
                     <div className="flex items-start gap-2">
                       <span className="text-green-600 dark:text-green-400 mt-0.5">✓</span>

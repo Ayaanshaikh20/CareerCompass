@@ -126,7 +126,7 @@ const ResumeAnalyzer = () => {
               Start Your Free Trial
             </h2>
             <p className="text-gray-600 dark:text-gray-300 text-sm mb-2">
-              Get 5 free resume analyses to optimize your job applications
+              Get 10 free resume analyses to optimize your job applications
             </p>
             <p className="text-gray-500 dark:text-gray-400 text-xs mb-6">
               No credit card required • Instant activation • AI-powered insights
@@ -139,7 +139,7 @@ const ResumeAnalyzer = () => {
             </button>
             <div className="mt-6 pt-6 border-t border-blue-200 dark:border-gray-700">
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                ✓ Analyze up to 5 resumes • ✓ Match against job descriptions • ✓
+                ✓ Analyze up to 10 resumes • ✓ Match against job descriptions • ✓
                 Get actionable feedback
               </p>
             </div>
