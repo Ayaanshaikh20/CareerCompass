@@ -9,11 +9,12 @@ const fileUpload = require("express-fileupload");
 const port = process.env.PORT || 8000;
 app.use(express.json());
 app.use(cookieParser());
+
 app.use(
   cors({
-    origin: "*",
+    origin: process.env.FRONTEND_URL_PROD_NEW,
     credentials: true,
-  }),
+  })
 );
 app.use(fileUpload());
 
