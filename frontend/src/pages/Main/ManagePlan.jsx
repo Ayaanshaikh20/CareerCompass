@@ -95,13 +95,13 @@ const ManagePlan = () => {
   };
 
   return (
-    <div className="bg-slate-100 dark:bg-gray-900 pt-4 sm:pt-6 px-2 sm:px-4 text-gray-900 dark:text-gray-100 font-sans min-h-full pb-8">
+    <div className="bg-slate-200/60 dark:bg-gray-950 p-3 sm:p-4 text-gray-900 dark:text-gray-100 font-sans min-h-full">
       {/* Header */}
-      <div className="max-w-7xl mx-auto mb-6">
-        <h1 className="text-base sm:text-lg md:text-xl font-bold mb-1">
+      <div className="max-w-7xl mx-auto mb-4">
+        <h1 className="text-lg sm:text-xl font-extrabold tracking-tight text-gray-900 dark:text-white">
           Manage Subscription
         </h1>
-        <p className="text-gray-600 dark:text-gray-400 text-[10px] sm:text-xs">
+        <p className="text-gray-500 dark:text-gray-400 text-xs mt-0.5">
           Choose the plan that works best for you
         </p>
       </div>
@@ -201,12 +201,9 @@ const ManagePlan = () => {
                   <button
                     onClick={() => handleUpgrade(plan.name)}
                     disabled={isCurrentPlan}
-                    className={`w-full py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-200 ${isCurrentPlan
-                        ? "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-500 cursor-not-allowed"
-                        : `bg-gradient-to-r ${plan.gradient} text-white hover:shadow-xl hover:scale-105`
-                      }`}
+                    className={isCurrentPlan ? "btn-secondary w-full py-2.5" : "btn-primary w-full py-2.5"}
                   >
-                    {isCurrentPlan ? plan.buttonText : plan.buttonText}
+                    {plan.buttonText}
                   </button>
                 </div>
               </div>

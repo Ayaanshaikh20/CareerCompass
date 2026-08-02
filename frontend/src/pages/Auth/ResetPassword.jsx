@@ -97,13 +97,9 @@ const ResetPassword = () => {
             <button
               type="submit"
               disabled={passwordreset}
-              className={`w-full py-2 rounded font-medium transition-colors ${
-                passwordreset
-                  ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                  : "bg-blue-600 text-white hover:bg-blue-700"
-              }`}
+              className="btn-primary w-full py-2.5 text-sm"
             >
-              Reset Password
+              Submit
             </button>
           </form>
         )}

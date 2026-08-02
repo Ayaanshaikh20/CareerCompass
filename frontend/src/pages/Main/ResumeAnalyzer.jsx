@@ -91,13 +91,13 @@ const ResumeAnalyzer = () => {
   };
 
   return (
-    <div className="bg-slate-100 dark:bg-gray-900 pt-4 sm:pt-6 px-2 sm:px-4 text-gray-900 dark:text-gray-100 font-sans min-h-full">
-      <div className="max-w-7xl mx-auto mb-4 sm:mb-6 flex items-start justify-between gap-4">
+    <div className="bg-slate-200/60 dark:bg-gray-950 p-3 sm:p-4 text-gray-900 dark:text-gray-100 font-sans min-h-full">
+      <div className="max-w-7xl mx-auto mb-4 flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-base sm:text-lg md:text-xl font-bold mb-1">
+          <h1 className="text-lg sm:text-xl font-extrabold tracking-tight text-gray-900 dark:text-white">
             Resume Analyzer
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 text-[10px] sm:text-xs">
+          <p className="text-gray-500 dark:text-gray-400 text-xs mt-0.5">
             Upload your resume and compare it with job descriptions
           </p>
         </div>
@@ -106,7 +106,7 @@ const ResumeAnalyzer = () => {
           <button
             type="button"
             onClick={() => navigate('/analyzed-results')}
-            className="ml-2 px-4 py-2 rounded-lg text-xs font-semibold bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-100 hover:shadow"
+            className="btn-secondary"
           >
             View Analyzed Resumes
           </button>
@@ -217,10 +217,7 @@ const ResumeAnalyzer = () => {
             <button
               type="submit"
               disabled={!hasFreeTrial}
-              className={`px-4 py-2 rounded-lg text-xs font-semibold shadow-md transition-all duration-200 ${hasFreeTrial
-                  ? "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white cursor-pointer"
-                  : "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-500 cursor-not-allowed"
-                }`}
+              className="btn-primary"
             >
               Analyze Resume
             </button>
@@ -322,7 +319,7 @@ const ResumeAnalyzer = () => {
         <DialogActions className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
           <button
             onClick={closeAnalysisModal}
-            className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-lg text-[11px] sm:text-xs font-semibold flex items-center gap-1.5 sm:gap-2 hover:from-blue-700 hover:to-blue-800 hover:shadow-lg active:scale-95 transition-all duration-200 shadow-md whitespace-nowrap"
+            className="btn-secondary"
           >
             Close
           </button>

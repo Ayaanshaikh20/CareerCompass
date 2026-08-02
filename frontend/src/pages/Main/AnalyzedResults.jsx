@@ -97,19 +97,19 @@ const AnalyzedResults = () => {
   };
 
   return (
-    <div className="bg-slate-50 dark:bg-gray-900 pt-4 sm:pt-6 px-3 sm:px-6 text-gray-950 dark:text-gray-100 min-h-full font-sans pb-12">
+    <div className="bg-slate-200/60 dark:bg-gray-950 p-3 sm:p-4 text-gray-900 dark:text-gray-100 font-sans min-h-full">
       {/* Header */}
-      <div className="max-w-7xl mx-auto mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="max-w-7xl mx-auto mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight">Saved Resume Analyses</h1>
-          <p className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm mt-0.5">
-            Access previous feedback, core strengths, missing keywords, and match scores.
+          <h1 className="text-lg sm:text-xl font-extrabold tracking-tight text-gray-900 dark:text-white">Saved Resume Analyses</h1>
+          <p className="text-gray-500 dark:text-gray-400 text-xs mt-0.5">
+            Access previous feedback, core strengths, missing keywords, and match scores
           </p>
         </div>
         <div>
           <button
             onClick={() => navigate("/resume-analyzer")}
-            className="w-full sm:w-auto px-4 py-2 text-xs font-semibold rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-md hover:shadow-lg transition duration-200 flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer"
+            className="btn-primary"
           >
             <AutoAwesomeIcon className="text-sm" />
             Analyze New Resume
@@ -148,7 +148,7 @@ const AnalyzedResults = () => {
             </p>
             <button
               onClick={() => navigate("/resume-analyzer")}
-              className="px-5 py-2.5 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition-all shadow active:scale-95 cursor-pointer"
+              className="btn-primary"
             >
               Analyze Resume Now
             </button>
@@ -332,7 +332,7 @@ const AnalyzedResults = () => {
         <DialogActions className="border-t border-gray-200 dark:border-gray-700 p-4">
           <button
             onClick={handleCloseDetails}
-            className="px-4 py-2 rounded-lg text-xs font-semibold bg-gray-105 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 transition cursor-pointer"
+            className="btn-secondary"
           >
             Close
           </button>
@@ -353,16 +353,16 @@ const AnalyzedResults = () => {
             Are you sure you want to permanently delete this resume analysis record? This action cannot be undone.
           </DialogContentText>
         </DialogContent>
-        <DialogActions className="p-4">
+        <DialogActions className="p-4 gap-2">
           <button
             onClick={handleCloseDelete}
-            className="px-3.5 py-1.5 text-xs font-semibold text-gray-700 dark:text-gray-300 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-lg transition cursor-pointer"
+            className="btn-secondary"
           >
             Cancel
           </button>
           <button
             onClick={handleDelete}
-            className="px-3.5 py-1.5 text-xs font-semibold text-white bg-rose-600 hover:bg-rose-700 rounded-lg transition shadow cursor-pointer"
+            className="btn-danger"
           >
             Delete
           </button>

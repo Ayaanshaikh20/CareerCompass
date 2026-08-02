@@ -184,16 +184,16 @@ const Companies = () => {
   };
 
   return (
-    <main className="bg-slate-100 dark:bg-gray-900 pt-4 sm:pt-6 px-2 sm:px-4 font-sans text-gray-900 dark:text-gray-100 min-h-full">
+    <main className="bg-slate-200/60 dark:bg-gray-950 p-3 sm:p-4 font-sans text-gray-900 dark:text-gray-100 min-h-full">
       <section className="max-w-7xl mx-auto">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3 gap-3">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3">
           <div>
-            <h1 className="text-base sm:text-lg md:text-xl font-bold text-gray-800 dark:text-gray-100">Companies</h1>
-            <p className="text-gray-600 dark:text-gray-400 text-[10px] sm:text-xs mt-1">Manage your shortlisted companies</p>
+            <h1 className="text-lg sm:text-xl font-extrabold tracking-tight text-gray-900 dark:text-white">Companies</h1>
+            <p className="text-gray-500 dark:text-gray-400 text-xs mt-0.5">Manage your shortlisted companies</p>
           </div>
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <input type="text" placeholder="Search..." value={quickFilterText} onChange={(e) => setQuickFilterText(e.target.value)} className="flex-1 sm:flex-none px-2 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-xs border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-            <button onClick={() => { setFormData(defaultFormData); setIsEdit(false); setOpen(true); }} className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-lg text-[11px] sm:text-xs font-semibold flex items-center gap-1.5 sm:gap-2 hover:from-blue-700 hover:to-blue-800 hover:shadow-lg active:scale-95 transition-all duration-200 shadow-md whitespace-nowrap">
+            <button onClick={() => { setFormData(defaultFormData); setIsEdit(false); setOpen(true); }} className="btn-primary">
               <FaPlus className="text-xs sm:text-sm" /><span className="hidden sm:inline">Add Company</span><span className="sm:hidden">Add</span>
             </button>
           </div>
@@ -206,9 +206,9 @@ const Companies = () => {
         <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
           <DialogTitle sx={{ fontWeight: 600, fontSize: "16px" }}>Delete Company</DialogTitle>
           <DialogContent><p className="text-sm">Are you sure you want to delete <strong>{selectedCompany?.companyName}</strong>?</p></DialogContent>
-          <DialogActions>
-            <button onClick={() => setDeleteDialogOpen(false)} className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Cancel</button>
-            <button onClick={confirmDelete} className="px-3 py-1 bg-red-600 text-white rounded text-sm font-medium hover:bg-red-700 transition-colors">Delete</button>
+          <DialogActions sx={{ p: 2, gap: 1 }}>
+            <button onClick={() => setDeleteDialogOpen(false)} className="btn-secondary">Cancel</button>
+            <button onClick={confirmDelete} className="btn-danger">Delete</button>
           </DialogActions>
         </Dialog>
 
@@ -257,8 +257,8 @@ const Companies = () => {
             </div>
           </DialogContent>
           <DialogActions sx={{ p: 2, gap: 1 }}>
-            <button onClick={() => { setFormData(defaultFormData); setOpen(false); setIsEdit(false); setErrors({}); }} className="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded text-xs font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">Cancel</button>
-            <button onClick={submitOrEdit} className="px-3 py-1.5 bg-blue-600 text-white rounded text-xs font-medium hover:bg-blue-700 transition-colors">{isEdit ? "Update" : "Add"}</button>
+            <button onClick={() => { setFormData(defaultFormData); setOpen(false); setIsEdit(false); setErrors({}); }} className="btn-secondary">Cancel</button>
+            <button onClick={submitOrEdit} className="btn-primary">{isEdit ? "Update" : "Add"}</button>
           </DialogActions>
         </Dialog>
       </section>

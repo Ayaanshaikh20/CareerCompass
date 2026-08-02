@@ -68,13 +68,9 @@ const ForgotPassword = () => {
           <button
             type="submit"
             disabled={cooldown > 0 || loading}
-            className={`w-full py-2 rounded font-medium transition-colors ${
-              cooldown > 0 || loading
-                ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                : "bg-blue-600 text-white hover:bg-blue-700"
-            }`}
+            className="btn-primary w-full py-2.5 text-sm"
           >
-            {loading ? "Sending..." : "Send reset link"}
+            {cooldown > 0 ? `Resend Code in ${cooldown}s` : "Send Reset Code"}
           </button>
         </form>
 

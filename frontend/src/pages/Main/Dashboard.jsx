@@ -109,35 +109,35 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="bg-gray-50/50 dark:bg-gray-950 p-3 sm:p-4 text-gray-900 dark:text-gray-100 font-sans min-h-full">
+    <div className="bg-slate-200/60 dark:bg-gray-950 p-3 sm:p-4 text-gray-900 dark:text-gray-100 font-sans min-h-full">
       <div className="mb-4">
         <h1 className="text-lg sm:text-xl font-extrabold tracking-tight text-gray-900 dark:text-white">Dashboard</h1>
-        <p className="text-gray-500 dark:text-gray-400 text-[11px] mt-0.5">Track your job applications and metrics at a glance</p>
+        <p className="text-gray-500 dark:text-gray-400 text-xs mt-0.5">Track your job applications and metrics at a glance</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 mb-5">
         {[
           { label: "Total Applications", value: applications.length, themeColor: "blue", trend: "+4 this week", icon: <WorkOutlineIcon sx={{ fontSize: 18 }} /> },
           { label: "Pending Review", value: statusCounts.pending, themeColor: "amber", trend: "Requires action", icon: <AccessTimeIcon sx={{ fontSize: 18 }} /> },
           { label: "Approved Offers", value: statusCounts.approved, themeColor: "green", trend: "Congratulations!", icon: <CheckCircleOutlineIcon sx={{ fontSize: 18 }} /> },
           { label: "Rejected Applications", value: statusCounts.rejected, themeColor: "red", trend: "Keep applying", icon: <CancelOutlinedIcon sx={{ fontSize: 18 }} /> },
         ].map(({ label, value, themeColor, trend, icon }, idx) => (
-          <div key={idx} className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200/60 dark:border-gray-700/50 p-4 shadow-sm hover:shadow-md transition-all duration-200 flex items-center justify-between">
+          <div key={idx} className="bg-white dark:bg-gray-800 rounded-xl border border-slate-200/90 dark:border-gray-700/60 p-4 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.06)] hover:shadow-md hover:border-slate-300 dark:hover:border-gray-600 transition-all duration-200 flex items-center justify-between">
             <div>
-              <p className="text-[10px] font-semibold text-gray-405 dark:text-gray-400 uppercase tracking-wider">{label}</p>
-              <p className="text-xl sm:text-2xl font-extrabold mt-1 text-gray-900 dark:text-white tracking-tight">{value}</p>
-              <p className={`text-[10px] mt-1.5 font-medium ${
-                themeColor === "green" ? "text-green-600 dark:text-green-400" :
-                themeColor === "red" ? "text-gray-400 dark:text-gray-500" :
-                themeColor === "amber" ? "text-amber-600 dark:text-amber-500" :
+              <p className="text-[10px] font-bold text-slate-500 dark:text-gray-400 uppercase tracking-wider">{label}</p>
+              <p className="text-xl sm:text-2xl font-black mt-1 text-slate-900 dark:text-white tracking-tight">{value}</p>
+              <p className={`text-[10px] mt-1.5 font-semibold ${
+                themeColor === "green" ? "text-emerald-600 dark:text-emerald-400" :
+                themeColor === "red" ? "text-slate-500 dark:text-gray-400" :
+                themeColor === "amber" ? "text-amber-600 dark:text-amber-400" :
                 "text-blue-600 dark:text-blue-400"
               }`}>{trend}</p>
             </div>
-            <div className={`p-2.5 rounded-xl flex items-center justify-center ${
-              themeColor === "blue" ? "bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400" :
-              themeColor === "amber" ? "bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400" :
-              themeColor === "green" ? "bg-green-50 dark:bg-green-950/40 text-green-600 dark:text-green-400" :
-              "bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400"
+            <div className={`p-2.5 rounded-xl border flex items-center justify-center ${
+              themeColor === "blue" ? "bg-blue-50/90 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border-blue-100 dark:border-blue-900/40" :
+              themeColor === "amber" ? "bg-amber-50/90 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border-amber-100 dark:border-amber-900/40" :
+              themeColor === "green" ? "bg-emerald-50/90 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-900/40" :
+              "bg-rose-50/90 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border-rose-100 dark:border-rose-900/40"
             }`}>
               {icon}
             </div>
@@ -146,45 +146,45 @@ const Dashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 pb-4">
-        <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl border border-gray-200/60 dark:border-gray-700/50 shadow-sm p-4 flex flex-col">
+        <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl border border-slate-200/90 dark:border-gray-700/60 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.06)] p-4 sm:p-5 flex flex-col">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white">Recent Applications</h2>
-            <span className="text-[9px] bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 font-semibold px-2 py-0.5 rounded">
+            <h2 className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white tracking-tight">Recent Applications</h2>
+            <span className="text-[10px] bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-900/40 font-bold px-2.5 py-0.5 rounded-full">
               Latest {applications.slice(0, 10).length}
             </span>
           </div>
 
           {/* Table Headers */}
-          <div className="flex items-center justify-between text-[9px] uppercase tracking-wider font-bold text-gray-400 dark:text-gray-500 px-2 pb-2 border-b border-gray-100 dark:border-gray-700/50 select-none">
+          <div className="flex items-center justify-between bg-slate-50 dark:bg-gray-800/80 py-2 px-3 rounded-lg border border-slate-100 dark:border-gray-700/40 text-[9px] uppercase tracking-wider font-extrabold text-slate-500 dark:text-gray-400 select-none mb-1">
             <span className="w-1/2">Role & Company</span>
             <span className="w-1/4 text-center">Applied Date</span>
             <span className="w-1/4 text-right">Status</span>
           </div>
           
-          <div className="max-h-80 overflow-y-auto custom-scrollbar flex-1 pr-1 mt-1">
+          <div className="max-h-80 overflow-y-auto custom-scrollbar flex-1 pr-1">
             {applications.length > 0 ? (
-              <div className="divide-y divide-gray-50 dark:divide-gray-700/30">
+              <div className="divide-y divide-slate-100 dark:divide-gray-700/40">
                 {applications.slice(0, 10).map((app, idx) => (
                   <div
                     key={idx}
-                    className="flex items-center justify-between py-2.5 hover:bg-gray-50/50 dark:hover:bg-gray-700/30 px-2 rounded-lg transition-colors group"
+                    className="flex items-center justify-between py-2.5 hover:bg-slate-50 dark:hover:bg-gray-700/40 px-3 rounded-lg transition-colors group"
                   >
                     <div className="w-1/2 min-w-0 pr-4">
-                      <p className="font-semibold text-xs text-gray-800 dark:text-gray-200 truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{app.role}</p>
-                      <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5 truncate">{app.employer} • {app.platform}</p>
+                      <p className="font-bold text-xs text-slate-800 dark:text-gray-100 truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{app.role}</p>
+                      <p className="text-[10px] text-slate-500 dark:text-gray-400 mt-0.5 font-medium truncate">{app.employer} • {app.platform}</p>
                     </div>
                     <div className="w-1/4 text-center select-none">
-                      <p className="text-[10px] text-gray-400 dark:text-gray-500 font-medium">{new Date(app.appliedDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</p>
+                      <p className="text-[10px] text-slate-500 dark:text-gray-400 font-semibold">{new Date(app.appliedDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</p>
                     </div>
                     <div className="w-1/4 flex justify-end select-none">
-                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wide ${
-                        app.status === "approved" ? "bg-green-50 dark:bg-green-950/40 text-green-700 dark:text-green-400" :
-                        app.status === "rejected" ? "bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-400" :
-                        "bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-450"
+                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[9px] font-extrabold uppercase tracking-wide border ${
+                        app.status === "approved" ? "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border-emerald-200/80 dark:border-emerald-800/50" :
+                        app.status === "rejected" ? "bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 border-rose-200/80 dark:border-rose-800/50" :
+                        "bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border-amber-200/80 dark:border-amber-800/50"
                       }`}>
-                        <span className={`w-1 h-1 rounded-full ${
-                          app.status === "approved" ? "bg-green-500" :
-                          app.status === "rejected" ? "bg-red-500" :
+                        <span className={`w-1.5 h-1.5 rounded-full ${
+                          app.status === "approved" ? "bg-emerald-500" :
+                          app.status === "rejected" ? "bg-rose-500" :
                           "bg-amber-500"
                         }`} />
                         {app.status}
@@ -194,24 +194,24 @@ const Dashboard = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-center text-gray-400 text-xs py-16">No applications yet. Start applying!</div>
+              <div className="text-center text-slate-400 dark:text-gray-500 text-xs py-16 font-medium">No applications yet. Start applying!</div>
             )}
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200/60 dark:border-gray-700/50 shadow-sm p-4">
+        <div className="bg-white dark:bg-gray-800 rounded-xl border border-slate-200/90 dark:border-gray-700/60 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.06)] p-4 sm:p-5 flex flex-col justify-between">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white">Platform Usage</h2>
+            <h2 className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white tracking-tight">Platform Usage</h2>
             <div className="flex gap-1 select-none">
-              <span className="text-[9px] bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 font-semibold px-2 py-0.5 rounded cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">30D</span>
-              <span className="text-[9px] bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 font-semibold px-2 py-0.5 rounded cursor-pointer">ALL</span>
+              <span className="text-[9px] bg-slate-100 dark:bg-gray-700 text-slate-700 dark:text-gray-300 font-bold px-2 py-0.5 rounded cursor-pointer hover:bg-slate-200 dark:hover:bg-gray-600 transition-colors">30D</span>
+              <span className="text-[9px] bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-900/40 font-bold px-2 py-0.5 rounded cursor-pointer">ALL</span>
             </div>
           </div>
           <div className="h-48 sm:h-64 flex items-center justify-center">
             {applications.length > 0 ? (
               <Line data={frequentPlatformsData} options={frequentPlatformsOptions} />
             ) : (
-              <div className="text-center text-gray-450 text-xs">No metrics to display</div>
+              <div className="text-center text-slate-400 dark:text-gray-500 text-xs font-medium">No metrics to display</div>
             )}
           </div>
         </div>

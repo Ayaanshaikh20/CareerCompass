@@ -299,12 +299,12 @@ const Applications = () => {
   };
 
   return (
-    <main className="bg-gray-50/50 dark:bg-gray-950 p-3 sm:p-4 font-sans text-gray-900 dark:text-gray-100 min-h-full">
+    <main className="bg-slate-200/60 dark:bg-gray-950 p-3 sm:p-4 font-sans text-gray-900 dark:text-gray-100 min-h-full">
       <section className="max-w-7xl mx-auto">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3">
           <div>
             <h1 className="text-lg sm:text-xl font-extrabold tracking-tight text-gray-900 dark:text-white">Applications</h1>
-            <p className="text-gray-500 dark:text-gray-400 text-[11px] mt-0.5">
+            <p className="text-gray-500 dark:text-gray-400 text-xs mt-0.5">
               Manage your job applications database
             </p>
           </div>
@@ -314,7 +314,7 @@ const Applications = () => {
               placeholder="Search..."
               value={quickFilterText}
               onChange={(e) => setQuickFilterText(e.target.value)}
-              className="w-full sm:w-48 px-3 py-1.5 text-xs border border-gray-250 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full sm:w-48 px-3 py-1.5 text-xs border border-slate-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <button
               onClick={() => {
@@ -322,7 +322,7 @@ const Applications = () => {
                 setIsEditApplication(false);
                 setOpen(true);
               }}
-              className="bg-blue-600 text-white px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 hover:bg-blue-700 active:scale-95 transition-all duration-200 shadow w-full sm:w-auto whitespace-nowrap"
+              className="btn-primary"
             >
               <FaPlus className="text-[10px]" />
               <span>Add Application</span>
@@ -458,16 +458,16 @@ const Applications = () => {
               cannot be undone.
             </DialogContentText>
           </DialogContent>
-          <DialogActions>
+          <DialogActions sx={{ p: 2, gap: 1 }}>
             <button
               onClick={() => setDeleteDialogOpen(false)}
-              className="px-3 py-1 bg-gray-100 text-gray-700 rounded text-sm font-medium hover:bg-gray-200 transition-colors"
+              className="btn-secondary"
             >
               Cancel
             </button>
             <button
               onClick={confirmDelete}
-              className="px-3 py-1 bg-red-600 text-white rounded text-sm font-medium hover:bg-red-700 transition-colors"
+              className="btn-danger"
             >
               Delete
             </button>
@@ -699,14 +699,14 @@ const Applications = () => {
           <DialogActions sx={{ px: 3, py: 2, gap: 1, borderTop: "1px solid rgba(229, 231, 235, 0.5)" }}>
             <button
               onClick={clearDrawer}
-              className="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-xs font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors mr-auto"
+              className="btn-secondary mr-auto"
             >
               Cancel
             </button>
             {currentStep > 0 && (
               <button
                 onClick={() => setCurrentStep((prev) => prev - 1)}
-                className="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-xs font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                className="btn-secondary"
               >
                 Back
               </button>
@@ -737,14 +737,14 @@ const Applications = () => {
                   }
                   setCurrentStep((prev) => prev + 1);
                 }}
-                className="px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-semibold hover:bg-blue-700 active:scale-95 transition-all"
+                className="btn-primary"
               >
                 Next
               </button>
             ) : (
               <button
                 onClick={submitOrEditApplication}
-                className="px-3 py-1.5 bg-blue-600 text-white rounded-lg text-xs font-semibold hover:bg-blue-700 active:scale-95 transition-all"
+                className="btn-primary"
               >
                 {isEditApplication ? "Update" : "Add"}
               </button>

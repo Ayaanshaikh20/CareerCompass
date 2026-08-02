@@ -130,21 +130,21 @@ const Documents = () => {
   const zoomOut = () => setScale((prev) => Math.max(prev - 0.1, 0.6));
 
   return (
-    <main className="bg-slate-100 dark:bg-gray-900 pt-4 sm:pt-6 px-2 sm:px-4 font-sans text-gray-900 dark:text-gray-100 min-h-full">
+    <main className="bg-slate-200/60 dark:bg-gray-950 p-3 sm:p-4 font-sans text-gray-900 dark:text-gray-100 min-h-full">
       <section className="max-w-7xl mx-auto">
-        <div className="w-full flex flex-col sm:flex-row justify-between gap-3">
-          <div className="mb-2 sm:mb-4">
-            <h1 className="text-base sm:text-lg md:text-xl font-bold text-gray-800 dark:text-gray-100">
+        <div className="w-full flex flex-col sm:flex-row justify-between gap-3 mb-4">
+          <div>
+            <h1 className="text-lg sm:text-xl font-extrabold tracking-tight text-gray-900 dark:text-white">
               Document Manager
             </h1>
-            <p className="text-gray-600 dark:text-gray-400 text-[10px] sm:text-xs mt-1">
+            <p className="text-gray-500 dark:text-gray-400 text-xs mt-0.5">
               View and manage your documents
             </p>
           </div>
           <div className="mb-2 sm:mb-4">
             <button
               onClick={openFileUploadForm}
-              className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-lg text-[11px] sm:text-xs font-semibold flex items-center gap-1.5 sm:gap-2 hover:from-blue-700 hover:to-blue-800 hover:shadow-lg active:scale-95 transition-all duration-200 shadow-md w-full sm:w-auto justify-center"
+              className="btn-primary"
             >
               <FaPlus className="text-xs sm:text-sm" />
               Upload Document
@@ -418,14 +418,14 @@ const Documents = () => {
         <DialogActions className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-4">
           <button
             onClick={closeFileUploadForm}
-            className="px-4 py-2 text-xs font-medium text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            className="btn-secondary"
           >
             Cancel
           </button>
           <button
             onClick={handleFileUpload}
             disabled={!fileName || !fileSelectRef.current?.files[0]}
-            className="px-4 py-2 text-xs font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="btn-primary"
           >
             Upload
           </button>

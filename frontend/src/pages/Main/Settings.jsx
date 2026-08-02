@@ -42,12 +42,13 @@ const Settings = () => {
   ];
 
   return (
-    <main className="w-full bg-gray-50 dark:bg-gray-950 p-2 sm:p-4 min-h-full">
-      <div className="max-w-4xl mx-auto">
-        <section className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm rounded-lg p-4 sm:p-6">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 pb-3 mb-6 border-b border-gray-200 dark:border-gray-700">
-            Preferences
-          </h2>
+    <main className="w-full bg-slate-200/60 dark:bg-gray-950 p-3 sm:p-4 text-gray-900 dark:text-gray-100 font-sans min-h-full">
+      <div className="max-w-4xl mx-auto space-y-4">
+        <div>
+          <h1 className="text-lg sm:text-xl font-extrabold tracking-tight text-gray-900 dark:text-white">Preferences</h1>
+          <p className="text-gray-500 dark:text-gray-400 text-xs mt-0.5">Manage your theme and application settings</p>
+        </div>
+        <section className="bg-white dark:bg-gray-800 border border-slate-200/90 dark:border-gray-700 shadow-sm rounded-lg p-4 sm:p-6">
 
           <div className="space-y-6">
             {/* Theme Setting */}
@@ -55,7 +56,7 @@ const Settings = () => {
               <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
                 Appearance
               </h3>
-              <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+              <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-gray-900 rounded-lg border border-slate-200 dark:border-gray-700">
                 <div>
                   <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                     Theme
@@ -66,7 +67,7 @@ const Settings = () => {
                 </div>
                 <button
                   onClick={toggleTheme}
-                  className="px-4 py-1.5 text-xs sm:text-sm font-medium rounded transition-colors bg-blue-600 text-white hover:bg-blue-700 shadow-sm"
+                  className="btn-secondary"
                 >
                   {isDark ? "Light Mode" : "Dark Mode"}
                 </button>
