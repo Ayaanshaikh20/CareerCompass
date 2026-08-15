@@ -3,10 +3,9 @@ const app = require("./server");
 const { dbClient, getTableName } = require("./config/dbConnect");
 const { ScanCommand, UpdateCommand } = require("@aws-sdk/lib-dynamodb");
 
-exports.handler = serverless(app);
+const expressHandler = serverless(app);
 
-// Lambda function triggered by AWS EventBridge every month
-exports.monthlyResetHandler = async (event) => {
+const runMonthlyReset = async () => {
   console.log("Running monthly reset cron job...");
   try {
     const tableName = getTableName("register_users");
@@ -20,9 +19,7 @@ exports.monthlyResetHandler = async (event) => {
 
       const result = await dbClient.send(new ScanCommand(scanParams));
 
-      // Reset analyses_used for each user
       for (const user of result.Items || []) {
-        // Skip users that already have 0 to save write capacity
         if (user.analyses_used === 0) continue;
 
         await dbClient.send(
@@ -46,4 +43,15 @@ exports.monthlyResetHandler = async (event) => {
     console.error("Error running monthly reset:", error);
     throw error;
   }
+};
+
+exports.handler = async (event, context) => {
+  // Check if this event came from AWS EventBridge Scheduler
+  if (event.source === "aws.scheduler" || event.source === "aws.events" || event["detail-type"] === "Scheduled Event") {
+    console.log("EventBridge Cron Trigger Detected!");
+    return await runMonthlyReset();
+  }
+
+  // Otherwise, it's a normal HTTP API request. Pass it to Express!
+  return expressHandler(event, context);
 };
