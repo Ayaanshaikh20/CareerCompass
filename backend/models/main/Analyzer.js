@@ -8,6 +8,7 @@ const {
   DeleteCommand,
 } = require("@aws-sdk/lib-dynamodb");
 const pdf = require("pdf-parse");
+const mammoth = require("mammoth");
 const { GoogleGenAI } = require("@google/genai");
 const { randomUUID } = require("crypto");
 
@@ -127,7 +128,17 @@ const extractContent = async (req, res, next) => {
     mimetype ===
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
   ) {
-    //parse docx
+    const result = await mammoth.extractRawText({ buffer: resume.data });
+    if (result && result.value) {
+      res.locals.resumeText = result.value;
+      res.locals.jobTitle = jobTitle;
+      res.locals.jobDescription = jobDescription;
+    } else {
+      return res.status(400).json({
+        status: 400,
+        message: "Failed to parse DOCX",
+      });
+    }
   }
   next();
 };

@@ -40,6 +40,24 @@ const Login = () => {
     }
   };
 
+  const handleGuestLogin = async () => {
+    customToggleLoading({ loading: true });
+    try {
+      const response = await axiosInstance.post("/guest-login");
+      const { status, message, userData } = response.data;
+      if (status === 200) {
+        toast.success(message || "Logged in as Guest!");
+        localStorage.setItem("uid", userData.userId);
+        queryClient.setQueryData(["userDetails"], userData);
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      toast.error("Guest login failed. Please register a free account.");
+    } finally {
+      customToggleLoading({ loading: false });
+    }
+  };
+
   return (
     <main className="flex h-[calc(100vh-50px)] w-full items-center justify-center bg-gray-50 dark:bg-gray-900 font-sans px-4">
       <div className="flex w-full max-w-7xl flex-col lg:flex-row items-center gap-10">
@@ -94,6 +112,13 @@ const Login = () => {
               className="btn-primary w-full py-2.5 text-sm"
             >
               Sign In
+            </button>
+            <button
+              type="button"
+              onClick={handleGuestLogin}
+              className="w-full py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg border border-gray-300 dark:border-gray-600 transition-colors"
+            >
+              ⚡ Explore as Guest (One-Click Demo)
             </button>
           </form>
 

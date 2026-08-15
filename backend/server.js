@@ -25,6 +25,7 @@ app.use(require("./controllers/auth/ForgetPassword"));
 app.use(require("./controllers/auth/ResetPassword"));
 app.use(require("./controllers/auth/Register"));
 app.use(require("./controllers/auth/Login"));
+app.use(require("./controllers/auth/GuestLogin"));
 app.use(require("./controllers/auth/RefreshToken"));
 app.use(require("./controllers/auth/Logout"));
 
@@ -45,6 +46,7 @@ app.use(require("./controllers/main/Companies"));
 app.use(require("./controllers/main/Notifications"));
 app.use(require("./controllers/main/Documents"));
 app.use(require("./controllers/main/Analyzer"));
+app.use(require("./controllers/main/Payment"));
 
 /* ===========================
    START SERVER

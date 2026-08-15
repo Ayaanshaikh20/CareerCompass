@@ -117,7 +117,7 @@ const Dashboard = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 mb-5">
         {[
-          { label: "Total Applications", value: applications.length, themeColor: "blue", trend: "+4 this week", icon: <WorkOutlineIcon sx={{ fontSize: 18 }} /> },
+          { label: "Total Applications", value: applications.length, themeColor: "blue", trend: "this week", icon: <WorkOutlineIcon sx={{ fontSize: 18 }} /> },
           { label: "Pending Review", value: statusCounts.pending, themeColor: "amber", trend: "Requires action", icon: <AccessTimeIcon sx={{ fontSize: 18 }} /> },
           { label: "Approved Offers", value: statusCounts.approved, themeColor: "green", trend: "Congratulations!", icon: <CheckCircleOutlineIcon sx={{ fontSize: 18 }} /> },
           { label: "Rejected Applications", value: statusCounts.rejected, themeColor: "red", trend: "Keep applying", icon: <CancelOutlinedIcon sx={{ fontSize: 18 }} /> },
@@ -126,19 +126,17 @@ const Dashboard = () => {
             <div>
               <p className="text-[10px] font-bold text-slate-500 dark:text-gray-400 uppercase tracking-wider">{label}</p>
               <p className="text-xl sm:text-2xl font-black mt-1 text-slate-900 dark:text-white tracking-tight">{value}</p>
-              <p className={`text-[10px] mt-1.5 font-semibold ${
-                themeColor === "green" ? "text-emerald-600 dark:text-emerald-400" :
-                themeColor === "red" ? "text-slate-500 dark:text-gray-400" :
-                themeColor === "amber" ? "text-amber-600 dark:text-amber-400" :
-                "text-blue-600 dark:text-blue-400"
-              }`}>{trend}</p>
+              <p className={`text-[10px] mt-1.5 font-semibold ${themeColor === "green" ? "text-emerald-600 dark:text-emerald-400" :
+                  themeColor === "red" ? "text-slate-500 dark:text-gray-400" :
+                    themeColor === "amber" ? "text-amber-600 dark:text-amber-400" :
+                      "text-blue-600 dark:text-blue-400"
+                }`}>{trend}</p>
             </div>
-            <div className={`p-2.5 rounded-xl border flex items-center justify-center ${
-              themeColor === "blue" ? "bg-blue-50/90 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border-blue-100 dark:border-blue-900/40" :
-              themeColor === "amber" ? "bg-amber-50/90 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border-amber-100 dark:border-amber-900/40" :
-              themeColor === "green" ? "bg-emerald-50/90 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-900/40" :
-              "bg-rose-50/90 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border-rose-100 dark:border-rose-900/40"
-            }`}>
+            <div className={`p-2.5 rounded-xl border flex items-center justify-center ${themeColor === "blue" ? "bg-blue-50/90 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border-blue-100 dark:border-blue-900/40" :
+                themeColor === "amber" ? "bg-amber-50/90 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border-amber-100 dark:border-amber-900/40" :
+                  themeColor === "green" ? "bg-emerald-50/90 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-900/40" :
+                    "bg-rose-50/90 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border-rose-100 dark:border-rose-900/40"
+              }`}>
               {icon}
             </div>
           </div>
@@ -160,7 +158,7 @@ const Dashboard = () => {
             <span className="w-1/4 text-center">Applied Date</span>
             <span className="w-1/4 text-right">Status</span>
           </div>
-          
+
           <div className="max-h-80 overflow-y-auto custom-scrollbar flex-1 pr-1">
             {applications.length > 0 ? (
               <div className="divide-y divide-slate-100 dark:divide-gray-700/40">
@@ -177,16 +175,14 @@ const Dashboard = () => {
                       <p className="text-[10px] text-slate-500 dark:text-gray-400 font-semibold">{new Date(app.appliedDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</p>
                     </div>
                     <div className="w-1/4 flex justify-end select-none">
-                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[9px] font-extrabold uppercase tracking-wide border ${
-                        app.status === "approved" ? "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border-emerald-200/80 dark:border-emerald-800/50" :
-                        app.status === "rejected" ? "bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 border-rose-200/80 dark:border-rose-800/50" :
-                        "bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border-amber-200/80 dark:border-amber-800/50"
-                      }`}>
-                        <span className={`w-1.5 h-1.5 rounded-full ${
-                          app.status === "approved" ? "bg-emerald-500" :
-                          app.status === "rejected" ? "bg-rose-500" :
-                          "bg-amber-500"
-                        }`} />
+                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[9px] font-extrabold uppercase tracking-wide border ${app.status === "approved" ? "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border-emerald-200/80 dark:border-emerald-800/50" :
+                          app.status === "rejected" ? "bg-rose-50 dark:bg-rose-950/50 text-rose-700 dark:text-rose-300 border-rose-200/80 dark:border-rose-800/50" :
+                            "bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border-amber-200/80 dark:border-amber-800/50"
+                        }`}>
+                        <span className={`w-1.5 h-1.5 rounded-full ${app.status === "approved" ? "bg-emerald-500" :
+                            app.status === "rejected" ? "bg-rose-500" :
+                              "bg-amber-500"
+                          }`} />
                         {app.status}
                       </span>
                     </div>
