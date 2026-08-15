@@ -58,6 +58,8 @@ const storeUser = async (req, res, next) => {
       phone_number: phone,
       email: email,
       password: hashedPassword,
+      plan: "FREE",
+      analyses_used: 0,
     };
 
     await dbClient.send(
