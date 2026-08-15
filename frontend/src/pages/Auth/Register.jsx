@@ -50,7 +50,7 @@ const Register = () => {
   };
 
   return (
-    <main className="flex h-[calc(100vh-50px)] w-full items-center justify-center bg-background font-sans px-4">
+    <main className="flex h-[calc(100vh-50px)] w-full items-center justify-center bg-gray-50 dark:bg-gray-900 font-sans px-4">
       <div className="flex w-full max-w-7xl flex-col lg:flex-row items-center gap-10">
         {/* Left Section (Image) */}
         <div className="hidden lg:flex w-1/2 justify-center">
@@ -59,7 +59,7 @@ const Register = () => {
 
         {/* Right Section (Form) */}
         <div className="w-full max-w-md rounded-xl p-6 md:p-8">
-          <h1 className="text-2xl md:text-3xl xl:text-4xl font-extrabold text-textPrimary mb-3 text-left">Register here 👋</h1>
+          <h1 className="text-2xl md:text-3xl xl:text-4xl font-extrabold text-gray-900 dark:text-gray-100 mb-3 text-left">Register here 👋</h1>
 
           <form onSubmit={handleSubmit} className="flex flex-col w-full mt-4 gap-4 text-sm">
             {/* Firstname */}
