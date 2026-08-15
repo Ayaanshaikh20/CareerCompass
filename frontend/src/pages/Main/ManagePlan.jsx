@@ -118,7 +118,9 @@ const ManagePlan = () => {
 
             if (verifyRes.data.status === 200) {
               toast.success(`Successfully upgraded to ${planName} plan! 🎉`);
-              window.location.reload();
+              setTimeout(() => {
+                window.location.reload();
+              }, 2000)
             } else {
               toast.error(verifyRes.data.message || "Payment verification failed");
             }
@@ -174,6 +176,9 @@ const ManagePlan = () => {
                 </div>
                 <p className="text-xs text-blue-100">
                   You've used {analysesUsed} of {plans.find(p => p.name === currentPlan)?.analyses || 0} resume analyses this month
+                </p>
+                <p className="text-xs text-blue-200 mt-1 italic">
+                  * Credits automatically reset on the 1st of every month
                 </p>
               </div>
               <div className="bg-white bg-opacity-20 px-4 py-2 rounded-lg">
