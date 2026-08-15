@@ -42,7 +42,7 @@ const ManagePlan = () => {
     },
     {
       name: "PRO",
-      price: "₹9",
+      price: "₹5",
       period: "per month",
       description: "For serious job seekers",
       analyses: 50,
@@ -64,7 +64,7 @@ const ManagePlan = () => {
     },
     {
       name: "PREMIUM",
-      price: "₹19",
+      price: "₹10",
       period: "per month",
       description: "For professionals and agencies",
       analyses: 200,

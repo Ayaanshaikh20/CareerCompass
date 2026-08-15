@@ -5,8 +5,8 @@ const { UpdateCommand } = require("@aws-sdk/lib-dynamodb");
 
 // Prices in Paise (INR)
 const PLAN_DETAILS = {
-  PRO: { amount: 900, name: "PRO" }, // ₹9
-  PREMIUM: { amount: 1900, name: "PREMIUM" }, // ₹19
+  PRO: { amount: 500, name: "PRO" }, // ₹5
+  PREMIUM: { amount: 1000, name: "PREMIUM" }, // ₹10
 };
 
 const getRazorpayInstance = () => {
